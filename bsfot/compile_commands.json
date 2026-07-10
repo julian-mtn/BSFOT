@@ -1,0 +1,18 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-O2",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "src/params.o",
+      "src/params.c"
+    ],
+    "directory": "/home/julian/Bureau/BSFOT/bsfot",
+    "file": "/home/julian/Bureau/BSFOT/bsfot/src/params.c",
+    "output": "/home/julian/Bureau/BSFOT/bsfot/src/params.o"
+  }
+]
