@@ -52,7 +52,7 @@ int verifier_check_signature(const signature_t *sig, public_params_t *params, co
     g1_null(fm);
     g1_new(fm);
 
-    waters_hash(fm, params->u0, params->u, params->l, message);
+    waters_hash(fm, params->u, params->l, message);
 
 
     /* gauche : e(h_s, bvk) * e(F(M), sigma2)*/
@@ -81,11 +81,13 @@ int verifier_check_signature(const signature_t *sig, public_params_t *params, co
   
     int valid = 0;
 
-    
+    /*
     printf("left: ");
     gt_print(left);
     printf("right: ");
     gt_print(right);
+    */
+   
     if (gt_cmp(left, right) == RLC_EQ) {
         valid = 1;
     }

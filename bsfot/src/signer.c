@@ -137,40 +137,42 @@ void signer_compute_response(signer_response_t *resp, const ot_request_t *req,co
     bn_rand_mod(r, p);
     bn_rand_mod(t, p);
 
-    /*cti,0 = ek0 * r * (alpha_i)^t*/
-    /*ct1,i = ek1 * r * (alpha_i * u_i)^t*/
-    for (int i=0; i < req->l; i++){
+    /* ct_i,0 = ek0 * r * alpha_i */
+    /* ct_i,1 = ek1 * r * alpha_i * (u_i)^t */
+
+    for (int i = 0; i < req->l; i++) {
 
         g1_null(resp->ct0_i[i]);
         g1_null(resp->ct1_i[i]);
         g1_new(resp->ct0_i[i]);
         g1_new(resp->ct1_i[i]);
+
         g1_t tmp1;
         g1_t tmp2;
+
         g1_null(tmp1);
         g1_null(tmp2);
         g1_new(tmp1);
         g1_new(tmp2);
 
         /*
-        * ct_i,0 = ek_i,0^r * alpha_i^t
+        * ct_i,0 = ek0_i^r * alpha_i
         */
         g1_mul(tmp1, req->ek0[i], r);
-        g1_mul(tmp2, alpha[i], t);
-        g1_add(resp->ct0_i[i], tmp1, tmp2);
+        g1_add(resp->ct0_i[i], tmp1, alpha[i]);
 
         /*
-        * ct_i,1 = ek_i,1^r * (alpha_i * u_i)^t
+        * ct_i,1 = ek1_i^r * alpha_i * u_i^t
         */
-        g1_add(tmp2, alpha[i], params->u[i]);
-        g1_mul(tmp2, tmp2, t);
-        g1_mul(tmp1, req->ek1[i], r);
-        g1_add(resp->ct1_i[i], tmp1, tmp2);
+        g1_mul(tmp1, req->ek1[i], r);      // ek1_i^r
+        g1_mul(tmp2, params->u[i], t);     // u_i^t
 
+        g1_add(resp->ct1_i[i], tmp1, alpha[i]);
+        g1_add(resp->ct1_i[i], resp->ct1_i[i], tmp2);
 
         g1_free(tmp1);
         g1_free(tmp2);
-    } 
+    }
 
     /*ct0 = g1^r*/
     g1_null(resp->ct0);

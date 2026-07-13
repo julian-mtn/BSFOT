@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-void waters_hash(g1_t result, g1_t u0, g1_t *u, int l, uint8_t *m)
+void waters_hash(g1_t result, g1_t *u, int l, uint8_t *m)
 {
     g1_t tmp;
     g1_null(tmp);
@@ -14,7 +14,7 @@ void waters_hash(g1_t result, g1_t u0, g1_t *u, int l, uint8_t *m)
     bn_null(bit);
     bn_new(bit);
 
-    g1_copy(result, u0);
+    g1_set_infty(result);
 
     for (int i = 0; i < l; i++) {
 

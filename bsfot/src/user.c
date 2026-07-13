@@ -177,7 +177,7 @@ void user_compute_signature(signature_t *sig, const user_state_t *st, const sign
     g2_new(sig->sigma2);
 
     /* Calcul de F(M) */
-    waters_hash(sig->fm, params->u0, params->u, params->l, st->message);
+    waters_hash(sig->fm, params->u, params->l, st->message);
 
     /*sigma1 = somme des sigma1_i = somme des ct_i,M_i / ct0^{y_i}*/
     g1_set_infty(sig->sigma1);
