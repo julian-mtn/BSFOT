@@ -3,9 +3,11 @@ CC = gcc
 TARGET = main
 
 CFLAGS = -Wall -Wextra -O2 -Iinclude
+
 LIBS = -lrelic -lgmp -lm
 
-SRC = $(wildcard src/*.c) main.c
+
+SRC = $(shell find src -name "*.c") main.c
 
 OBJ = $(SRC:src/%.c=build/%.o)
 OBJ := $(OBJ:main.c=build/main.o)
@@ -19,7 +21,7 @@ $(TARGET): $(OBJ)
 
 
 build/%.o: src/%.c
-	mkdir -p build
+	mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 
