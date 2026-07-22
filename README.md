@@ -28,35 +28,35 @@ bsfot/
 │   ├── signer_response.bin     # Réponse du signer
 │   └── signature.bin           # Signature finale
 │
-├── main.c                      # Point d'entrée du programme
-├── makefile
+├── main.c                      # main
+├── makefile                    # makefile
 │
-├── include/                    # Fichiers headers
+├── include/                    
 │   ├── benchmark.h             # Mesures de performances
 │   ├── config.h                # Constantes globales
 │   ├── io.h                    # Lecture / écriture des données
 │   ├── keys.h                  # Génération des clés
 │   ├── message.h               # Génération des messages
 │   ├── params.h                # Paramètres publics
-│   ├── timer.h                 # Chronomètres
+│   ├── timer.h                 # Chrono
 │   ├── run.h                   # Pipeline du protocole
 │   ├── signer.h                # Fonctions du signer
-│   ├── user.h                  # Fonctions de l'utilisateur
+│   ├── user.h                  # Fonctions de user
 │   ├── waters.h                # Fonction de hachage de Waters
 │   └── verifier.h              # Vérification des signatures
 │
-└── src/                        # Fichiers sources
-    ├── benchmark.c              # Mesures de performances
-    ├── io.c                     # Lecture / écriture des fichiers
-    ├── keys.c                   # Génération des clés du signer
-    ├── message.c                # Génération des messages aléatoires
-    ├── params.c                 # Génération des paramètres publics
-    ├── timer.c                  # Gestion des chronomètres
-    ├── run.c                    # Exécution du protocole complet
-    ├── signer.c                 # Implémentation du signer
-    ├── user.c                   # Implémentation de l'utilisateur
-    ├── waters.c                 # Signature de Waters
-    └── verifier.c               # Vérification des signatures
+└── src/                        
+    ├── benchmark.c             
+    ├── io.c                    
+    ├── keys.c                  
+    ├── message.c               
+    ├── params.c                
+    ├── timer.c                 
+    ├── run.c                   
+    ├── signer.c                
+    ├── user.c                  
+    ├── waters.c                
+    └── verifier.c              
 ```
 
 ## Étapes de génération de la signature
