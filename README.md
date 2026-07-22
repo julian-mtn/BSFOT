@@ -41,12 +41,12 @@ bsfot/
 │   │   └── waters.h            # Fonction de hachage de Waters
 │   │
 │   ├── ot_classic/
-│   │   ├── protocol.h          # Pipeline OT classique
+│   │   ├── run.h               # Pipeline OT classique
 │   │   ├── signer.h            # Côté signer
 │   │   └── user.h              # Côté user
 │   │
 │   └── ot_dual/
-│       ├── protocol.h          # Pipeline Dual-Mode OT
+│       ├── run.h               # Pipeline Dual-Mode OT
 │       ├── signer.h            # Côté signer
 │       └── user.h              # Côté user
 │
@@ -63,12 +63,12 @@ bsfot/
     │   └── waters.c
     │
     ├── ot_classic/
-    │   ├── protocol.c
+    │   ├── run.c
     │   ├── signer.c
     │   └── user.c
     │
     └── ot_dual/
-        ├── protocol.c
+        ├── run.c
         ├── signer.c
         └── user.c
 ```
