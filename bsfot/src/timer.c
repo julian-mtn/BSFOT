@@ -1,5 +1,5 @@
 #define _POSIX_C_SOURCE 200809L
-#include "common/timer.h"
+#include "timer.h"
 #include <time.h>
 
 double timespec_diff_ms(struct timespec start, struct timespec end)

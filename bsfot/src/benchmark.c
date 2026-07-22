@@ -1,6 +1,6 @@
-#include "common/benchmark.h"
-#include "common/timer.h"
-#include "ot_classic/run.h"
+#include "benchmark.h"
+#include "timer.h"
+#include "run.h"
 
 #include <stdio.h>
 

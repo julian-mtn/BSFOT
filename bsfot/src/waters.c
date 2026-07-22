@@ -1,4 +1,4 @@
-#include "waters/waters.h"
+#include "waters.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

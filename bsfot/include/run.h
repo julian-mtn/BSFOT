@@ -7,12 +7,12 @@
 #include <relic/relic.h>
 #include <relic/relic_pp.h>
 
-#include "common/params.h"
-#include "ot_classic/user.h"
-#include "ot_classic/signer.h"
-#include "common/keys.h"
-#include "waters/verifier.h"
-#include "common/benchmark.h"
+#include "params.h"
+#include "user.h"
+#include "signer.h"
+#include "keys.h"
+#include "verifier.h"
+#include "benchmark.h"
 
 int protocol_run(benchmark_result_t *result);
 

@@ -3,9 +3,9 @@
 
 #include <relic/relic.h>
 
-#include "common/params.h"
-#include "common/keys.h"
-#include "common/config.h"
+#include "params.h"
+#include "keys.h"
+#include "config.h"
 
 
 

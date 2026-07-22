@@ -1,7 +1,7 @@
-#include "ot_classic/user.h"
-#include "common/params.h"
-#include "common/io.h"
-#include "waters/waters.h"
+#include "user.h"
+#include "params.h"
+#include "io.h"
+#include "waters.h"
 
 void user_ot_init(user_state_t *st, const public_params_t *params, const uint8_t *message)
 {

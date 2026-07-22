@@ -7,9 +7,9 @@
 #include <relic/relic.h>
 #include <relic/relic_pp.h>
 
-#include "common/params.h"
-#include "common/keys.h"
-#include "ot_classic/user.h"
+#include "params.h"
+#include "keys.h"
+#include "user.h"
 
 
 /**

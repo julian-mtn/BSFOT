@@ -1,4 +1,4 @@
-#include "common/io.h"
+#include "io.h"
 
 #include <stdlib.h>
 

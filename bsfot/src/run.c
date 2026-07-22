@@ -1,5 +1,7 @@
-#include "ot_classic/run.h"
-#include "common/timer.h"
+#include "run.h"
+#include "timer.h"
+#include "message.h"
+#include "config.h"
 
 int protocol_run(benchmark_result_t *result)
 {
@@ -31,16 +33,14 @@ int protocol_run(benchmark_result_t *result)
 
 
    public_params_t params;
-   int l = 8; // taille du message en bits
                                                    timer_start(&timer);
-   init_params(&params, l);
+   init_params(&params, MESSAGE_LENGTH);
                                                    result->params_ms = timer_stop_ms(&timer);
    printf("[OK] Paramètres publics générés\n");
 
 
-   uint8_t message[8] = {
-      1,0,1,1,0,0,1,0
-   };
+   uint8_t message[MESSAGE_LENGTH];
+   generate_random_message(message,MESSAGE_LENGTH);
 
 
    user_state_t user;

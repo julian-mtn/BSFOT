@@ -1,5 +1,5 @@
-#include "ot_classic/signer.h"
-#include "common/io.h"
+#include "signer.h"
+#include "io.h"
 
 int signer_read_ot_request_from_file(ot_request_t *req, const public_params_t *params){
 
