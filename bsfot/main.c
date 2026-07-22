@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "benchmark.h"
+#include "common/benchmark.h"
 
 
 int main(void)

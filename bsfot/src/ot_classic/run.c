@@ -1,5 +1,5 @@
-#include "protocol.h"
-#include "timer.h"
+#include "ot_classic/run.h"
+#include "common/timer.h"
 
 int protocol_run(benchmark_result_t *result)
 {

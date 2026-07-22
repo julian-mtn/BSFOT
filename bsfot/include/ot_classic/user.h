@@ -4,9 +4,10 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <relic/relic.h>
-#include "params.h"
-#include "config.h"
-#include "signer.h"
+
+#include "common/params.h"
+#include "common/config.h"
+#include "ot_classic/signer.h"
 
 /**
  * État local de l'user durant le protocole de signature aveugle

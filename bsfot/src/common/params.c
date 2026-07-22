@@ -1,4 +1,4 @@
-#include "params.h"
+#include "common/params.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

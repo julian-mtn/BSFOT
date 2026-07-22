@@ -3,9 +3,10 @@
 
 #include <relic/relic.h>
 
-#include "params.h"
-#include "keys.h"
-#include "config.h"
+#include "common/params.h"
+#include "common/keys.h"
+#include "common/config.h"
+
 
 
 /** Réponse OT envoyée par user au signer */

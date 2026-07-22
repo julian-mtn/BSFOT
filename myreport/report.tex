@@ -296,7 +296,7 @@ La propriété d'aveuglement garantit que le signataire ne peut pas
 déterminer quel message a été signé parmi plusieurs exécutions
 possibles.
 
-\section{Construction du protocole}
+\section{Protocole basé sur OTs}
 
 \subsection{Paramètres publics}
 
@@ -535,7 +535,7 @@ uniquement la branche correspondant à son bit $M_i$.
 
 %------------------------------------------------------------
 
-\subsection{Vérification de la correctness}
+\subsection{Correctness}
 
 La signature obtenue par l'utilisateur est une signature de Waters de la forme
 $\sigma=(F(M),\hat{\sigma}_1,\hat{\sigma}_2)$ avec :
@@ -580,10 +580,9 @@ e(\hat{\sigma}_1,g_2)
 Ainsi, l'équation de vérification est satisfaite et la signature obtenue est
 une signature de Waters valide. 
 
+\subsection{Aveuglement sous clés malveillantes}
 
-\section{Aveuglement sous clés malveillantes}
-
-\subsection{Définition}
+\subsubsection{Définition}
 
 \begin{definition}[Blindness]
 Un schéma de signature aveugle est dit aveugle sous clés malveillantes si pour tout adversaire PPT
@@ -616,7 +615,7 @@ b=\mathcal A(\sigma_0,\sigma_1)
 Autrement dit, aucun adversaire PPT $\mathcal A$ ne peut distinguer si la signature obtenue correspond au message $m_0$ ou au message $m_1$, avec un avantage non négligeable.
 \end{definition}
 
-\subsection{Preuve: Blindness du schéma de signature}
+\subsubsection{Preuve: Blindness du schéma de signature}
 On veut montrer que, pour deux messages $m_0$ et $m_1$, un signataire malveillant $\mathcal{A}$ ne peut pas distinguer lequel des deux messages a été signé par l'utilisateur. Autrement dit, les vues de $\mathcal{A}$ dans les deux exécutions sont indistinguables :
 \[
 \operatorname{View}_{\mathcal{A}}(m_0) \approx \operatorname{View}_{\mathcal{A}}(m_1).
@@ -633,15 +632,15 @@ Pour montrer cette propriété, nous construisons une suite de jeux.
 
 Le premier jeu correspond à l'exécution réelle du protocole avec le message $m_0$. L'utilisateur génère les clés OT $(ek_{i,0}, ek_{i,1})$ pour chaque bit du message $m_0$ et les envoie au signataire. Il obtient ensuite une réponse du signataire, effectue le déchiffrement et produit la signature.
 
-\transition{On remplace les preuves NIZK par des preuves simulées produites par un simulateur de type Subversion Zero-Knowledge (sub-ZK).}
+\transition{ \textit{On remplace les preuves NIZK par des preuves simulées produites par un simulateur de type Subversion Zero-Knowledge (sub-ZK).}}
 
 \noindent\textbf{G$_1$:}
 
 Ce jeu est identique à G$_0$, à l'exception que les preuves NIZK sont désormais simulées. Par définition de la propriété sub-ZK, même si les paramètres sont choisis (de manière malveillante ou non) par $\mathcal{A}$, les preuves simulées sont indistinguables des preuves réelles. Ainsi,
 $\text{G}_0 \approx \text{G}_1$.
 
-\transition{On applique la propriété sub-ZK à la preuve NIZK de randomisation afin
-de supprimer la dépendance à $F(M)$ et $t'$.}
+\transition{\textit{On applique la propriété sub-ZK à la preuve NIZK de randomisation afin
+de supprimer la dépendance à $F(M)$ et $t'$.}}
 
 \noindent\textbf{G$_2$:}
 
@@ -664,8 +663,9 @@ Car d'après la propriété de randomisation de Waters démontrée dans
 la section \ref{sec:randomisation-waters}, l'aléa final $t+t'$ est
 uniformément distribué dans $\mathbb{Z}_p$ et peut être remplacé par un
 nouvel aléa $t_0\sample\mathbb{Z}_p$ indépendant.
-Le remplacement de $F(M)$ par $F(\mathbf{0})$ est quand à lui justifié par
-la simulation de la preuve NIZK grâce à la propriété sub-ZK.
+Le remplacement de $F(M)$ par $F(\mathbf{0})$ est justifié par une 
+réduction à l'hypothèse Decisional Diffie--Hellman (DDH),
+dont la preuve est présentée dans la section~\ref{sec:DDH-waters}.
 La signature finale produite par le simulateur devient alors :
 \[
 \sigma=(F(\mathbf{0}),\widehat{\sigma}_1,\widehat{\sigma}_2).
@@ -674,7 +674,7 @@ Comme la preuve simulée est indistinguable d'une preuve réelle,
 la vue du signataire reste indistinguable entre les deux jeux.
 Ainsi $\mathrm{G}_1\approx\mathrm{G}_2$.
 
-\transition{On simule les composantes $\sigma_{1,i}$ de manière à les rendre indépendantes du message tout en conservant leur produit égal à $\sigma_1$.}
+\transition{\textit{On simule les composantes $\sigma_{1,i}$ de manière à les rendre indépendantes du message tout en conservant leur produit égal à $\sigma_1$.}}
 
 \noindent\textbf{G$_3$:}
 
@@ -707,7 +707,7 @@ $\sigma_{1,1},\ldots,\sigma_{1,\ell}$ l'est également. Les jeux $\mathrm{G}_2$ 
 sont donc identiquement distribués, et donc
 $\mathrm{G}_2 \approx \mathrm{G}_3$.
 
-\transition{On utilise la propriété OT hiding pour montrer que la distribution des clés OT ne révèle aucune information sur le message.}
+\transition{\textit{On utilise la propriété OT hiding pour montrer que la distribution des clés OT ne révèle aucune information sur le message.}}
 
 \noindent\textbf{G$_4$:}
 
@@ -716,9 +716,9 @@ $(ek_{i,0},ek_{i,1})=\left(g_1^{y_i},\,g_1^{x_i-y_i}\right)$,
 et si $M_i=1$,
 $(ek_{i,0},ek_{i,1})=\left(g_1^{x_i-y_i},\,g_1^{y_i}\right).$
 Comme $y_i$ est choisi uniformément dans $\mathbb{Z}_p$, la valeur $x_i-y_i$ l'est également. Les deux distributions sont donc identiques et ne révèlent aucune information sur les bits $M_i$. Ainsi,
-$\text{G}_2 \approx \text{G}_3.$
+$\text{G}_3 \approx \text{G}_4$.
 
-\transition{On remplace le message $m_0$ par le message $m_1$.}
+\transition{\textit{On remplace le message $m_0$ par le message $m_1$.}}
 
 \noindent\textbf{G$_5$:}
 
@@ -737,7 +737,7 @@ Ainsi, la vue du signataire malveillant dans l'exécution du protocole avec le m
 Par conséquent, l'adversaire $\mathcal{A}$ ne peut pas distinguer quel message a été signé par l'utilisateur. Le protocole satisfait donc la propriété de blindness.
 
 
-\subsection{Preuve: randomisation de Waters}
+\subsubsection{Preuve: randomisation de Waters ($G_1 \rightarrow G_2$)}
 \label{sec:randomisation-waters}
 
 La signature obtenue après le déchiffrement est une signature de Waters
@@ -775,4 +775,312 @@ produit une distribution indépendante de l'aléa initial de signature.
 Elle permet donc de remplacer, dans la transition entre G$_1$ et G$_2$,
 la randomisation réelle par une randomisation simulée utilisant un aléa
 indépendant du message.
+
+\subsubsection{Preuve: Réduction DDH ($G_1 \rightarrow G_2$)}
+\label{sec:DDH-waters}
+
+Nous montrons que la transition entre les jeux $G_1$ et $G_2$ est
+computationnellement indistinguable sous l'hypothèse Decisional
+Diffie--Hellman (DDH).
+Le simulateur reçoit une instance DDH
+$
+(g, g^a, g^b, c),
+$
+où il doit distinguer les deux cas suivants :
+\[
+c = g^{ab}
+\qquad \text{ou} \qquad
+c \xleftarrow{\$} G.
+\]
+
+À partir de cette instance, le simulateur exécute l'algorithme \textsf{Setup} et construit les paramètres publics ( les bases $u_0, u_1, \ldots$) tel que:
+\begin{itemize}
+    \item si $c = g^{ab}$, la distribution simulée corresponde au jeu contenant $F(M)$ ;
+    \item si $c$ est uniforme dans $G$, la distribution simulée corresponde au jeu contenant $F(\mathbf{0})$.
+\end{itemize}
+
+Ainsi, tout adversaire capable de distinguer ces deux jeux permet de résoudre le problème DDH avec un avantage non négligeable.
+
+
+
+\section{Protocole basé sur Dual-Mode OTs}
+
+\subsection{Paramètres publics}
+
+\begin{itemize}
+    \item un système de groupes bilinéaires
+    $(\mathbb{G}_1,\mathbb{G}_2,\mathbb{G}_T,e,p)$,
+    où $\mathbb{G}_1$ et $\mathbb{G}_2$ sont des groupes cycliques
+    d'ordre premier $p$, munis d'un couplage bilinéaire
+    $
+    e:\mathbb{G}_1\times\mathbb{G}_2\rightarrow\mathbb{G}_T,
+    $
+    avec des générateurs
+    $g_1\in\mathbb{G}_1$ et $g_2\in\mathbb{G}_2$.
+
+    \item les paramètres de la fonction de hachage de Waters,
+    constitués d'un élément aléatoire
+    $u_0\in\mathbb{G}_1$
+    ainsi que d'un vecteur
+    $\mathbf{u}=(u_1,\ldots,u_\ell)\in\mathbb{G}_1^\ell$.
+    La fonction de hachage associée est toujours :
+    \[
+    F(M)=u_0\prod_{i=1}^{\ell}u_i^{M_i}.
+    \]
+
+    \item un CRS global pour l'OT dual-mode :
+    $
+    \mathsf{OT\text{-}CRS}=(g,h,w,\widetilde{w}),
+    $
+    où les éléments sont choisis uniformément dans le groupe approprié.
+    On définit également :
+    $
+    \eta=\log_g(h),
+    $
+    lorsque $g\neq 1$.
+
+    \item la clé publique du schéma de signature :
+    $
+    \mathsf{bvk}=g_2^a,
+    $
+    associée à la clé secrète :
+    $
+    \mathsf{bsk}=h_s^a,
+    $
+    où $h_s\in\mathbb{G}_1$ est choisi aléatoirement.
+
+\end{itemize}
+
+
+
+\subsection{Schéma de signature}
+
+\fbox{%
+\begin{minipage}{0.95\linewidth}
+\centering
+
+\begin{pchstack}[center]
+
+\procedure{$\mathbf{Signer}$}
+{
+\\
+\\
+\\
+\\
+\\
+t\sample\mathbb{Z}_p\\
+\forall i\in[\ell]:\
+(\mathsf{ek}_{i,1},
+\widetilde{\mathsf{ek}}_{i,1})
+=
+\left(
+\dfrac{w}{\mathsf{ek}_{i,0}},
+\dfrac{\widetilde w}{\widetilde{\mathsf{ek}}_{i,0}}
+\right)
+\\
+\forall i\in[\ell]:
+\text{ choisir }\alpha_i
+\text{ tel que }
+\prod_i\alpha_i=\mathsf{bsk}\,u_0^t
+\\
+\forall i\in[\ell],\ b\in\{0,1\}:\\
+\qquad s_{i,b},s'_{i,b}\sample\mathbb Z_p\\
+\qquad C_{i,b}=g^{s_{i,b}}h^{s'_{i,b}}\\
+\qquad
+D_{i,b}
+=
+\mathsf{ek}_{i,b}^{s_{i,b}}
+\widetilde{\mathsf{ek}}_{i,b}^{s'_{i,b}}
+\alpha_i u_i^{tb}
+\\
+\sigma_2=g_2^t,\qquad
+\sigma'_2=g_1^t
+\\
+\sendmessageright*
+{
+(C_{i,b},D_{i,b})_{i,b},
+\sigma_2,
+\sigma'_2
+}
+}
+
+\pchspace
+
+\procedure{$\mathbf{User}$}
+{
+\forall i\in[\ell]:
+y_i\sample\mathbb Z_p
+\\
+(\mathsf{ek}_{i,M_i},
+\widetilde{\mathsf{ek}}_{i,M_i})
+=
+(g^{y_i},h^{y_i})
+\\
+(\mathsf{ek}_{i,1-M_i},
+\widetilde{\mathsf{ek}}_{i,1-M_i})
+=
+\left(
+w\cdot\mathsf{ek}_{i,M_i}^{-1},
+\widetilde w\cdot
+\widetilde{\mathsf{ek}}_{i,M_i}^{-1}
+\right)
+\\
+\sendmessageleft*
+{
+(\mathsf{ek}_{i,0},
+\widetilde{\mathsf{ek}}_{i,0})_{i\in[\ell]}
+}
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+e(\sigma'_2,g_2) \stackrel{?}{=} e(g_1,\sigma_2)
+\\
+\sigma_{1,i}
+=
+D_{i,M_i}C_{i,M_i}^{-y_i}
+\\
+\sigma_1
+=
+\prod_{i\in[\ell]}
+\sigma_{1,i}
+\\
+t'\sample\mathbb Z_p
+\\
+\widehat{\sigma}_1
+=
+\sigma_1F(M)^{t'}
+\\
+\widehat{\sigma}_2
+=
+\sigma_2g_2^{t'}
+\\
+\widehat{\sigma}'_2
+=
+\sigma'_2g_1^{t'}
+\\
+\textbf{return }
+\sigma=
+(\widehat{\sigma}_1,
+\widehat{\sigma}_2,
+\widehat{\sigma}'_2)
+}
+
+\end{pchstack}
+
+\end{minipage}
+}
+
+\subsection{Correctness}
+
+\[
+\textsf{Le vérifieur accepte} \iff
+\begin{cases}
+e(\hat{\sigma}_2', g_2) = e(g_1, \hat{\sigma}_2), \\[0.5em]
+e(\hat{\sigma}_1, g_2) = e(h_s, \mathsf{bvk}) \cdot e(F(M), \hat{\sigma}_2).
+\end{cases}
+\]
+Première équation (en utilisant la bilinéarité):
+\[
+\begin{aligned}
+e(\widehat{\sigma}_2',g_2)
+&=
+e(g_1^{t+t'},g_2)\\
+&=
+e(g_1,g_2)^{t+t'}\\
+&=
+e(g_1,g_2^{t+t'})\\
+&=
+e(g_1,\widehat{\sigma}_2).
+\end{aligned}
+\]
+Seconde équation (toujours pas bilinéarité):
+\[
+\begin{aligned}
+e(\widehat{\sigma}_1,g_2)
+&=
+e(h_s^aF(M)^{t+t'},g_2)\\
+&=
+e(h_s^a,g_2)\,
+e(F(M)^{t+t'},g_2)\\
+&=
+e(h_s,g_2^a)\,
+e(F(M),g_2^{t+t'})\\
+&=
+e(h_s,\mathsf{bvk})\,
+e(F(M),\widehat{\sigma}_2),
+\end{aligned}
+\]
+
+
+\subsection{Branches DH et messy}
+
+Pour chaque position $i$ du message, l'utilisateur construit deux branches.
+La première correspond à son vrai bit $M_i$ et est définie par
+\[
+(\mathsf{ek}_{i,M_i},\widetilde{\mathsf{ek}}_{i,M_i})
+=
+(g^{y_i},h^{y_i}),
+\]
+où $y_i$ est choisi aléatoirement.
+Comme $h=g^\eta$, on obtient
+\[
+h^{y_i}=(g^{y_i})^\eta,
+\]
+c'est-à-dire
+\[
+\widetilde{\mathsf{ek}}_{i,M_i}
+=
+\mathsf{ek}_{i,M_i}^{\,\eta}.
+\]
+Cette branche vérifie donc la relation de Diffie--Hellman et est appelée \emph{branche DH}.
+C'est la branche sur laquelle le protocole fonctionne normalement.
+La seconde branche est construite à partir de la première :
+\[
+(\mathsf{ek}_{i,1-M_i},
+\widetilde{\mathsf{ek}}_{i,1-M_i})
+=
+\left(
+\frac{w}{\mathsf{ek}_{i,M_i}},
+\frac{\widetilde w}{\widetilde{\mathsf{ek}}_{i,M_i}}
+\right).
+\]
+Pour que cette branche soit également une paire DH, il faudrait que
+\[
+\widetilde{\mathsf{ek}}_{i,1-M_i}
+=
+\mathsf{ek}_{i,1-M_i}^{\,\eta}.
+\]
+Or,
+\[
+\mathsf{ek}_{i,1-M_i}^{\,\eta}
+=
+\left(\frac{w}{\mathsf{ek}_{i,M_i}}\right)^\eta
+=
+\frac{w^\eta}{\widetilde{\mathsf{ek}}_{i,M_i}}.
+\]
+Ainsi, cette égalité serait satisfaite uniquement si
+\[
+\widetilde w = w^\eta.
+\]
+Cependant, le CRS est choisi de manière à vérifier
+\[
+\widetilde w \neq w^\eta.
+\]
+La seconde branche ne peut donc jamais être une paire DH. C'est une \emph{branche messy}.
+En résumé, pour un utilisateur honnête, chaque position contient exactement une branche DH 
+(la bonne branche, correspondant au bit du message) et une branche messy (la mauvaise branche). 
+Elle ne transporte aucune information utile.
+
+
+
 \end{document}

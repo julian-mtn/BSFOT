@@ -1,7 +1,7 @@
 #ifndef KEYS_H
 #define KEYS_H
 
-#include "params.h"
+#include "common/params.h"
 
 /** Structure pour la clé secrète du signer */
 typedef struct {
