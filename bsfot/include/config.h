@@ -7,6 +7,6 @@
 #define SIGNATURE_FILE         "outputs/signature.bin"
 
 
-#define MESSAGE_LENGTH 256
+#define MESSAGE_LENGTH 2048
 
 #endif 

@@ -5,13 +5,13 @@
 #include <stdio.h>
 
 
-int benchmark_run(benchmark_result_t *result) {
+int benchmark_run(benchmark_result_t *result, int mode) {
     benchmark_timer_t timer;
 
 
     timer_start(&timer);
 
-    int ret = protocol_run(result);
+    int ret = protocol_run(result, mode);
 
     result->total_ms = timer_stop_ms(&timer);
 

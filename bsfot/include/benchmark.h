@@ -17,7 +17,7 @@ typedef struct {
 } benchmark_result_t;
 
 
-int benchmark_run(benchmark_result_t *result);
+int benchmark_run(benchmark_result_t *result, int mode);
 
 void benchmark_print(const benchmark_result_t *result);
 
