@@ -3,8 +3,7 @@
 #include "io.h"
 #include "waters.h"
 
-void user_ot_init(user_state_t *st, const public_params_t *params, const uint8_t *message)
-{
+void user_ot_init(user_state_t *st, const public_params_t *params, const uint8_t *message){
     st->l = params->l;
 
     /* Copie du message */
@@ -65,8 +64,7 @@ void user_ot_init(user_state_t *st, const public_params_t *params, const uint8_t
     bn_free(order);
 }
 
-void user_state_free(user_state_t *st)
-{
+void user_state_free(user_state_t *st){
     free(st->message);
 
     for (int i = 0; i < st->l; i++) {
@@ -80,9 +78,9 @@ void user_state_free(user_state_t *st)
     free(st->ek1);
 }
 
-void user_write_ot_keys_to_file(const user_state_t *st){
+void user_write_ot_keys_to_file(const user_state_t *st, const char *filename){
     
-    FILE *file = fopen(OT_KEYS_FILE, "wb");
+    FILE *file = fopen(filename, "wb");
     if (file == NULL) {
         perror("Erreur lors de l'ouverture du fichier");
         return;
@@ -109,7 +107,7 @@ void user_write_ot_keys_to_file(const user_state_t *st){
 
 int user_read_signer_response_from_file(signer_response_t *resp,const public_params_t *params){
     
-    FILE *file = fopen(SIGNER_RESPONSE_FILE, "rb");
+    FILE *file = fopen(CLASSIC_SIGNER_RESPONSE_FILE, "rb");
     if (file == NULL) {
         perror("Erreur lors de l'ouverture du fichier");
         return 0;
@@ -240,8 +238,8 @@ void user_compute_signature(signature_t *sig, const user_state_t *st, const sign
     bn_free(order);
 }
 
-void user_write_signature_to_file(signature_t *sig){
-    FILE *file = fopen(SIGNATURE_FILE, "wb");
+void user_write_signature_to_file(signature_t *sig, const char *filename){
+    FILE *file = fopen(filename, "wb");
     if (file == NULL) {
         perror("Erreur lors de l'ouverture du fichier");
         return;

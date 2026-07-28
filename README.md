@@ -1,16 +1,35 @@
-# Compilation et exécution
+## Compilation & Exécution
 
 Compiler le projet :
-
 ```bash
 make
 ```
 
-Exécuter le programme :
+Exécuter le code :
+```bash
+./main <mode>
+```
+
+Modes disponibles :
+
+| Mode | Protocole | Description |
+|------|-----------|-------------|
+| 0 | Classic OT | Oblivious Transfer classique basé sur ElGamal |
+| 1 | Dual-Mode OT | Oblivious Transfer utilisant une construction Dual-Mode |
+
+Exemples :
 
 ```bash
-./main
+./main 0
 ```
+
+Exécute le protocole Classic OT.
+
+```bash
+./main 1
+```
+
+Exécute le protocole Dual-Mode OT.
 
 Supprimer les fichiers générés :
 

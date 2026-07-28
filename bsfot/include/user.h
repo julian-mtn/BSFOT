@@ -51,6 +51,9 @@ typedef struct {
     /** Composante sigma2 chiffrée/randomisée */
     g2_t sigma2;
 
+    /** Composante \hat{\sigma}'_2 pour le dualmode */
+    g1_t sigma2_prime;
+
 } signature_t;
 
 /**
@@ -77,7 +80,7 @@ void user_ot_init(user_state_t *st,const public_params_t *params,const uint8_t *
  *
  * @param st État user contenant les clés OT
  */
-void user_write_ot_keys_to_file(const user_state_t *st);
+void user_write_ot_keys_to_file(const user_state_t *st, const char *filename);
 
 /** 
  * Lit la réponse du signer depuis le fichier SIGNER_RESPONSE_FILE et la stocke dans la structure resp
@@ -109,7 +112,7 @@ void user_compute_signature(signature_t *sig, const user_state_t *st, const sign
  *
  * @param sig Signature à écrire
  */
-void user_write_signature_to_file(signature_t *sig);
+void user_write_signature_to_file(signature_t *sig, const char *filename);
 
 /**
  * Libère une signature.

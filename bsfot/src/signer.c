@@ -1,9 +1,9 @@
 #include "signer.h"
 #include "io.h"
 
-int signer_read_ot_request_from_file(ot_request_t *req, const public_params_t *params){
+int signer_read_ot_request_from_file(ot_request_t *req, const public_params_t *params,const char *filename ){
 
-    FILE *file = fopen(OT_KEYS_FILE, "rb");
+    FILE *file = fopen(filename, "rb");
 
     if (file == NULL) {
         perror("Erreur lors de l'ouverture du fichier");
@@ -78,8 +78,7 @@ int signer_read_ot_request_from_file(ot_request_t *req, const public_params_t *p
     return 1;
 }
 
-void signer_ot_request_free(ot_request_t *req)
-{
+void signer_ot_request_free(ot_request_t *req){
     for (int i = 0; i < req->l; i++) {
         g1_free(req->ek0[i]);
         g1_free(req->ek1[i]);
@@ -195,9 +194,8 @@ void signer_compute_response(signer_response_t *resp, const ot_request_t *req,co
     free(alpha);
 }
 
-void signer_write_response_to_file(signer_response_t *resp)
-{
-    FILE *file = fopen(SIGNER_RESPONSE_FILE, "wb");
+void signer_write_response_to_file(signer_response_t *resp, const char *filename){
+    FILE *file = fopen(filename, "wb");
 
     if(file == NULL){
         perror("Erreur lors de l'ouverture du fichier");
@@ -241,8 +239,8 @@ void signer_write_response_to_file(signer_response_t *resp)
     fclose(file);
 }
 
-void signer_ot_response_free(signer_response_t *resp)
-{
+void signer_ot_response_free(signer_response_t *resp){
+
     for (int i = 0; i < resp->l; i++) {
         g1_free(resp->ct0_i[i]);
         g1_free(resp->ct1_i[i]);

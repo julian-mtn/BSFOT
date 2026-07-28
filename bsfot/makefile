@@ -31,7 +31,7 @@ build/main.o: main.c
 
 
 run: $(TARGET)
-	./$(TARGET)
+	./$(TARGET) $(MODE)
 
 
 clean:

@@ -56,7 +56,7 @@ typedef struct {
  *
  * @return 1 si les clés sont valides, 0 sinon
  */
-int signer_read_ot_request_from_file(ot_request_t *req,const public_params_t *params);
+int signer_read_ot_request_from_file(ot_request_t *req,const public_params_t *params, const char *filename);
 
 
 /**
@@ -85,7 +85,10 @@ void signer_compute_response(signer_response_t *resp,
  *  - sigma2
  * @param resp Structure contenant la réponse du signer
  */
-void signer_write_response_to_file(signer_response_t *resp);
+void signer_write_response_to_file(
+        signer_response_t *resp,
+        const char *filename);
+
 
 void signer_ot_request_free(ot_request_t *req);
 void signer_ot_response_free(signer_response_t *resp);

@@ -4,8 +4,8 @@
 #include <string.h>
 
 
-void waters_hash(g1_t result, g1_t *u, int l, uint8_t *m)
-{
+void waters_hash(g1_t result, g1_t *u, int l, uint8_t *m){
+    
     g1_t tmp;
     g1_null(tmp);
     g1_new(tmp);

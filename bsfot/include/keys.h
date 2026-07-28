@@ -3,29 +3,76 @@
 
 #include "params.h"
 
-/** Structure pour la clé secrète du signer */
+
+/*
+ * Clé secrète du signer
+ */
 typedef struct {
-    g1_t bsk;     /* h_s^a */
-    bn_t a;       
+
+    /*
+     * Mode classique :
+     * bsk = hs^a
+     */
+    g1_t bsk;
+
+    /*
+     * Exposant secret classique
+     */
+    bn_t a;
+
+
+
+    /*
+     * Mode Dual-Mode :
+     * clé secrète utilisée par le signer
+     */
+    g1_t dm_bsk;
+
+
 } signer_secret_key_t;
 
-/** Structure pour la clé publique du signer */
+
+
+/*
+ * Clé publique du signer
+ */
 typedef struct {
-    g2_t bvk;     /* g2^a */
+
+    /*
+     * Mode classique :
+     * bvk = g2^a
+     */
+    g2_t bvk;
+
+
+
+    /*
+     * Mode Dual-Mode
+     */
+    g2_t dm_bvk;
+
+
 } signer_public_key_t;
 
 
+
 /**
- * Génère la paire de clés du signer
- * 
- *   - clé publique : bvk = g2^a
- * 
- *   - clé secrète : bsk = hs^a
+ * Génère les clés du signer selon le mode.
  *
- * @param params paramètres publics.
- * @param sk Structure de la clé secrète du signer
- * @param pk Structure de la clé publique du signer
+ * mode 0 :
+ *      bsk = hs^a
+ *      bvk = g2^a
+ *
+ * mode 1 :
+ *      génération des paramètres Dual-Mode
+ *
  */
-void keygen(public_params_t *params, signer_secret_key_t *sk, signer_public_key_t *pk);
+void keygen(
+        public_params_t *params,
+        signer_secret_key_t *sk,
+        signer_public_key_t *pk
+);
+
+
 
 #endif

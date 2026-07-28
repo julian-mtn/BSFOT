@@ -2,7 +2,7 @@
 
 #include <stdlib.h>
 
-int write_g1(FILE *file, g1_t P) {
+int write_g1(FILE *file, const g1_t P) {
     int size = g1_size_bin(P, 1);
 
     if (fwrite(&size, sizeof(int), 1, file) != 1)
@@ -44,7 +44,7 @@ int read_g1(FILE *file, g1_t P){
     return 1;
 }
 
-int write_g2(FILE *file, g2_t P){
+int write_g2(FILE *file, const g2_t P){
 
     int size = g2_size_bin(P, 1);
 
@@ -87,7 +87,7 @@ int read_g2(FILE *file, g2_t P){
     return 1;
 }
 
-int write_bn(FILE *file, bn_t x){
+int write_bn(FILE *file, const bn_t x){
 
     int size = bn_size_bin(x);
 
