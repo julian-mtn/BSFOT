@@ -62,11 +62,11 @@ def load_results():
 
 def plot_breakdown(results):
 
-    #trie croissant totaux
+    # Trie les courbes par temps de calcul croissant
     results = dict(
         sorted(
             results.items(),
-            key=lambda x: x[1].get("Total", float("inf"))
+            key=lambda x: x[1].get("Crypto", float("inf"))
         )
     )
 
@@ -105,28 +105,37 @@ def plot_breakdown(results):
             for b, v in zip(bottom, values)
         ]
 
-    # Affichage du temps total au-dessus de chaque barre
-    for i, total in enumerate(bottom):
+    # Affichage du temps de calcul total au-dessus des barres
+    for i, curve in enumerate(curves):
+
+        crypto_time = results[curve].get("Crypto", 0)
+
         plt.text(
             i,
-            total,
-            f"{total:.1f}",
+            crypto_time,
+            f"{crypto_time:.1f}",
             ha="center",
             va="bottom",
             fontsize=9
         )
 
     plt.ylabel("Temps (ms)")
-    plt.xlabel("Courbe RELIC")
-    plt.title("Temps d'exécution de BSFOT en fonction des courbes de pairing")
+    plt.xlabel("Courbes RELIC")
+    plt.title(
+        "Temps de calcul de BSFOT en fonction des courbes de pairing"
+    )
 
     plt.legend()
+
     plt.grid(
         axis="y",
         alpha=0.3
     )
 
-    plt.xticks(rotation=60, ha="right")
+    plt.xticks(
+        rotation=60,
+        ha="right"
+    )
 
     plt.tight_layout()
 
@@ -154,7 +163,7 @@ def main():
     plot_breakdown(results)
 
     print("Graphique généré :")
-    print(" - results/images/breakdown.png")
+    print(" - results/images/benchmark.png")
 
 
 if __name__ == "__main__":
