@@ -66,6 +66,7 @@ make clean
 
 ## Structure générale du projet
 
+```text
 bsfot/
 ├── build/                          # Fichiers objets générés
 ├── outputs/                        # Fichiers échangés lors des communications
@@ -115,6 +116,7 @@ bsfot/
     ├── user_dualmode.c
     ├── verifier.c
     └── waters.c
+```
 
 ## Étapes de génération de la signature
 
