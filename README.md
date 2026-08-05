@@ -25,7 +25,7 @@ kss18-638
 ```
 Chaque courbe correspond directement au nom du preset RELIC utilisé lors de l'installation.
 
-## Mode d'exécution
+# Mode d'exécution
 
 Les modes correspondent à différentes versions de la phase OT (Oblivious Tranfer).
 Modes disponibles :
@@ -49,7 +49,7 @@ make CURVE=bls12-381
 ```
 Exécute le protocole avec Dual-Mode OT sur la courbe BLS12-381.
 
-## Benchmarks automatiques
+# Benchmarks automatiques
 
 Le script `run_benchmarks.sh` permet d'automatiser l'évaluation des performances sur plusieurs courbes RELIC.
 
@@ -81,7 +81,7 @@ results/
 └── images/      # Graphiques générés automatiquement
 ```
 
-## Nettoyage
+# Nettoyage
 
 Supprimer les fichiers générés par la compilation :
 
