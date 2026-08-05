@@ -1,6 +1,6 @@
-## Benchmark results
+## Derniers Benchmark
 
-![Benchmark results](bsfot/results/images/benchmark.png)
+![Benchmark](bsfot/results/images/benchmark.png)
 
 
 ## Compilation & Exécution
