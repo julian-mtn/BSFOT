@@ -1,28 +1,3 @@
 Mode : Classic OT
 
 -- Curve FM16-P765:
-
-[OK] RELIC initialisé
-[OK] Paramètres publics générés -> [MESSAGE_LENGTH : 2048 bits]
-[OK] Clés OT classiques écrites dans outputs/classic_ot_keys.bin
-[OK] Requête OT classique lue
-[OK] Phase OT terminée
-[OK] Clé secrète et publique du signer générées
-[OK] Réponse signer OT classique écrite
-[OK] Réponse du signer lue par l'utilisateur
-[OK] Signature finale calculée par l'utilisateur
-[OK] Signature classique écrite
-
-[--- Signature Valide ---]
-
------ Benchmark -----
-Params      : 2115.758 ms
-OT          : 3740.178 ms
-KeyGen      : 3.280 ms
-Signer      : 5273.552 ms
-Signature   : 1307.542 ms
-Verify      : 31.244 ms
----------------------
-Crypto      : 12471.553 ms
-Total       : 13685.568 ms
----------------------

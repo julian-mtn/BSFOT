@@ -3,7 +3,7 @@ Mode : Classic OT
 -- Curve K16-P330:
 
 [OK] RELIC initialisé
-[OK] Paramètres publics générés -> [MESSAGE_LENGTH : 2048 bits]
+[OK] Paramètres publics générés
 [OK] Clés OT classiques écrites dans outputs/classic_ot_keys.bin
 [OK] Requête OT classique lue
 [OK] Phase OT terminée
@@ -16,13 +16,15 @@ Mode : Classic OT
 [--- Signature Valide ---]
 
 ----- Benchmark -----
-Params      : 434.867 ms
-OT          : 782.506 ms
-KeyGen      : 1.092 ms
-Signer      : 1304.736 ms
-Signature   : 317.075 ms
-Verify      : 5.512 ms
+Message     : 2048 bits
 ---------------------
-Crypto      : 2845.789 ms
-Total       : 2957.124 ms
+Params      : 433.392 ms
+OT          : 702.290 ms
+KeyGen      : 0.950 ms
+Signer      : 1160.883 ms
+Signature   : 286.088 ms
+Verify      : 5.256 ms
+---------------------
+Crypto      : 2588.858 ms
+Total       : 2691.718 ms
 ---------------------

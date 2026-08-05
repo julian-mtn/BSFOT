@@ -3,7 +3,7 @@ Mode : Classic OT
 -- Curve B48-P575:
 
 [OK] RELIC initialisé
-[OK] Paramètres publics générés -> [MESSAGE_LENGTH : 2048 bits]
+[OK] Paramètres publics générés
 [OK] Clés OT classiques écrites dans outputs/classic_ot_keys.bin
 [OK] Requête OT classique lue
 [OK] Phase OT terminée
@@ -16,13 +16,15 @@ Mode : Classic OT
 [--- Signature Valide ---]
 
 ----- Benchmark -----
-Params      : 1132.152 ms
-OT          : 1599.351 ms
-KeyGen      : 3.711 ms
-Signer      : 2677.921 ms
-Signature   : 669.120 ms
-Verify      : 44.616 ms
+Message     : 2048 bits
 ---------------------
-Crypto      : 6126.870 ms
-Total       : 6445.324 ms
+Params      : 1119.218 ms
+OT          : 1616.642 ms
+KeyGen      : 4.117 ms
+Signer      : 2698.497 ms
+Signature   : 735.395 ms
+Verify      : 45.246 ms
+---------------------
+Crypto      : 6219.115 ms
+Total       : 6536.638 ms
 ---------------------

@@ -3,7 +3,7 @@ Mode : Classic OT
 -- Curve BN-P446:
 
 [OK] RELIC initialisé
-[OK] Paramètres publics générés -> [MESSAGE_LENGTH : 2048 bits]
+[OK] Paramètres publics générés
 [OK] Clés OT classiques écrites dans outputs/classic_ot_keys.bin
 [OK] Requête OT classique lue
 [OK] Phase OT terminée
@@ -16,13 +16,15 @@ Mode : Classic OT
 [--- Signature Valide ---]
 
 ----- Benchmark -----
-Params      : 917.390 ms
-OT          : 1190.873 ms
-KeyGen      : 0.706 ms
-Signer      : 2041.161 ms
-Signature   : 513.847 ms
-Verify      : 4.910 ms
+Message     : 2048 bits
 ---------------------
-Crypto      : 4668.887 ms
-Total       : 4839.328 ms
+Params      : 865.882 ms
+OT          : 1262.287 ms
+KeyGen      : 0.764 ms
+Signer      : 2212.335 ms
+Signature   : 551.444 ms
+Verify      : 5.414 ms
+---------------------
+Crypto      : 4898.127 ms
+Total       : 5079.308 ms
 ---------------------

@@ -3,7 +3,7 @@ Mode : Classic OT
 -- Curve B24-P315:
 
 [OK] RELIC initialisé
-[OK] Paramètres publics générés -> [MESSAGE_LENGTH : 2048 bits]
+[OK] Paramètres publics générés
 [OK] Clés OT classiques écrites dans outputs/classic_ot_keys.bin
 [OK] Requête OT classique lue
 [OK] Phase OT terminée
@@ -16,13 +16,15 @@ Mode : Classic OT
 [--- Signature Valide ---]
 
 ----- Benchmark -----
-Params      : 228.150 ms
-OT          : 450.111 ms
-KeyGen      : 0.876 ms
-Signer      : 582.658 ms
-Signature   : 147.970 ms
-Verify      : 9.475 ms
+Message     : 2048 bits
 ---------------------
-Crypto      : 1419.240 ms
-Total       : 1560.273 ms
+Params      : 235.304 ms
+OT          : 437.943 ms
+KeyGen      : 0.711 ms
+Signer      : 576.491 ms
+Signature   : 145.120 ms
+Verify      : 9.194 ms
+---------------------
+Crypto      : 1404.763 ms
+Total       : 1531.770 ms
 ---------------------

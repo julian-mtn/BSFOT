@@ -65,7 +65,7 @@ static int protocol_init(protocol_ctx_t *ctx, benchmark_result_t *result, int mo
    timer_start(&ctx->timer);
    init_params(&ctx->params, MESSAGE_LENGTH, mode);
    result->params_ms = timer_stop_ms(&ctx->timer);
-   printf("[OK] Paramètres publics générés -> [MESSAGE_LENGTH : %d bits]\n", MESSAGE_LENGTH);
+   printf("[OK] Paramètres publics générés\n");
 
    generate_random_message(ctx->message, MESSAGE_LENGTH);
    

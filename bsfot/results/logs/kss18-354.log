@@ -3,7 +3,7 @@ Mode : Classic OT
 -- Curve K18-P354:
 
 [OK] RELIC initialisé
-[OK] Paramètres publics générés -> [MESSAGE_LENGTH : 2048 bits]
+[OK] Paramètres publics générés
 [OK] Clés OT classiques écrites dans outputs/classic_ot_keys.bin
 [OK] Requête OT classique lue
 [OK] Phase OT terminée
@@ -16,13 +16,15 @@ Mode : Classic OT
 [--- Signature Valide ---]
 
 ----- Benchmark -----
-Params      : 320.287 ms
-OT          : 604.470 ms
-KeyGen      : 0.591 ms
-Signer      : 824.006 ms
-Signature   : 201.633 ms
-Verify      : 4.897 ms
+Message     : 2048 bits
 ---------------------
-Crypto      : 1955.884 ms
-Total       : 2075.341 ms
+Params      : 311.685 ms
+OT          : 555.413 ms
+KeyGen      : 0.690 ms
+Signer      : 767.885 ms
+Signature   : 202.164 ms
+Verify      : 4.799 ms
+---------------------
+Crypto      : 1842.636 ms
+Total       : 1960.117 ms
 ---------------------

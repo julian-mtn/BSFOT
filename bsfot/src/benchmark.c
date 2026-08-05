@@ -1,6 +1,7 @@
 #include "benchmark.h"
 #include "timer.h"
 #include "run.h"
+#include "config.h"
 
 #include <stdio.h>
 
@@ -33,6 +34,8 @@ int benchmark_run(benchmark_result_t *result, int mode) {
 void benchmark_print(const benchmark_result_t *result) {
 
     printf("\n----- Benchmark -----\n");
+    printf("Message     : %d bits\n", MESSAGE_LENGTH);
+    printf("---------------------\n");
     printf("Params      : %.3f ms\n", result->params_ms);
     printf("OT          : %.3f ms\n", result->ot_ms);
     printf("KeyGen      : %.3f ms\n", result->keygen_ms);

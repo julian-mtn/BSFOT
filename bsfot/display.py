@@ -24,6 +24,15 @@ def parse_log(filepath):
     with open(filepath, "r") as file:
         content = file.read()
 
+    # Taille du message
+    match = re.search(
+        r"Message\s*:\s*(\d+)\s*bits",
+        content
+    )
+
+    if match:
+        results["Message"] = int(match.group(1))
+
     for metric in METRICS + ["Crypto", "Total"]:
         match = re.search(
             rf"{metric}\s*:\s*([0-9.]+)\s*ms",
@@ -121,8 +130,18 @@ def plot_breakdown(results):
 
     plt.ylabel("Temps (ms)")
     plt.xlabel("Courbes RELIC")
+    message_bits = next(iter(results.values())).get("Message", "?")
+
     plt.title(
-        "Temps de calcul de BSFOT en fonction des courbes de pairing"
+        "Temps de calcul de BSFOT en fonction des courbes de pairing",
+        fontsize=14,
+        fontweight="bold"
+    )
+
+    plt.suptitle(
+        f"Taille du message : {message_bits} bits",
+        fontsize=11,
+        color="dimgray"
     )
 
     plt.legend()

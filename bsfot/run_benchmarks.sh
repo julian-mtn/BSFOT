@@ -131,18 +131,19 @@ install_curve()
 
 
     echo "[OK] $curve installé."
+    echo
 }
 
 
-
-echo "=== Benchmark RELIC sur ${#CURVES[@]} courbe(s) : ${CURVES[*]} ==="
+echo
+echo "=== Benchmark ${#CURVES[@]} courbes : ${CURVES[*]} ==="
 echo
 
 
 for curve in "${CURVES[@]}"
 do
 
-    echo "--- Courbe : $curve ---"
+    #echo "--- Courbe : $curve ---"
 
 
     if ! install_curve "$curve"; then
@@ -174,10 +175,8 @@ do
     if ./main "$MODE" > "$LOGFILE" 2>&1
     then
         echo "[OK] $curve -> $LOGFILE"
-
-        grep -E \
-        "Params|OT|KeyGen|Signer|Signature|Verify|Crypto|Total" \
-        "$LOGFILE" | sed 's/^/    /'
+        echo
+        cat "$LOGFILE"
 
     else
         echo "[ERREUR] Exécution échouée pour $curve — voir $LOGFILE"
@@ -189,7 +188,7 @@ do
 done
 
 
-echo "=== Terminé. Résultats dans $RESULTS_DIR/ ==="
+echo "=== Done ==="
 
 
 

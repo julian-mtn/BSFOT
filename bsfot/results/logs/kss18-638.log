@@ -3,7 +3,7 @@ Mode : Classic OT
 -- Curve K18-P638:
 
 [OK] RELIC initialisé
-[OK] Paramètres publics générés -> [MESSAGE_LENGTH : 2048 bits]
+[OK] Paramètres publics générés
 [OK] Clés OT classiques écrites dans outputs/classic_ot_keys.bin
 [OK] Requête OT classique lue
 [OK] Phase OT terminée
@@ -16,13 +16,15 @@ Mode : Classic OT
 [--- Signature Valide ---]
 
 ----- Benchmark -----
-Params      : 1703.078 ms
-OT          : 2658.317 ms
-KeyGen      : 2.461 ms
-Signer      : 4359.106 ms
-Signature   : 1075.603 ms
-Verify      : 20.934 ms
+Message     : 2048 bits
 ---------------------
-Crypto      : 9819.500 ms
-Total       : 10351.662 ms
+Params      : 1663.035 ms
+OT          : 2476.588 ms
+KeyGen      : 2.318 ms
+Signer      : 4053.976 ms
+Signature   : 1079.449 ms
+Verify      : 21.478 ms
+---------------------
+Crypto      : 9296.845 ms
+Total       : 9795.458 ms
 ---------------------
