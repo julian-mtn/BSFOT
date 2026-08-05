@@ -1,17 +1,32 @@
 ## Compilation & Exécution
 
-Le projet peut être compilé et exécuté de deux manières selon l'utilisation voulu.
+Le projet peut être compilé et exécuté de deux manières :
 
 | Commande | Description |
 |----------|-------------|
 | `make` | Compile le projet avec la courbe RELIC sélectionnée (`bn254` par défaut). |
 | `make CURVE=<courbe>` | Compile le projet avec une autre installation de RELIC (ex. `bls381`, `kss18-638`). |
 | `./main <mode>` | Exécute le protocole pour le mode choisi. |
-| `sudo ./run_benchmarks.sh <courbe1> [<courbe2> ...]` | Installe automatiquement les courbes RELIC demandées si elles ne sont pas déjà présentes, compile le projet pour chacune d'elles, exécute le protocole et enregistre les résultats dans le dossier `results/`. |
+| `./run_benchmarks.sh` | Lance automatiquement les benchmarks sur toutes les courbes définies dans `curves.txt`. |
 
-### Exécution du protocole
+Le fichier `curves.txt` contient la liste des courbes RELIC utilisées pour les benchmarks.
 
-Le programme implémente un protocole de **Blind Signature** basé sur les signatures de Waters. Selon le mode choisi, l'échange entre l'utilisateur et le signer utilise soit un **Classic Oblivious Transfer**, soit un **Dual-Mode Oblivious Transfer**.
+Exemple :
+
+```text
+bn254
+bls12-381
+kss18-638
+```
+
+Chaque courbe correspond directement au nom du preset RELIC utilisé lors de l'installation.
+
+
+## Exécution du protocole
+
+Le programme implémente un protocole de **Blind Signature** basé sur les signatures de Waters.
+
+Le protocole simule l'échange entre un utilisateur et un signer. Selon le mode choisi, la génération de la signature utilise soit un **Classic Oblivious Transfer**, soit un **Dual-Mode Oblivious Transfer**.
 
 Modes disponibles :
 
@@ -27,42 +42,61 @@ make
 ./main 0
 ```
 
+Exécute le protocole avec Classic OT.
+
+
 ```bash
-make CURVE=bls381
+make CURVE=bls12-381
 ./main 1
 ```
 
-### Benchmarks automatiques
+Exécute le protocole avec Dual-Mode OT sur la courbe BLS12-381.
 
-Le script `run_benchmarks.sh` permet d'exécuter automatiquement le protocole sur une ou plusieurs courbes RELIC.
 
-Pour chaque courbe passée en paramètre, le script :
+## Benchmarks automatiques
 
-1. vérifie si la bibliothèque RELIC correspondante est installée 
-2. installe automatiquement la courbe si nécessaire 
-3. compile le projet avec cette courbe 
-4. exécute le protocole 
-5. enregistre les mesures de performances dans le dossier `results/`.
+Le script `run_benchmarks.sh` permet d'automatiser l'évaluation des performances sur plusieurs courbes RELIC.
 
-Exemple :
+Les courbes testées sont définies dans le fichier :
 
-```bash
-sudo ./run_benchmarks.sh bn254 bls381 kss18-638
+```text
+curves.txt
 ```
 
-Les fichiers de résultats sont ensuite disponibles dans le dossier :
+Pour chaque courbe, le script :
+
+1. Vérifie si l'installation RELIC correspondante existe.
+2. Installe automatiquement la courbe si nécessaire dans `/opt/`.
+3. Compile le projet avec cette courbe.
+4. Exécute le protocole.
+5. Enregistre les temps d'exécution.
+6. Génère automatiquement des graphiques de comparaison.
+
+Lancement :
+
+```bash
+./run_benchmarks.sh
+```
+
+Le script demande les droits administrateur uniquement lorsqu'une installation RELIC dans `/opt/` est nécessaire.
+
+Les résultats sont organisés dans :
 
 ```text
 results/
+├── logs/        # Logs d'exécution, compilation et installation RELIC
+└── images/      # Graphiques générés automatiquement
 ```
 
-### Nettoyage
 
-Supprimer les fichiers générés :
+## Nettoyage
+
+Supprimer les fichiers générés par la compilation :
 
 ```bash
 make clean
 ```
+
 
 ## Structure générale du projet
 
@@ -78,13 +112,21 @@ bsfot/
 │   └── dualmod_signature.bin       # Signature finale (Dual-Mode OT)
 │
 ├── results/                        # Résultats des benchmarks
-│   ├── *.log                       # Temps d'exécution par courbe
-│   └── install_logs/               # Logs de RELIC
+│   ├── logs/                       # Logs d'exécution, compilation et installation RELIC
+│   │   ├── *.log
+│   │   ├── build_logs/
+│   │   └── install_logs/
+│   │
+│   └── images/                     # Graphiques générés par display.py
+│       ├── total_time.png
+│       └── breakdown.png
 │
+├── curves.txt                      # Liste des courbes RELIC à tester
+├── display.py                      # Génération des graphiques de benchmark
 ├── main.c                          # main
 ├── makefile                        # makefile
-├── run_benchmarks.sh               # Compilation et benchmarks multi-courbes
-├── compile_commands.json           # Base de compilation 
+├── run_benchmarks.sh               # Installation RELIC et benchmarks multi-courbes
+├── compile_commands.json           # Base de compilation
 │
 ├── include/
 │   ├── benchmark.h                 # Mesures de performances
@@ -117,6 +159,7 @@ bsfot/
     ├── verifier.c
     └── waters.c
 ```
+
 
 ## Étapes de génération de la signature
 

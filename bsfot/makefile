@@ -2,13 +2,18 @@ CC = gcc
 
 TARGET = main
 
-# Choix de la courbe : make CURVE=bls381 (défaut = bn254)
+# Choix de la courbe RELIC
+# Exemple : make CURVE=bn254
 CURVE ?= bn254
+
 RELIC_DIR = /opt/relic-$(CURVE)
 
-CFLAGS = -Wall -Wextra -O2 -Iinclude -I$(RELIC_DIR)/include
+CFLAGS = -Wall -Wextra -O2 \
+         -Iinclude \
+         -I$(RELIC_DIR)/include
 
 LDFLAGS = -L$(RELIC_DIR)/lib
+
 LIBS = -lrelic_s -lgmp -lm
 
 

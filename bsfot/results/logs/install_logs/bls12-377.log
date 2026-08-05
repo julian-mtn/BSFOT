@@ -474,14 +474,14 @@
    SEED=WCGR      Use Windows' CryptGenRandom. (recommended)
 
 -- Configured operating system: LINUX
--- Compiler flags:  -Wall   -O3 -funroll-loops -fomit-frame-pointer -march=native -mtune=native -Wno-stringop-overflow -Wno-stringop-overread
--- Linker flags: -L/home/julian/relic/src/low/x64-asm-10l/  -static
--- Configured /home/julian/relic/include/relic_conf.h.in with backend x64-asm-10l
+-- Compiler flags:  -Wall   -O3 -funroll-loops -fomit-frame-pointer -finline-small-functions -march=native -mtune=native -Wno-stringop-overflow -Wno-stringop-overread
+-- Linker flags: -L/home/julian/relic/src/low/x64-asm-6l/  -static
+-- Configured /home/julian/relic/include/relic_conf.h.in with backend x64-asm-6l
 -- Configured GMP: -I/usr/include/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu/libgmp.a
 -- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
 -- Configuring done (0.5s)
 -- Generating done (0.0s)
--- Build files have been written to: /home/julian/relic/build-kss18-638
+-- Build files have been written to: /home/julian/relic/build-bls12-377
 
 -- Configuring RELIC 0.7.0...
 
@@ -940,511 +940,515 @@
    SEED=WCGR      Use Windows' CryptGenRandom. (recommended)
 
 -- Configured operating system: LINUX
--- Compiler flags:  -Wall   -O3 -funroll-loops -fomit-frame-pointer -march=native -mtune=native -Wno-stringop-overflow -Wno-stringop-overread
--- Linker flags: -L/home/julian/relic/src/low/x64-asm-10l/  -static
--- Configured /home/julian/relic/include/relic_conf.h.in with backend x64-asm-10l
+-- Compiler flags:  -Wall   -O3 -funroll-loops -fomit-frame-pointer -finline-small-functions -march=native -mtune=native -Wno-stringop-overflow -Wno-stringop-overread
+-- Linker flags: -L/home/julian/relic/src/low/x64-asm-6l/  -static
+-- Configured /home/julian/relic/include/relic_conf.h.in with backend x64-asm-6l
 -- Configured GMP: -I/usr/include/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu/libgmp.a
 -- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
 -- Configuring done (0.0s)
 -- Generating done (0.0s)
--- Build files have been written to: /home/julian/relic/build-kss18-638
+-- Build files have been written to: /home/julian/relic/build-bls12-377
 [  0%] Built target arith_objs
-[  0%] Building C object src/CMakeFiles/relic_s.dir/relic_conf.c.o
-[  0%] Building C object src/CMakeFiles/relic_s.dir/relic_err.c.o
-[  0%] Building C object src/CMakeFiles/relic_s.dir/arch/relic_arch_x64.c.o
-[  0%] Building C object src/CMakeFiles/relic_s.dir/relic_util.c.o
-[  1%] Building C object src/CMakeFiles/relic_s.dir/relic_core.c.o
-[  2%] Building C object src/CMakeFiles/relic_s.dir/rand/relic_rand_core.c.o
-[  2%] Building C object src/CMakeFiles/relic_s.dir/relic_test.c.o
-[  2%] Building C object src/CMakeFiles/relic_s.dir/rand/relic_rand_udev.c.o
+[  1%] Building C object src/CMakeFiles/relic_s.dir/arch/relic_arch_x64.c.o
+[  1%] Building C object src/CMakeFiles/relic_s.dir/relic_err.c.o
+[  1%] Building C object src/CMakeFiles/relic_s.dir/relic_util.c.o
+[  1%] Building C object src/CMakeFiles/relic_s.dir/rand/relic_rand_core.c.o
+[  1%] Building C object src/CMakeFiles/relic_s.dir/relic_conf.c.o
+[  1%] Building C object src/CMakeFiles/relic_s.dir/relic_test.c.o
+[  1%] Building C object src/CMakeFiles/relic_s.dir/rand/relic_rand_udev.c.o
+[  2%] Building C object src/CMakeFiles/relic_s.dir/relic_core.c.o
 [  2%] Building C object src/CMakeFiles/relic_s.dir/relic_bench.c.o
-[  3%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_add.c.o
 [  3%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_cmp.c.o
-[  3%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_div.c.o
+[  3%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_add.c.o
 [  3%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_factor.c.o
+[  3%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_div.c.o
 [  4%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_gcd.c.o
 [  4%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_inv.c.o
 [  4%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_lag.c.o
-[  5%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_lcm.c.o
+[  4%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_lcm.c.o
 [  5%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_mem.c.o
 [  5%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_mod.c.o
 [  5%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_mul.c.o
-[  6%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_mxp.c.o
+[  5%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_mxp.c.o
 [  6%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_mxp_sim.c.o
 [  6%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_prime.c.o
 [  6%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_rec.c.o
-[  7%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_shift.c.o
+[  6%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_shift.c.o
 [  7%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_smb.c.o
 [  7%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_sqr.c.o
 [  7%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_srt.c.o
-[  8%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_util.c.o
+[  7%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_util.c.o
 [  8%] Building C object src/CMakeFiles/relic_s.dir/dv/relic_dv_mem.c.o
 [  8%] Building C object src/CMakeFiles/relic_s.dir/dv/relic_dv_util.c.o
 [  8%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_add.c.o
-[  8%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_crt.c.o
-[  9%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_cmp.c.o
+[  8%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_cmp.c.o
+[  9%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_crt.c.o
 [  9%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_div.c.o
 [  9%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_exp.c.o
-[ 10%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_inv.c.o
+[  9%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_inv.c.o
 [ 10%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_mul.c.o
-[ 10%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_prime.c.o
 [ 10%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_param.c.o
-[ 11%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_rdc.c.o
+[ 10%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_prime.c.o
+[ 10%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_rdc.c.o
 [ 11%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_shift.c.o
 [ 11%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_smb.c.o
 [ 11%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_sqr.c.o
-[ 12%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_srt.c.o
+[ 11%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_srt.c.o
 [ 12%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_util.c.o
 [ 12%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp12_mul.c.o
 [ 12%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp12_sqr.c.o
-[ 13%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp16_mul.c.o
+[ 12%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp16_mul.c.o
 [ 13%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp16_sqr.c.o
 [ 13%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp18_mul.c.o
 [ 13%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp18_sqr.c.o
-[ 14%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp24_mul.c.o
+[ 13%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp24_mul.c.o
 [ 14%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp24_sqr.c.o
 [ 14%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp2_mul.c.o
-[ 14%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp2_sqr.c.o
 [ 15%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp3_mul.c.o
+[ 15%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp2_sqr.c.o
 [ 15%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp3_sqr.c.o
 [ 15%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp48_mul.c.o
 [ 15%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp48_sqr.c.o
-[ 15%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp54_mul.c.o
-[ 16%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp4_mul.c.o
-[ 15%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp4_sqr.c.o
-[ 17%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp54_sqr.c.o
+[ 15%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp4_mul.c.o
+[ 16%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp4_sqr.c.o
+[ 16%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp54_mul.c.o
+[ 16%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp54_sqr.c.o
 [ 17%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp6_mul.c.o
 [ 17%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp6_sqr.c.o
 [ 17%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp8_mul.c.o
-[ 18%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp8_sqr.c.o
+[ 17%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp8_sqr.c.o
 [ 18%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp9_mul.c.o
 [ 18%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp9_sqr.c.o
 [ 18%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_add.c.o
-[ 19%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_cmp.c.o
+[ 18%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_cmp.c.o
 [ 19%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_crt.c.o
 [ 19%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_cyc.c.o
 [ 19%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_exp.c.o
-[ 20%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_field.c.o
+[ 19%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_field.c.o
 [ 20%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_frb.c.o
 [ 20%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_inv.c.o
 [ 20%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_pck.c.o
-[ 21%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_rdc.c.o
+[ 20%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_rdc.c.o
 [ 21%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_srt.c.o
-[ 21%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_util.c.o
 [ 21%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_add.c.o
-[ 22%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_cmp.c.o
+[ 21%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_util.c.o
+[ 21%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_cmp.c.o
 [ 22%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_exp.c.o
 [ 22%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_inv.c.o
 [ 22%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_itr.c.o
-[ 23%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_mul.c.o
+[ 22%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_mul.c.o
 [ 23%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_param.c.o
 [ 23%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_poly.c.o
 [ 23%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_rdc.c.o
-[ 24%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_shift.c.o
+[ 23%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_shift.c.o
 [ 24%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_slv.c.o
 [ 24%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_sqr.c.o
 [ 24%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_srt.c.o
-[ 25%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_trc.c.o
+[ 24%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_trc.c.o
 [ 25%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_util.c.o
 [ 25%] Building C object src/CMakeFiles/relic_s.dir/fbx/relic_fb2_inv.c.o
 [ 25%] Building C object src/CMakeFiles/relic_s.dir/fbx/relic_fb2_mul.c.o
-[ 26%] Building C object src/CMakeFiles/relic_s.dir/fbx/relic_fb2_slv.c.o
+[ 25%] Building C object src/CMakeFiles/relic_s.dir/fbx/relic_fb2_slv.c.o
 [ 26%] Building C object src/CMakeFiles/relic_s.dir/fbx/relic_fb2_sqr.c.o
 [ 26%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_add.c.o
 [ 26%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_cmp.c.o
-[ 27%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_curve.c.o
+[ 26%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_curve.c.o
 [ 27%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_dbl.c.o
 [ 27%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_map.c.o
 [ 27%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_mul.c.o
-[ 28%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_mul_cof.c.o
+[ 27%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_mul_cof.c.o
 [ 28%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_mul_fix.c.o
 [ 28%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_mul_sim.c.o
 [ 28%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_neg.c.o
-[ 29%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_norm.c.o
+[ 28%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_norm.c.o
 [ 29%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_param.c.o
 [ 29%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_pck.c.o
-[ 30%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_psi.c.o
-[ 30%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_tpl.c.o
+[ 29%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_psi.c.o
 [ 30%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_util.c.o
+[ 30%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_tpl.c.o
 [ 30%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_add.c.o
-[ 31%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_cmp.c.o
-[ 31%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_curve.c.o
+[ 30%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_cmp.c.o
+[ 30%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_curve.c.o
 [ 31%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_dbl.c.o
 [ 31%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_frb.c.o
-[ 32%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_map.c.o
+[ 31%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_map.c.o
+[ 31%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_mul.c.o
 [ 32%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_mul_cof.c.o
-[ 32%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_mul.c.o
 [ 32%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_mul_fix.c.o
-[ 33%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_mul_sim.c.o
-[ 33%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_neg.c.o
+[ 32%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_mul_sim.c.o
+[ 32%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_neg.c.o
 [ 33%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_norm.c.o
 [ 33%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_pck.c.o
-[ 34%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_util.c.o
-[ 34%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_add.c.o
+[ 33%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_util.c.o
+[ 33%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_add.c.o
 [ 34%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_cmp.c.o
 [ 34%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_curve.c.o
-[ 35%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_dbl.c.o
-[ 35%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_frb.c.o
+[ 34%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_dbl.c.o
+[ 34%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_frb.c.o
 [ 35%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_map.c.o
 [ 35%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_mul.c.o
-[ 36%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_mul_cof.c.o
-[ 36%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_mul_fix.c.o
+[ 35%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_mul_cof.c.o
+[ 35%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_mul_fix.c.o
 [ 36%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_mul_sim.c.o
 [ 36%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_neg.c.o
-[ 37%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_norm.c.o
-[ 37%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_util.c.o
+[ 36%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_norm.c.o
+[ 36%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_util.c.o
 [ 37%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_add.c.o
 [ 37%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_cmp.c.o
-[ 38%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_curve.c.o
-[ 38%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_dbl.c.o
+[ 37%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_curve.c.o
+[ 37%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_dbl.c.o
 [ 38%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_frb.c.o
 [ 38%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_map.c.o
-[ 39%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_mul.c.o
-[ 39%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_mul_cof.c.o
+[ 38%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_mul.c.o
+[ 38%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_mul_cof.c.o
 [ 39%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_mul_fix.c.o
 [ 39%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_mul_sim.c.o
-[ 40%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_neg.c.o
-[ 40%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_norm.c.o
+[ 39%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_neg.c.o
+[ 39%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_norm.c.o
 [ 40%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_util.c.o
 [ 40%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_add.c.o
-[ 41%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_cmp.c.o
-[ 41%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_curve.c.o
+[ 40%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_cmp.c.o
+[ 40%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_curve.c.o
 [ 41%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_dbl.c.o
-[ 42%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_frb.c.o
-[ 42%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_map.c.o
+[ 41%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_frb.c.o
+[ 41%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_map.c.o
 [ 42%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_mul.c.o
 [ 42%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_mul_cof.c.o
-[ 43%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_mul_sim.c.o
-[ 43%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_mul_fix.c.o
-[ 43%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_norm.c.o
+[ 42%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_mul_fix.c.o
+[ 42%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_mul_sim.c.o
 [ 43%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_neg.c.o
-[ 44%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_util.c.o
-[ 44%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_add.c.o
+[ 43%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_norm.c.o
+[ 43%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_util.c.o
+[ 43%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_add.c.o
 [ 44%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_cmp.c.o
 [ 44%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_curve.c.o
-[ 45%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_dbl.c.o
-[ 45%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_frb.c.o
+[ 44%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_dbl.c.o
+[ 44%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_frb.c.o
 [ 45%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_hlv.c.o
 [ 45%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_map.c.o
-[ 46%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_mul.c.o
-[ 46%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_mul_fix.c.o
+[ 45%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_mul.c.o
+[ 45%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_mul_fix.c.o
 [ 46%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_mul_sim.c.o
 [ 46%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_neg.c.o
-[ 47%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_norm.c.o
-[ 47%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_param.c.o
+[ 46%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_norm.c.o
+[ 46%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_param.c.o
 [ 47%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_pck.c.o
 [ 47%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_util.c.o
-[ 48%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_add.c.o
-[ 48%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_cmp.c.o
+[ 47%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_add.c.o
+[ 47%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_cmp.c.o
 [ 48%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_curve.c.o
 [ 48%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_dbl.c.o
-[ 49%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_map.c.o
-[ 49%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_mul.c.o
+[ 48%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_map.c.o
+[ 48%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_mul.c.o
 [ 49%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_mul_fix.c.o
 [ 49%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_mul_sim.c.o
-[ 50%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_neg.c.o
-[ 50%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_norm.c.o
+[ 49%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_neg.c.o
+[ 49%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_norm.c.o
 [ 50%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_param.c.o
+[ 50%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_util.c.o
 [ 50%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_pck.c.o
-[ 51%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_util.c.o
-[ 51%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k1.c.o
+[ 50%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k1.c.o
 [ 51%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k12.c.o
 [ 51%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k16.c.o
-[ 52%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k18.c.o
-[ 52%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k2.c.o
+[ 51%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k18.c.o
+[ 51%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k2.c.o
 [ 52%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k24.c.o
 [ 52%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k48.c.o
-[ 53%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k54.c.o
-[ 53%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k8.c.o
+[ 52%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k54.c.o
 [ 53%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k1.c.o
+[ 52%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k8.c.o
 [ 53%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k12.c.o
-[ 54%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k16.c.o
-[ 54%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k18.c.o
+[ 53%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k16.c.o
+[ 53%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k18.c.o
 [ 54%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k2.c.o
-[ 55%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k24.c.o
-[ 55%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k48.c.o
-[ 55%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k54.c.o
+[ 54%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k24.c.o
+[ 54%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k54.c.o
+[ 54%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k48.c.o
 [ 55%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k8.c.o
-[ 56%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k1.c.o
-[ 56%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k12.c.o
-[ 56%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k16.c.o
+[ 55%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k1.c.o
+[ 55%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k12.c.o
+[ 55%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k16.c.o
 [ 56%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k18.c.o
-[ 57%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k2.c.o
-[ 57%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k24.c.o
+[ 56%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k2.c.o
+[ 56%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k24.c.o
+[ 56%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k48.c.o
 [ 57%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k54.c.o
-[ 57%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k48.c.o
-[ 58%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k8.c.o
-[ 58%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map.c.o
-[ 58%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k1.c.o
+[ 57%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k8.c.o
+[ 57%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map.c.o
+[ 57%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k1.c.o
 [ 58%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k12.c.o
-[ 59%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k16.c.o
-[ 59%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k18.c.o
-[ 59%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k2.c.o
+[ 58%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k16.c.o
+[ 58%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k18.c.o
+[ 58%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k2.c.o
 [ 59%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k24.c.o
-[ 60%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k48.c.o
-[ 60%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k54.c.o
-[ 60%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k8.c.o
+[ 59%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k48.c.o
+[ 59%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k54.c.o
+[ 59%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k8.c.o
 [ 60%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_norm.c.o
-[ 61%] Building C object src/CMakeFiles/relic_s.dir/pc/relic_pc_core.c.o
-[ 61%] Building C object src/CMakeFiles/relic_s.dir/pc/relic_pc_exp.c.o
-[ 61%] Building C object src/CMakeFiles/relic_s.dir/pc/relic_pc_util.c.o
+[ 60%] Building C object src/CMakeFiles/relic_s.dir/pc/relic_pc_core.c.o
+[ 60%] Building C object src/CMakeFiles/relic_s.dir/pc/relic_pc_exp.c.o
+[ 60%] Building C object src/CMakeFiles/relic_s.dir/pc/relic_pc_util.c.o
 [ 61%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_rsa.c.o
-[ 62%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_rabin.c.o
-[ 62%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_bdpe.c.o
-[ 62%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ghpe.c.o
+[ 61%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_rabin.c.o
+[ 61%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_bdpe.c.o
+[ 61%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ghpe.c.o
 [ 62%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_phpe.c.o
-[ 63%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_shpe.c.o
-[ 63%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_rsapsi.c.o
-[ 63%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_shipsi.c.o
+[ 62%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_shpe.c.o
+[ 62%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_rsapsi.c.o
+[ 62%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_shipsi.c.o
 [ 63%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecdh.c.o
-[ 64%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecmqv.c.o
-[ 64%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecies.c.o
-[ 64%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecdsa.c.o
-[ 65%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecss.c.o
-[ 65%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_vbnn.c.o
-[ 65%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pok.c.o
+[ 63%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecmqv.c.o
+[ 63%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecies.c.o
+[ 63%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecdsa.c.o
+[ 64%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecss.c.o
+[ 64%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_vbnn.c.o
+[ 64%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pok.c.o
 [ 65%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_sok.c.o
 [ 65%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ers.c.o
-[ 66%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_smlers.c.o
-[ 66%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_etrs.c.o
-[ 67%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_oprf.c.o
-[ 67%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ped.c.o
-[ 67%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pcdel.c.o
-[ 67%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pdbat.c.o
+[ 65%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_smlers.c.o
+[ 65%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_etrs.c.o
+[ 65%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ped.c.o
+[ 66%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_oprf.c.o
+[ 66%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pdbat.c.o
+[ 66%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pcdel.c.o
 [ 67%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_sokaka.c.o
-[ 68%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_bgn.c.o
-[ 68%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ibe.c.o
-[ 68%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_bls.c.o
+[ 67%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_bgn.c.o
+[ 67%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ibe.c.o
+[ 67%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_bls.c.o
 [ 68%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_cls.c.o
-[ 69%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pss.c.o
-[ 69%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_bbs.c.o
-[ 69%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_zss.c.o
+[ 68%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pss.c.o
+[ 68%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_bbs.c.o
+[ 68%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_zss.c.o
 [ 69%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_cmlhs.c.o
-[ 70%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_mklhs.c.o
-[ 70%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pbpsi.c.o
-[ 70%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_mpss.c.o
+[ 69%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_mklhs.c.o
+[ 69%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pbpsi.c.o
+[ 69%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_mpss.c.o
 [ 70%] Building C object src/CMakeFiles/relic_s.dir/bc/relic_bc_aes.c.o
-[ 71%] Building C object src/CMakeFiles/relic_s.dir/bc/rijndael-alg-fst.c.o
-[ 71%] Building C object src/CMakeFiles/relic_s.dir/bc/rijndael-api-fst.c.o
-[ 71%] Building C object src/CMakeFiles/relic_s.dir/md/blake2s-ref.c.o
+[ 70%] Building C object src/CMakeFiles/relic_s.dir/bc/rijndael-alg-fst.c.o
+[ 70%] Building C object src/CMakeFiles/relic_s.dir/bc/rijndael-api-fst.c.o
+[ 70%] Building C object src/CMakeFiles/relic_s.dir/md/blake2s-ref.c.o
 [ 71%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_blake2s.c.o
-[ 72%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_hmac.c.o
-[ 72%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_kdf.c.o
-[ 72%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_sha224.c.o
+[ 71%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_hmac.c.o
+[ 71%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_kdf.c.o
 [ 72%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_sha256.c.o
-[ 73%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_sha384.c.o
-[ 73%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_sha512.c.o
+[ 72%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_sha224.c.o
+[ 72%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_sha384.c.o
+[ 72%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_sha512.c.o
 [ 73%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_xmd.c.o
 [ 73%] Building C object src/CMakeFiles/relic_s.dir/md/sha224-256.c.o
-[ 74%] Building C object src/CMakeFiles/relic_s.dir/md/sha384-512.c.o
-[ 74%] Building C object src/CMakeFiles/relic_s.dir/mpc/relic_mpc_mt.c.o
-[ 74%] Building C object src/CMakeFiles/relic_s.dir/mpc/relic_mpc_pc.c.o
+[ 73%] Building C object src/CMakeFiles/relic_s.dir/mpc/relic_mpc_mt.c.o
+[ 73%] Building C object src/CMakeFiles/relic_s.dir/md/sha384-512.c.o
+[ 73%] Building C object src/CMakeFiles/relic_s.dir/mpc/relic_mpc_pc.c.o
 [ 74%] Building C object src/CMakeFiles/relic_s.dir/mpc/relic_mpc_sss.c.o
-[ 75%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_add_low.c.o
-[ 75%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_div_low.c.o
-[ 75%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_mod_low.c.o
-[ 75%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_mul_low.c.o
-[ 76%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_shift_low.c.o
-[ 76%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_sqr_low.c.o
-[ 76%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fp_inv_low.c.o
-[ 76%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-10l/relic_fp_mul_low.c.o
-[ 77%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-10l/relic_fp_rdc_low.c.o
-[ 77%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fp_shift_low.c.o
-[ 77%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-10l/relic_fp_sqr_low.c.o
-[ 77%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fp_smb_low.c.o
-[ 78%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fpx_add_low.c.o
-[ 78%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fpx_mul_low.c.o
-[ 78%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-10l/relic_fpx_rdc_low.c.o
-[ 78%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fpx_sqr_low.c.o
-[ 79%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fb_add_low.c.o
-[ 79%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_inv_low.c.o
-[ 79%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_itr_low.c.o
-[ 80%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_mul_low.c.o
-[ 80%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_rdc_low.c.o
-[ 80%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fb_shift_low.c.o
-[ 80%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_slv_low.c.o
-[ 81%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_sqr_low.c.o
-[ 81%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_srt_low.c.o
-[ 81%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_trc_low.c.o
-[ 81%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-10l/relic_fp_add_low.s.o
-[ 82%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-10l/relic_fp_mul_low.s.o
-[ 82%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-10l/relic_fp_rdc_low.s.o
-[ 82%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-10l/relic_fpx_rdc_low.s.o
+[ 74%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_add_low.c.o
+[ 74%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_div_low.c.o
+[ 74%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_mod_low.c.o
+[ 75%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_bn_mul_low.c.o
+[ 75%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_bn_shift_low.c.o
+[ 75%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_sqr_low.c.o
+[ 75%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fp_inv_low.c.o
+[ 76%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_fp_mul_low.c.o
+[ 76%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_fp_rdc_low.c.o
+[ 76%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_fp_shift_low.c.o
+[ 76%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fp_smb_low.c.o
+[ 77%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_fp_sqr_low.c.o
+[ 77%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fpx_add_low.c.o
+[ 77%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_fpx_mul_low.c.o
+[ 77%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fpx_rdc_low.c.o
+[ 78%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_fpx_sqr_low.c.o
+[ 78%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fb_add_low.c.o
+[ 78%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_inv_low.c.o
+[ 78%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_itr_low.c.o
+[ 79%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_mul_low.c.o
+[ 79%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_rdc_low.c.o
+[ 79%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fb_shift_low.c.o
+[ 79%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_slv_low.c.o
+[ 80%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_sqr_low.c.o
+[ 80%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_srt_low.c.o
+[ 80%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_trc_low.c.o
+[ 80%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_bn_mul_low.s.o
+[ 81%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_bn_shift_low.s.o
+[ 81%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_fp_add_low.s.o
+[ 81%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_fp_mul_low.s.o
+[ 81%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_fp_rdc_low.s.o
+[ 82%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_fp_shift_low.s.o
+[ 82%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_fpx_mul_low.s.o
+[ 82%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-6l/relic_fpx_sqr_low.s.o
 [ 82%] Linking C static library ../lib/librelic_s.a
 [ 82%] Built target relic_s
-[ 83%] Building C object test/CMakeFiles/test_fp.dir/test_fp.c.o
-[ 83%] Building C object test/CMakeFiles/test_dv.dir/test_dv.c.o
-[ 85%] Building C object test/CMakeFiles/test_ep.dir/test_ep.c.o
-[ 83%] Building C object test/CMakeFiles/test_fb.dir/test_fb.c.o
+[ 84%] Building C object test/CMakeFiles/test_fpx.dir/test_fpx.c.o
+[ 84%] Building C object test/CMakeFiles/test_dv.dir/test_dv.c.o
+[ 84%] Building C object test/CMakeFiles/test_ep.dir/test_ep.c.o
+[ 84%] Building C object test/CMakeFiles/test_fbx.dir/test_fbx.c.o
+[ 84%] Building C object test/CMakeFiles/test_fp.dir/test_fp.c.o
 [ 85%] Building C object test/CMakeFiles/test_bn.dir/test_bn.c.o
-[ 85%] Building C object test/CMakeFiles/test_epx.dir/test_epx.c.o
-[ 85%] Building C object test/CMakeFiles/test_fpx.dir/test_fpx.c.o
-[ 86%] Building C object test/CMakeFiles/test_fbx.dir/test_fbx.c.o
+[ 86%] Building C object test/CMakeFiles/test_epx.dir/test_epx.c.o
+[ 86%] Building C object test/CMakeFiles/test_fb.dir/test_fb.c.o
 [ 86%] Linking C executable ../bin/test_dv
 [ 86%] Linking C executable ../bin/test_fbx
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 86%] Built target test_dv
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 87%] Building C object test/CMakeFiles/test_eb.dir/test_eb.c.o
 [ 87%] Built target test_fbx
 [ 88%] Building C object test/CMakeFiles/test_ed.dir/test_ed.c.o
 [ 88%] Linking C executable ../bin/test_fb
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 88%] Linking C executable ../bin/test_fp
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
-/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 88%] Built target test_fb
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
-/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 88%] Building C object test/CMakeFiles/test_ec.dir/test_ec.c.o
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 88%] Built target test_fp
 [ 88%] Building C object test/CMakeFiles/test_pc.dir/test_pc.c.o
 [ 88%] Linking C executable ../bin/test_ep
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
-/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 88%] Linking C executable ../bin/test_eb
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 88%] Built target test_ep
 [ 89%] Building C object test/CMakeFiles/test_pp.dir/test_pp.c.o
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 89%] Linking C executable ../bin/test_ec
-[ 89%] Linking C executable ../bin/test_ed
 [ 89%] Built target test_eb
 [ 89%] Building C object test/CMakeFiles/test_md.dir/test_md.c.o
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
-/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+[ 89%] Linking C executable ../bin/test_ed
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 89%] Built target test_ec
-[ 89%] Built target test_ed
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 90%] Building C object test/CMakeFiles/test_cp.dir/test_cp.c.o
+[ 90%] Built target test_ed
+[ 90%] Linking C executable ../bin/test_bn
 [ 91%] Building C object test/CMakeFiles/test_mpc.dir/test_mpc.c.o
-[ 91%] Linking C executable ../bin/test_bn
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 91%] Linking C executable ../bin/test_md
 [ 91%] Built target test_bn
 [ 91%] Building C object test/CMakeFiles/test_rand.dir/test_rand.c.o
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-[ 91%] Linking C executable ../bin/test_mpc
 [ 91%] Built target test_md
-[ 91%] Building C object test/CMakeFiles/test_core.dir/test_core.c.o
+[ 91%] Linking C executable ../bin/test_mpc
 [ 92%] Linking C executable ../bin/test_rand
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+[ 92%] Building C object test/CMakeFiles/test_core.dir/test_core.c.o
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 92%] Linking C executable ../bin/test_pc
-[ 92%] Built target test_mpc
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 92%] Linking C executable ../bin/test_core
-[ 92%] Building C object bench/CMakeFiles/bench_bn.dir/bench_bn.c.o
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
-/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 92%] Built target test_mpc
 [ 92%] Built target test_rand
+[ 92%] Building C object bench/CMakeFiles/bench_bn.dir/bench_bn.c.o
 [ 92%] Building C object bench/CMakeFiles/bench_dv.dir/bench_dv.c.o
-[ 92%] Built target test_pc
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-[ 92%] Building C object bench/CMakeFiles/bench_fp.dir/bench_fp.c.o
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 92%] Built target test_pc
 [ 92%] Built target test_core
+[ 92%] Building C object bench/CMakeFiles/bench_fp.dir/bench_fp.c.o
 [ 92%] Building C object bench/CMakeFiles/bench_fpx.dir/bench_fpx.c.o
 [ 92%] Linking C executable ../bin/bench_dv
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 92%] Built target bench_dv
 [ 92%] Building C object bench/CMakeFiles/bench_fb.dir/bench_fb.c.o
 [ 92%] Linking C executable ../bin/test_epx
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 92%] Built target test_epx
 [ 92%] Building C object bench/CMakeFiles/bench_fbx.dir/bench_fbx.c.o
-[ 92%] Linking C executable ../bin/test_cp
 [ 93%] Linking C executable ../bin/bench_fbx
-[ 93%] Linking C executable ../bin/bench_fp
 [ 93%] Linking C executable ../bin/bench_fb
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
-/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-[ 93%] Linking C executable ../bin/test_pp
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
-/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
-/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-[ 93%] Built target test_cp
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+[ 93%] Linking C executable ../bin/test_cp
+[ 93%] Linking C executable ../bin/bench_fp
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 93%] Built target bench_fbx
-[ 93%] Building C object bench/CMakeFiles/bench_ep.dir/bench_ep.c.o
-[ 93%] Built target bench_fp
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+[ 93%] Linking C executable ../bin/test_pp
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-[ 93%] Building C object bench/CMakeFiles/bench_epx.dir/bench_epx.c.o
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 93%] Building C object bench/CMakeFiles/bench_ep.dir/bench_ep.c.o
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 93%] Built target bench_fb
+[ 93%] Built target test_cp
+[ 93%] Built target bench_fp
+[ 93%] Building C object bench/CMakeFiles/bench_epx.dir/bench_epx.c.o
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 93%] Building C object bench/CMakeFiles/bench_eb.dir/bench_eb.c.o
 [ 93%] Building C object bench/CMakeFiles/bench_ed.dir/bench_ed.c.o
 [ 93%] Built target test_pp
 [ 93%] Building C object bench/CMakeFiles/bench_ec.dir/bench_ec.c.o
 [ 93%] Linking C executable ../bin/bench_bn
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 93%] Linking C executable ../bin/bench_ec
 [ 93%] Built target bench_bn
 [ 93%] Building C object bench/CMakeFiles/bench_pp.dir/bench_pp.c.o
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 93%] Built target bench_ec
 [ 93%] Building C object bench/CMakeFiles/bench_pc.dir/bench_pc.c.o
 [ 94%] Linking C executable ../bin/bench_eb
+[ 94%] Linking C executable ../bin/bench_ep
 [ 95%] Linking C executable ../bin/bench_ed
-[ 95%] Linking C executable ../bin/bench_ep
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 95%] Built target bench_eb
+[ 95%] Built target bench_ep
 [ 95%] Built target bench_ed
 [ 95%] Building C object bench/CMakeFiles/bench_md.dir/bench_md.c.o
-[ 95%] Built target bench_ep
 [ 95%] Building C object bench/CMakeFiles/bench_cp.dir/bench_cp.c.o
 [ 95%] Building C object bench/CMakeFiles/bench_mpc.dir/bench_mpc.c.o
-[ 95%] Linking C executable ../bin/test_fpx
 [ 95%] Linking C executable ../bin/bench_md
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+[ 95%] Linking C executable ../bin/test_fpx
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_bn_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 95%] Built target bench_md
 [ 95%] Built target test_fpx
-[ 95%] Linking C executable ../bin/bench_pc
 [ 95%] Building C object bench/CMakeFiles/bench_rand.dir/bench_rand.c.o
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+[ 95%] Linking C executable ../bin/bench_pc
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 95%] Linking C executable ../bin/bench_rand
-[ 95%] Built target bench_pc
 [ 96%] Linking C executable ../bin/bench_mpc
+[ 96%] Built target bench_pc
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 97%] Linking C executable ../bin/bench_pp
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
-/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
-/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 97%] Built target bench_rand
 [ 97%] Built target bench_mpc
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 97%] Built target bench_pp
 [ 98%] Linking C executable ../bin/bench_epx
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
-[ 98%] Built target bench_epx
 [ 99%] Linking C executable ../bin/bench_fpx
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+[ 99%] Built target bench_epx
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [ 99%] Built target bench_fpx
 [100%] Linking C executable ../bin/bench_cp
-/usr/bin/ld: warning: relic_fpx_rdc_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
 /usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
 [100%] Built target bench_cp
 [  0%] Built target arith_objs
@@ -1486,41 +1490,41 @@
 [100%] Built target bench_rand
 Install the project...
 -- Install configuration: ""
--- Installing: /opt/relic-kss18-638/include/relic/relic.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_alloc.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_arch.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_bc.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_bench.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_bn.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_core.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_cp.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_dv.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_eb.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_ec.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_ed.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_ep.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_epx.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_err.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_fb.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_fbx.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_fp.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_fpx.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_label.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_md.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_mpc.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_multi.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_pc.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_pp.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_rand.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_test.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_types.h
--- Installing: /opt/relic-kss18-638/include/relic/relic_util.h
--- Installing: /opt/relic-kss18-638/include/relic/low/relic_bn_low.h
--- Installing: /opt/relic-kss18-638/include/relic/low/relic_dv_low.h
--- Installing: /opt/relic-kss18-638/include/relic/low/relic_fb_low.h
--- Installing: /opt/relic-kss18-638/include/relic/low/relic_fp_low.h
--- Installing: /opt/relic-kss18-638/include/relic/low/relic_fpx_low.h
--- Up-to-date: /opt/relic-kss18-638/include/relic
--- Installing: /opt/relic-kss18-638/include/relic/relic_conf.h
--- Installing: /opt/relic-kss18-638/cmake/relic-config.cmake
--- Installing: /opt/relic-kss18-638/lib/librelic_s.a
+-- Installing: /opt/relic-bls12-377/include/relic/relic.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_alloc.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_arch.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_bc.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_bench.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_bn.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_core.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_cp.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_dv.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_eb.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_ec.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_ed.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_ep.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_epx.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_err.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_fb.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_fbx.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_fp.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_fpx.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_label.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_md.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_mpc.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_multi.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_pc.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_pp.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_rand.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_test.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_types.h
+-- Installing: /opt/relic-bls12-377/include/relic/relic_util.h
+-- Installing: /opt/relic-bls12-377/include/relic/low/relic_bn_low.h
+-- Installing: /opt/relic-bls12-377/include/relic/low/relic_dv_low.h
+-- Installing: /opt/relic-bls12-377/include/relic/low/relic_fb_low.h
+-- Installing: /opt/relic-bls12-377/include/relic/low/relic_fp_low.h
+-- Installing: /opt/relic-bls12-377/include/relic/low/relic_fpx_low.h
+-- Up-to-date: /opt/relic-bls12-377/include/relic
+-- Installing: /opt/relic-bls12-377/include/relic/relic_conf.h
+-- Installing: /opt/relic-bls12-377/cmake/relic-config.cmake
+-- Installing: /opt/relic-bls12-377/lib/librelic_s.a
