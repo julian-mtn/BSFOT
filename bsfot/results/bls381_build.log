@@ -1,0 +1,31 @@
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/message.c -o build/message.o
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/signer.c -o build/signer.o
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/run.c -o build/run.o
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/params.c -o build/params.o
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/signer_dualmode.c -o build/signer_dualmode.o
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/benchmark.c -o build/benchmark.o
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/io.c -o build/io.o
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/waters.c -o build/waters.o
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/verifier.c -o build/verifier.o
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/keys.c -o build/keys.o
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/user_dualmode.c -o build/user_dualmode.o
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/timer.c -o build/timer.o
+mkdir -p build/
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c src/user.c -o build/user.o
+mkdir -p build
+gcc -Wall -Wextra -O2 -Iinclude -I/opt/relic-bls381/include -c main.c -o build/main.o
+gcc build/message.o build/signer.o build/run.o build/params.o build/signer_dualmode.o build/benchmark.o build/io.o build/waters.o build/verifier.o build/keys.o build/user_dualmode.o build/timer.o build/user.o build/main.o -o main -L/opt/relic-bls381/lib -lrelic_s -lgmp -lm
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker

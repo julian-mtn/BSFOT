@@ -2,9 +2,14 @@ CC = gcc
 
 TARGET = main
 
-CFLAGS = -Wall -Wextra -O2 -Iinclude
+# Choix de la courbe : make CURVE=bls381 (défaut = bn254)
+CURVE ?= bn254
+RELIC_DIR = /opt/relic-$(CURVE)
 
-LIBS = -lrelic -lgmp -lm
+CFLAGS = -Wall -Wextra -O2 -Iinclude -I$(RELIC_DIR)/include
+
+LDFLAGS = -L$(RELIC_DIR)/lib
+LIBS = -lrelic_s -lgmp -lm
 
 
 SRC = $(shell find src -name "*.c") main.c
@@ -17,7 +22,7 @@ all: $(TARGET)
 
 
 $(TARGET): $(OBJ)
-	$(CC) $(OBJ) -o $(TARGET) $(LIBS)
+	$(CC) $(OBJ) -o $(TARGET) $(LDFLAGS) $(LIBS)
 
 
 build/%.o: src/%.c

@@ -27,6 +27,7 @@ void init_params(public_params_t *params, int l, int mode){
 
     g1_rand(params->u0);
 
+
     /*
      * hs doit exister dans les deux modes
      */

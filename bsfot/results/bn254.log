@@ -1,0 +1,28 @@
+Mode : Classic OT
+
+-- Curve BN-P254:
+
+[OK] RELIC initialisé
+[OK] Paramètres publics générés -> [MESSAGE_LENGTH : 2048 bits]
+[OK] Clés OT classiques écrites dans outputs/classic_ot_keys.bin
+[OK] Requête OT classique lue
+[OK] Phase OT terminée
+[OK] Clé secrète et publique du signer générées
+[OK] Réponse signer OT classique écrite
+[OK] Réponse du signer lue par l'utilisateur
+[OK] Signature finale calculée par l'utilisateur
+[OK] Signature classique écrite
+
+[--- Signature Valide ---]
+
+----- Benchmark -----
+Params      : 186.374 ms
+OT          : 331.151 ms
+KeyGen      : 0.188 ms
+Signer      : 497.942 ms
+Signature   : 124.533 ms
+Verify      : 1.248 ms
+---------------------
+Crypto      : 1141.436 ms
+Total       : 1190.640 ms
+---------------------

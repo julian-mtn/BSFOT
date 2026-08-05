@@ -1,35 +1,62 @@
 ## Compilation & Exécution
 
-Compiler le projet :
-```bash
-make
-```
+Le projet peut être compilé et exécuté de deux manières selon l'utilisation voulu.
 
-Exécuter le code :
-```bash
-./main <mode>
-```
+| Commande | Description |
+|----------|-------------|
+| `make` | Compile le projet avec la courbe RELIC sélectionnée (`bn254` par défaut). |
+| `make CURVE=<courbe>` | Compile le projet avec une autre installation de RELIC (ex. `bls381`, `kss18-638`). |
+| `./main <mode>` | Exécute le protocole pour le mode choisi. |
+| `sudo ./run_benchmarks.sh <courbe1> [<courbe2> ...]` | Installe automatiquement les courbes RELIC demandées si elles ne sont pas déjà présentes, compile le projet pour chacune d'elles, exécute le protocole et enregistre les résultats dans le dossier `results/`. |
+
+### Exécution du protocole
+
+Le programme implémente un protocole de **Blind Signature** basé sur les signatures de Waters. Selon le mode choisi, l'échange entre l'utilisateur et le signer utilise soit un **Classic Oblivious Transfer**, soit un **Dual-Mode Oblivious Transfer**.
 
 Modes disponibles :
 
-| Mode | Protocole | Description |
-|------|-----------|-------------|
-| 0 | Classic OT | Oblivious Transfer classique basé sur ElGamal |
-| 1 | Dual-Mode OT | Oblivious Transfer utilisant une construction Dual-Mode |
+| Mode | Protocole |
+|------|-----------|
+| `0` | Classic OT |
+| `1` | Dual-Mode OT |
 
 Exemples :
 
 ```bash
+make
 ./main 0
 ```
 
-Exécute le protocole Classic OT.
-
 ```bash
+make CURVE=bls381
 ./main 1
 ```
 
-Exécute le protocole Dual-Mode OT.
+### Benchmarks automatiques
+
+Le script `run_benchmarks.sh` permet d'exécuter automatiquement le protocole sur une ou plusieurs courbes RELIC.
+
+Pour chaque courbe passée en paramètre, le script :
+
+1. vérifie si la bibliothèque RELIC correspondante est installée 
+2. installe automatiquement la courbe si nécessaire 
+3. compile le projet avec cette courbe 
+4. exécute le protocole 
+5. enregistre les mesures de performances dans le dossier `results/`.
+
+Exemple :
+
+```bash
+sudo ./run_benchmarks.sh bn254 bls381 kss18-638
+```
+
+Les fichiers de résultats sont ensuite disponibles dans le dossier :
+
+```text
+results/
+```
+
+### Nettoyage
 
 Supprimer les fichiers générés :
 
@@ -39,44 +66,55 @@ make clean
 
 ## Structure générale du projet
 
-```text
 bsfot/
-├── build/                      # Fichiers objets générés
-├── outputs/                    # Fichiers échangés lors des communications
-│   ├── ot_keys.bin             # Clés OT générées par l'utilisateur
-│   ├── signer_response.bin     # Réponse du signer
-│   └── signature.bin           # Signature finale
+├── build/                          # Fichiers objets générés
+├── outputs/                        # Fichiers échangés lors des communications
+│   ├── classic_ot_keys.bin         # Clés OT générées par l'utilisateur (Classic OT)
+│   ├── classic_signer_response.bin # Réponse du signer (Classic OT)
+│   ├── classic_signature.bin       # Signature finale (Classic OT)
+│   ├── dualmod_ot_keys.bin         # Clés OT générées par l'utilisateur (Dual-Mode OT)
+│   ├── dualmod_signer_response.bin # Réponse du signer (Dual-Mode OT)
+│   └── dualmod_signature.bin       # Signature finale (Dual-Mode OT)
 │
-├── main.c                      # main
-├── makefile                    # makefile
+├── results/                        # Résultats des benchmarks
+│   ├── *.log                       # Temps d'exécution par courbe
+│   └── install_logs/               # Logs de RELIC
 │
-├── include/                    
-│   ├── benchmark.h             # Mesures de performances
-│   ├── config.h                # Constantes globales
-│   ├── io.h                    # Lecture / écriture des données
-│   ├── keys.h                  # Génération des clés
-│   ├── message.h               # Génération des messages
-│   ├── params.h                # Paramètres publics
-│   ├── timer.h                 # Chrono
-│   ├── run.h                   # Pipeline du protocole
-│   ├── signer.h                # Fonctions du signer
-│   ├── user.h                  # Fonctions de user
-│   ├── waters.h                # Fonction de hachage de Waters
-│   └── verifier.h              # Vérification des signatures
+├── main.c                          # main
+├── makefile                        # makefile
+├── run_benchmarks.sh               # Compilation et benchmarks multi-courbes
+├── compile_commands.json           # Base de compilation 
 │
-└── src/                        
-    ├── benchmark.c             
-    ├── io.c                    
-    ├── keys.c                  
-    ├── message.c               
-    ├── params.c                
-    ├── timer.c                 
-    ├── run.c                   
-    ├── signer.c                
-    ├── user.c                  
-    ├── waters.c                
-    └── verifier.c              
-```
+├── include/
+│   ├── benchmark.h                 # Mesures de performances
+│   ├── config.h                    # Constantes globales
+│   ├── io.h                        # Lecture / écriture des données
+│   ├── keys.h                      # Génération des clés
+│   ├── message.h                   # Génération des messages
+│   ├── params.h                    # Paramètres publics
+│   ├── timer.h                     # Chrono
+│   ├── run.h                       # Pipeline du protocole
+│   ├── signer.h                    # Fonctions du signer (Classic OT)
+│   ├── signer_dualmode.h           # Fonctions du signer (Dual-Mode OT)
+│   ├── user.h                      # Fonctions de l'utilisateur (Classic OT)
+│   ├── user_dualmode.h             # Fonctions de l'utilisateur (Dual-Mode OT)
+│   ├── waters.h                    # Fonction de hachage de Waters
+│   └── verifier.h                  # Vérification des signatures
+│
+└── src/
+    ├── benchmark.c
+    ├── io.c
+    ├── keys.c
+    ├── message.c
+    ├── params.c
+    ├── run.c
+    ├── signer.c
+    ├── signer_dualmode.c
+    ├── timer.c
+    ├── user.c
+    ├── user_dualmode.c
+    ├── verifier.c
+    └── waters.c
 
 ## Étapes de génération de la signature
 
