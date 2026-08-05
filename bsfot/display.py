@@ -62,6 +62,14 @@ def load_results():
 
 def plot_breakdown(results):
 
+    #trie croissant totaux
+    results = dict(
+        sorted(
+            results.items(),
+            key=lambda x: x[1].get("Total", float("inf"))
+        )
+    )
+
     curves = list(results.keys())
 
     bottom = [0] * len(curves)
