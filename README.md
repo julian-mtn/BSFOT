@@ -1,7 +1,5 @@
 # BSFOT (Blind Signatures from Oblivious Transfer)
 
-## Derniers Benchmark
-
 ![Benchmark](bsfot/results/images/benchmark.png)
 
 ## Compilation & Exécution
