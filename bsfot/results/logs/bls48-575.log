@@ -18,13 +18,13 @@ Mode : Classic OT
 ----- Benchmark -----
 Message     : 2048 bits
 ---------------------
-Params      : 1119.218 ms
-OT          : 1616.642 ms
-KeyGen      : 4.117 ms
-Signer      : 2698.497 ms
-Signature   : 735.395 ms
-Verify      : 45.246 ms
+Params      : 1226.182 ms
+OT          : 1747.990 ms
+KeyGen      : 3.826 ms
+Signer      : 2959.837 ms
+Signature   : 729.454 ms
+Verify      : 41.883 ms
 ---------------------
-Crypto      : 6219.115 ms
-Total       : 6536.638 ms
+Crypto      : 6709.172 ms
+Total       : 7047.263 ms
 ---------------------

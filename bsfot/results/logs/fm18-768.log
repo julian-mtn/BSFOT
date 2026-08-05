@@ -1,6 +1,6 @@
 Mode : Classic OT
 
--- Curve K18-P354:
+-- Curve FM18-P768:
 
 [OK] RELIC initialisé
 [OK] Paramètres publics générés
@@ -18,13 +18,13 @@ Mode : Classic OT
 ----- Benchmark -----
 Message     : 2048 bits
 ---------------------
-Params      : 393.653 ms
-OT          : 636.053 ms
-KeyGen      : 0.635 ms
-Signer      : 897.631 ms
-Signature   : 215.918 ms
-Verify      : 6.727 ms
+Params      : 2780.057 ms
+OT          : 4416.661 ms
+KeyGen      : 3.057 ms
+Signer      : 6335.509 ms
+Signature   : 1524.202 ms
+Verify      : 36.912 ms
 ---------------------
-Crypto      : 2150.618 ms
-Total       : 2283.180 ms
+Crypto      : 15096.398 ms
+Total       : 16463.113 ms
 ---------------------
