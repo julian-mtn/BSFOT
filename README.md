@@ -2,7 +2,6 @@
 
 ![Benchmark](bsfot/results/images/benchmark.png)
 
-
 ## Compilation & Exécution
 
 Le projet peut être compilé et exécuté de deux manières :
@@ -22,17 +21,13 @@ Exemple :
 bn254
 bls12-381
 kss18-638
+...
 ```
-
 Chaque courbe correspond directement au nom du preset RELIC utilisé lors de l'installation.
 
+## Mode d'exécution
 
-## Exécution du protocole
-
-Le programme implémente un protocole de **Blind Signature** basé sur les signatures de Waters.
-
-Le protocole simule l'échange entre un utilisateur et un signer. Selon le mode choisi, la génération de la signature utilise soit un **Classic Oblivious Transfer**, soit un **Dual-Mode Oblivious Transfer**.
-
+Les modes correspondent à différentes versions de la phase OT (Oblivious Tranfer).
 Modes disponibles :
 
 | Mode | Protocole |
@@ -46,17 +41,13 @@ Exemples :
 make
 ./main 0
 ```
-
 Exécute le protocole avec Classic OT.
-
 
 ```bash
 make CURVE=bls12-381
 ./main 1
 ```
-
 Exécute le protocole avec Dual-Mode OT sur la courbe BLS12-381.
-
 
 ## Benchmarks automatiques
 
@@ -69,30 +60,26 @@ curves.txt
 ```
 
 Pour chaque courbe, le script :
-
 1. Vérifie si l'installation RELIC correspondante existe.
 2. Installe automatiquement la courbe si nécessaire dans `/opt/`.
 3. Compile le projet avec cette courbe.
 4. Exécute le protocole.
 5. Enregistre les temps d'exécution.
-6. Génère automatiquement des graphiques de comparaison.
+6. Génère automatiquement un graphiques de comparaison.
 
 Lancement :
-
 ```bash
 ./run_benchmarks.sh
 ```
 
-Le script demande les droits administrateur uniquement lorsqu'une installation RELIC dans `/opt/` est nécessaire.
-
-Les résultats sont organisés dans :
+Le script demande les droits administrateur (sudo) lorsqu'une installation RELIC est nécessaire.
+Les résultats sont rangés dans :
 
 ```text
 results/
 ├── logs/        # Logs d'exécution, compilation et installation RELIC
 └── images/      # Graphiques générés automatiquement
 ```
-
 
 ## Nettoyage
 
@@ -101,7 +88,6 @@ Supprimer les fichiers générés par la compilation :
 ```bash
 make clean
 ```
-
 
 ## Structure générale du projet
 
@@ -164,7 +150,6 @@ bsfot/
     ├── verifier.c
     └── waters.c
 ```
-
 
 ## Étapes de génération de la signature
 
