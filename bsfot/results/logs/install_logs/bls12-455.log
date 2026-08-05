@@ -1,0 +1,1529 @@
+-- The C compiler identification is GNU 13.3.0
+-- The CXX compiler identification is GNU 13.3.0
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/cc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/c++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+
+-- Configuring RELIC 0.7.0...
+
+-- Available switches (default = CHECK, VERBS, DOCUM):
+
+   DEBUG=[off|on] Build with debugging support.
+   PROFL=[off|on] Build with profiling support.
+   CHECK=[off|on] Build with error-checking support.
+   VERBS=[off|on] Build with detailed error messages.
+   OVERH=[off|on] Build with overhead estimation.
+   DOCUM=[off|on] Build documentation.
+   STRIP=[off|on] Build only selected algorithms.
+   QUIET=[off|on] Build with printing disabled.
+   COLOR=[off|on] Build with colored output.
+   BIGED=[off|on] Build with big-endian support.
+   SHLIB=[off|on] Build shared library.
+   STLIB=[off|on] Build static library.
+   STBIN=[off|on] Build static binaries.
+   AMALG=[off|on] Build amalgamation for better performance.
+   AUSAN=[off|on] Build with ASan and UBSan (gcc/clang only).
+
+-- Number of times each test or benchmark is ran (default = 50, 1000):
+
+   TESTS=n        If n > 0, build automated tests and run them n times.
+   BENCH=n        If n > 0, build automated benchmarks and run them n * n times.
+
+-- Number of available processor cores (default = 1):
+
+   CORES=n        If n > 1, enable multithreading support.
+
+-- Available modules (default = ALL)
+
+   WITH=BN       Multiple precision arithmetic.
+   WITH=DV       Temporary double-precision digit vectors.
+   WITH=FP       Prime field arithmetic.
+   WITH=FPX      Prime extension field arithmetic.
+   WITH=FB       Binary field arithmetic.
+   WITH=EP       Elliptic curves over prime fields.
+   WITH=EPX      Elliptic curves over extensions of prime fields.
+   WITH=EB       Elliptic curves over binary fields.
+   WITH=ED       Elliptic Edwards curves over prime fields.
+   WTTH=EC       Elliptic curve cryptography.
+   WITH=PB       Pairings over binary elliptic curves.
+   WITH=PP       Pairings over prime elliptic curves.
+   WTTH=PC       Pairing-based cryptography.
+   WITH=BC       Block ciphers (symmetric encryption).
+   WITH=MD       Message digests (hash functions).
+   WITH=CP       Cryptographic protocols.
+   WITH=MPC      Multi-party computation primitives.
+   WITH=ALL      All of the above.
+   Note: the programmer is responsible for not using unselected modules.
+
+-- Available arithmetic backends (default = easy):
+
+   ARITH=easy     Easy-to-understand and portable, but slow backend.
+   ARITH=fiat     Backend based on code generated from Fiat-Crypto.
+   ARITH=gmp      Backend based on GNU Multiple Precision library.
+
+   ARITH=gmp-sec  Same as above, but using constant-time code.
+
+-- Available memory-allocation policies (default = AUTO):
+
+   ALLOC=AUTO     All memory is automatically allocated.
+   ALLOC=DYNAMIC  All memory is allocated dynamically on demand.
+
+-- Supported operating systems (default = LINUX):
+
+   OPSYS=         Undefined/No specific operating system.
+   OPSYS=LINUX    GNU/Linux operating system.
+   OPSYS=FREEBSD  FreeBSD operating system.
+   OPSYS=NETBSD   NetBSD operating system.
+   OPSYS=MACOSX   Mac OS X operating system.
+   OPSYS=WINDOWS  Windows operating system.
+   OPSYS=DROID    Android operating system.
+   OPSYS=DUINO    Arduino platform.
+
+-- Supported multithreading APIs (default = UNDEF):
+
+   MULTI=         No multithreading support.
+   MULTI=OPENMP   Open Multi-Processing.
+   MULTI=PTHREAD  POSIX threads.
+
+-- Supported timers (default = HREAL):
+
+   TIMER=         No timer.
+   TIMER=HREAL    GNU/Linux realtime high-resolution timer.
+   TIMER=HPROC    GNU/Linux per-process high-resolution timer.
+   TIMER=HTHRD    GNU/Linux per-thread high-resolution timer.
+   TIMER=ANSI     ANSI-compatible timer.
+   TIMER=POSIX    POSIX-compatible timer.
+   TIMER=CYCLE    Cycle-counting timer. (architecture-dependant)
+   TIMER=PERF     GNU/Linux performance monitoring framework.
+
+-- Prefix to identify this build of the library (default = ""):
+
+   LABEL=relic
+
+-- Available switches (default = CHECK, VERBS, DOCUM):
+
+   RLC_DEPTH=w    Width w in [2,8] of table for fixed exponentiation.
+   RLC_WIDTH=w    Width w in [2,6] of table for exponentiation.
+
+-- Available architectures (default = X64):
+
+   ARCH=          No specific architecture (disable some features).
+   ARCH=AVR       Atmel AVR ATMega128 8-bit architecture.
+   ARCH=MSP       TI MSP430 16-bit architecture.
+   ARCH=ARM       ARM 32-bit architecture.
+   ARCH=A64       ARM 64-bit architecture.
+   ARCH=X86       Intel x86-compatible 32-bit architecture.
+   ARCH=X64       AMD x86_64-compatible 64-bit architecture.
+
+-- Available word sizes (default = 64):
+
+   WSIZE=8        Build a 8-bit library.
+   WSIZE=16       Build a 16-bit library.
+   WSIZE=32       Build a 32-bit library.
+   WSIZE=64       Build a 64-bit library.
+
+-- Byte boundary to align digit vectors (default = 1):
+
+   ALIGN=1        Do not align digit vectors.
+   ALIGN=2        Align digit vectors into 16-bit boundaries.
+   ALIGN=8        Align digit vectors into 64-bit boundaries.
+   ALIGN=16       Align digit vectors into 128-bit boundaries.
+
+-- Looking for include file execinfo.h
+-- Looking for include file execinfo.h - found
+-- Looking for backtrace
+-- Looking for backtrace - found
+-- Looking for backtrace_symbols
+-- Looking for backtrace_symbols - found
+-- Multiple precision arithmetic configuration (BN module):
+
+   ** Options for the multiple precision module (default = 1024,DOUBLE,0):
+
+      BN_PRECI=n        The base precision in bits. Let w be n in words.
+      BN_MAGNI=DOUBLE   A multiple precision integer can store 2w words.
+      BN_MAGNI=CARRY    A multiple precision integer can store w+1 words.
+      BN_MAGNI=SINGLE   A multiple precision integer can store w words.
+      BN_KARAT=n        The number of Karatsuba steps.
+
+   ** Available multiple precision arithmetic methods (default = COMBA;COMBA;MONTY;SLIDE;BASIC;BASIC):
+
+      Integer multiplication:
+      BN_METHD=BASIC    Schoolbook multiplication.
+      BN_METHD=COMBA    Comba multiplication.
+
+      Integer squaring:
+      BN_METHD=BASIC    Schoolbook squaring.
+      BN_METHD=COMBA    Comba squaring.
+      BN_METHD=MULTP    Reuse multiplication for squaring.
+
+      Modular reduction:
+      BN_METHD=BASIC    Division-based modular reduction.
+      BN_METHD=BARRT    Barrett modular reduction.
+      BN_METHD=MONTY    Montgomery modular reduction.
+      BN_METHD=RADIX    Diminished radix modular reduction.
+
+      Modular exponentiation:
+      BN_METHD=BASIC    Binary modular exponentiation.
+      BN_METHD=MONTY    Montgomery powering ladder.
+      BN_METHD=SLIDE    Sliding window modular exponentiation.
+
+      Greatest Common Divisor:
+      BN_METHD=BASIC    Euclid's standard GCD algorithm.
+      BN_METHD=BINAR    Binary GCD algorithm.
+      BN_METHD=LEHME    Lehmer's fast GCD algorithm.
+
+      Prime generation:
+      BN_METHD=BASIC    Basic prime generation.
+      BN_METHD=SAFEP    Safe prime generation.
+      BN_METHD=STRON    Strong prime generation.
+
+-- Prime field arithmetic configuration (FP module):
+
+   ** Arithmetic precision of the prime field module (default = 256,0,off,off):
+
+      FP_PRIME=n        The prime modulus size in bits.
+      FP_KARAT=n        The number of Karatsuba levels.
+      FP_PMERS=[off|on] Prefer Pseudo-Mersenne primes over random primes.
+      FP_QNRES=[off|on] Use -1 as quadratic non-residue (make sure that p = 3 mod 8).
+   ** Available prime field arithmetic methods (default = BASIC;COMBA;COMBA;MONTY;JMPDS;JMPDS;SLIDE):
+      Field addition:
+      FP_METHD=BASIC    Schoolbook addition.
+      FP_METHD=INTEG    Integrated modular addition.
+
+      Field multiplication:
+      FP_METHD=BASIC    Schoolbook multiplication.
+      FP_METHD=INTEG    Integrated modular multiplication.
+      FP_METHD=COMBA    Comba multiplication.
+
+      Field squaring:
+      FP_METHD=BASIC    Schoolbook squaring.
+      FP_METHD=INTEG    Integrated modular squaring.
+      FP_METHD=COMBA    Comba squaring.
+      FP_METHD=MULTP    Reuse multiplication for squaring.
+
+      Modular reduction:
+      FP_METHD=BASIC    Division-based reduction.
+      FP_METHD=QUICK    Fast reduction modulo special form prime (2^t - c, c > 0).
+      FP_METHD=MONTY    Montgomery modular reduction.
+
+      Field inversion:
+      FP_METHD=BASIC    Inversion by Fermat's Little Theorem.
+      FP_METHD=BINAR    Binary Inversion algorithm.
+      FP_METHD=MONTY    Montgomery inversion.
+      FP_METHD=EXGCD    Inversion by the Extended Euclidean algorithm.
+      FP_METHD=DIVST    Constant-time inversion by division steps.
+      FP_METHD=LOWER    Pass inversion to the lower level.
+
+      Legendre symbol:
+      FP_METHD=BASIC    Computation by Fermat's Little Theorem.
+      FP_METHD=DIVST    Constant-time method by division steps.
+      FP_METHD=JMPDS    Constant-time method by jump division steps.
+      FP_METHD=LOWER    Pass call to the lower level.
+
+      Field exponentiation:
+      FP_METHD=BASIC    Binary exponentiation.
+      FP_METHD=SLIDE    Sliding window exponentiation.
+      FP_METHD=MONTY    Constant-time Montgomery powering ladder.
+
+-- Prime extension field arithmetic configuration (FPX module):
+
+   ** Available bilinear pairing methods (default = BASIC;BASIC;BASIC):
+      Quadratic extension arithmetic:
+      FPX_METHD=BASIC    Basic quadratic extension field arithmetic.
+      FPX_METHD=INTEG    Quadratic extension field arithmetic with embedded modular reduction.
+
+      Cubic extension arithmetic:
+      FPX_METHD=BASIC    Basic cubic extension field arithmetic.
+      FPX_METHD=INTEG    Cubic extension field arithmetic with embedded modular reduction.
+
+      Extension field arithmetic:
+      FPX_METHD=BASIC    Basic extension field arithmetic.
+      FPX_METHD=LAZYR    Lazy-reduced extension field arithmetic.
+
+-- Binary field arithmetic configuration (FB module):
+
+   ** Options for the binary elliptic curve module (default = 283,0,on,on,on):
+
+      FB_POLYN=n        The irreducible polynomial size in bits.
+      FB_KARAT=n        The number of Karatsuba levels.
+      FB_TRINO=[off|on] Prefer trinomials.
+      FB_SQRTF=[off|on] Prefer square-root friendly polynomials.
+      FB_PRECO=[off|on] Precompute multiplication table for sqrt(z).
+      RLC_WIDTH=w        Width w in [2,6] of window processing for exponentiation methods.
+
+   ** Available binary field arithmetic methods (default = LODAH;QUICK;QUICK;BASIC;QUICK;QUICK;EXGCD;SLIDE;QUICK):
+
+      Field multiplication:
+      FB_METHD=BASIC    Right-to-left shift-and-add multiplication.
+      FB_METHD=INTEG    Integrated modular multiplication.
+      FB_METHD=LODAH    L�pez-Dahab comb multiplication with window of width 4.
+
+      Field squaring:
+      FB_METHD=BASIC    Bit manipulation squaring.
+      FB_METHD=INTEG    Integrated modular squaring.
+      FB_METHD=QUICK    Table-based squaring.
+
+      Modular reduction:
+      FB_METHD=BASIC    Shift-and-add modular reduction.
+      FB_METHD=QUICK    Fast reduction modulo a trinomial or pentanomial.
+
+      Field square root:
+      FB_METHD=BASIC    Square root by repeated squaring.
+      FB_METHD=QUICK    Fast square root extraction.
+
+      Trace computation:
+      FB_METHD=BASIC    Trace computation by repeated squaring.
+      FB_METHD=QUICK    Fast trace computation.
+
+      Quadratic equation solver:
+      FB_METHD=BASIC    Solve a quadratic equation by half-trace computation.
+      FB_METHD=QUICK    Fast solving with precomputed half-traces.
+
+      Field inversion:
+      FB_METHD=BASIC    Inversion by Fermat's Little Theorem.
+      FB_METHD=BINAR    Binary Inversion algorithm.
+      FB_METHD=ALMOS    Inversion by the Amost inverse algorithm.
+      FB_METHD=EXGCD    Inversion by the Extended Euclidean algorithm.
+      FB_METHD=ITOHT    Inversion by Itoh-Tsuji.
+      FB_METHD=CTAIA    Constant-time almost inversion algorithm.
+      FB_METHD=BRUCH    Hardware-friendly inversion by Brunner et al.
+      FB_METHD=LOWER    Pass inversion to the lower level.
+
+      Field exponentiation:
+      FB_METHD=BASIC    Binary exponentiation.
+      FB_METHD=SLIDE    Sliding window exponentiation.
+      FB_METHD=MONTY    Constant-time Montgomery powering ladder.
+
+      Iterated squaring/square-root:
+      FB_METHD=BASIC    Iterated squaring/square-root by consecutive squaring/square-root.
+      FB_METHD=QUICK    Iterated squaring/square-root by table-based method.
+
+-- Prime elliptic curve arithmetic configuration (EP module):
+
+   ** Options for the prime elliptic curve module (default = all on):
+
+      EP_PLAIN=[off|on] Support for ordinary curves without endomorphisms.
+      EP_SUPER=[off|on] Support for supersingular curves.
+      EP_ENDOM=[off|on] Support for ordinary curves with endomorphisms.
+      EP_MIXED=[off|on] Use mixed coordinates.
+      EP_CTMAP=[off|on] Use contant-time SSWU and isogeny map for hashing.
+
+      EP_PRECO=[off|on] Build precomputation table for generator.
+      RLC_DEPTH=w        Width w in [2,8] of precomputation table for fixed point methods.
+   ** Available prime elliptic curve methods (default = PROJC;LWNAF;COMBS;INTER;SSWUM):
+
+      Point representation:
+      EP_METHD=BASIC    Affine coordinates.
+      EP_METHD=PROJC    Homogeneous projective coordinates (complete formula).
+      EP_METHD=JACOB    Jacobian projective coordinates.
+
+      Variable-base scalar multiplication:
+      EB_METHD=BASIC    Binary double-and-add method.
+      EP_METHD=SLIDE    Sliding window method.
+      EP_METHD=MONTY    Montgomery ladder method.
+      EP_METHD=LWNAF    Left-to-right window NAF method.
+      EP_METHD=LWREG    Left-to-right regular recoding method (GLV for curves with endomorphisms).
+
+      Fixed-base scalar multiplication:
+      EP_METHD=BASIC    Binary method for fixed point multiplication.
+      EP_METHD=COMBS    Single-table Comb method for fixed point multiplication.
+      EP_METHD=COMBD    Double-table Comb method for fixed point multiplication.
+      EP_METHD=LWNAF    Left-to-right window NAF method (GLV for curves with endomorphisms).
+
+      Variable-base simultaneous scalar multiplication:
+      EP_METHD=BASIC    Multiplication-and-addition simultaneous multiplication.
+      EP_METHD=TRICK    Shamir's trick for simultaneous multiplication.
+      EP_METHD=INTER    Interleaving of window NAFs (GLV for Koblitz curves).
+      EP_METHD=JOINT    Joint sparse form.
+
+      Hash to point on the elliptic curve:
+      EP_METHD=BASIC    Hash to x-coordinate and increment.
+      EP_METHD=SSWUM    Simplified Shallue-van de Woestijne-Ulas method.
+      EP_METHD=SWIFT    SwiftEC hashing method.
+
+-- Binary elliptic curve arithmetic configuration (EB module):
+
+   ** Options for the binary elliptic curve module (default = on, w = 4):
+
+      EB_PLAIN=[off|on] Support for ordinary curves without endomorphisms.
+      EB_KBLTZ=[off|on] Support for Koblitz anomalous binary curves.
+      EB_MIXED=[off|on] Use mixed coordinates.
+      EB_PRECO=[off|on] Build precomputation table for generator.
+   ** Available binary elliptic curve methods (default = PROJC;LWNAF;COMBS;INTER):
+
+      Point representation:
+      EB_METHD=BASIC    Affine coordinates.
+      EB_METHD=PROJC    Projective coordinates (L�pez-Dahab for ordinary curves).
+
+      Variable-base scalar multiplication:
+      EB_METHD=BASIC    Binary double-and-add method.
+      EB_METHD=LODAH    Lopez-Dahab constant-time point multiplication.
+      EB_METHD=LWNAF    Left-to-right window (T)NAF method.
+      EB_METHD=RWNAF    Right-to-left window (T)NAF method.
+      EB_METHD=HALVE    Halving method.
+
+      Fixed-base scalar multiplication:
+      EB_METHD=BASIC    Binary method for fixed point multiplication.
+      EB_METHD=COMBS    Single-table Comb method for fixed point multiplication.
+      EB_METHD=COMBD    Double-table Comb method for fixed point multiplication.
+      EB_METHD=LWNAF    Left-to-right window (T)NAF method.
+
+      Variable-base simultaneous scalar multiplication:
+      EB_METHD=BASIC    Multiplication-and-addition simultaneous multiplication.
+      EB_METHD=TRICK    Shamir's trick for simultaneous multiplication.
+      EB_METHD=INTER    Interleaving of window (T)NAFs.
+      EB_METHD=JOINT    Joint sparse form.
+
+-- Elliptic Edwards curve over prime fields arithmetic configuration (ED module):
+
+   ** Options for the prime elliptic Edwards curve module (default = all on):
+      ED_PRECO=[off|on] Build precomputation table for generator.
+      RLC_DEPTH=w        Width w in [2,6] of precomputation table for fixed point methods.
+   ** Available prime elliptic Edwards curve methods (default = PROJC;LWNAF;COMBS;INTER):
+      ED_METHD=BASIC    Affine coordinates.
+      EP_METHD=PROJC  	 Simple projective twisted Edwards coordinates.
+      EP_METHD=EXTND 	 Extended projective twisted Edwards coordinates.
+
+      *** variable-base multiplication method ***
+      ED_METHD=BASIC    Binary method.
+      ED_METHD=SLIDE    Sliding window method.
+      ED_METHD=MONTY    Montgomery ladder method.
+      ED_METHD=LWNAF    Left-to-right window NAF method.
+      EP_METHD=LWREG    Left-to-right regular recoding method (GLV for curves with endomorphisms).
+
+      *** fixed-base multiplication method ***
+      ED_METHD=BASIC    Binary method for fixed point multiplication.
+      ED_METHD=COMBS    Single-table Comb method for fixed point multiplication.
+      ED_METHD=COMBD    Double-table Comb method for fixed point multiplication.
+      ED_METHD=LWNAF    Left-to-right window NAF method.
+
+      *** variable-base simultaneous multiplication method ***
+      ED_METHD=BASIC    Multiplication-and-addition simultaneous multiplication.
+      ED_METHD=TRICK    Shamir's trick for simultaneous multiplication.
+      ED_METHD=INTER    Interleaving of window NAFs (GLV for Koblitz curves).
+      ED_METHD=JOINT    Joint sparse form.
+
+      Note: these methods must be given in order. Ex: ED_METHD="EXTND;LWNAF;COMBD;TRICK"
+
+-- Elliptic curve cryptography configuration (EC module):
+
+   ** Options for the binary elliptic curve module (default = on):
+
+      EC_ENDOM=[off|on] Prefer (prime or binary) curves with endomorphisms.
+
+   ** Available elliptic curve methods (default = PRIME):
+
+      EC_METHD=PRIME    Use prime curves.
+      EC_METHD=CHAR2    Use binary curves.
+      EC_METHD=EDDIE    Use prime Edwards curves.
+
+-- Bilinear pairings arithmetic configuration (PP module):
+
+   ** Available bilinear pairing methods (default = BASIC;OATEP):
+
+      Extension field arithmetic:
+      PP_METHD=BASIC    Basic extension field arithmetic.
+      PP_METHD=LAZYR    Lazy reduced extension field arithmetic.
+
+      Pairing computation:
+      PP_METHD=TATEP    Tate pairing.
+      PP_METHD=WEILP    Weil pairing.
+      PP_METHD=OATEP    Optimal ate pairing.
+
+-- Message digest configuration (MD module):
+
+   ** Available hash functions (default = SH256):
+
+      MD_METHD=SH224        SHA-224 hash function.
+      MD_METHD=SH256        SHA-256 hash function.
+      MD_METHD=SH384        SHA-384 hash function.
+      MD_METHD=SH512        SHA-512 hash function.
+      MD_METHD=B2S160       BLAKE2s-160 hash function.
+      MD_METHD=B2S256       BLAKE2s-256 hash function.
+
+-- Cryptographic protocols configuration (CP module):
+
+   ** Options for the cryptographic protocols module (default = on, PKCS2):
+
+      CP_CRT=[off|on] Support for faster CRT-based exponentiation in factoring-based cryptosystems.
+
+      CP_RSAPD=BASIC    RSA with basic padding.
+      CP_RSAPD=PKCS1    RSA with PKCS#1 v1.5 padding.
+      CP_RSAPD=PKCS2    RSA with PKCS#1 v2.1 padding.
+
+-- Available pseudo-random number generators (default = HASHD):
+
+   RAND=HASHD     Use the HASH-DRBG generator. (recommended)
+   RAND=RDRND     Use Intel RdRand instruction directly.
+   RAND=UDEV      Use the operating system underlying generator.
+   RAND=CALL      Override the generator with a callback.
+
+-- Available random number generator seeders (default = UDEV):
+
+   SEED=          Use a zero seed. (horribly insecure!)
+   SEED=LIBC      Use rand()/random() functions. (insecure!)
+   SEED=RDRND     Use Intel RdRand instruction directly.
+   SEED=UDEV      Use non-blocking /dev/urandom. (recommended)
+   SEED=WCGR      Use Windows' CryptGenRandom. (recommended)
+
+-- Configured operating system: LINUX
+-- Compiler flags:  -Wall   -O3 -funroll-loops -fomit-frame-pointer -finline-small-functions -march=native -mtune=native -Wno-stringop-overflow -Wno-stringop-overread
+-- Linker flags: -L/home/julian/relic/src/low/x64-asm-8l/  -static
+-- Configured /home/julian/relic/include/relic_conf.h.in with backend x64-asm-8l
+-- Configured GMP: -I/usr/include/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu/libgmp.a
+-- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
+-- Configuring done (0.5s)
+-- Generating done (0.1s)
+-- Build files have been written to: /home/julian/relic/build-bls12-455
+
+-- Configuring RELIC 0.7.0...
+
+-- Available switches (default = CHECK, VERBS, DOCUM):
+
+   DEBUG=[off|on] Build with debugging support.
+   PROFL=[off|on] Build with profiling support.
+   CHECK=[off|on] Build with error-checking support.
+   VERBS=[off|on] Build with detailed error messages.
+   OVERH=[off|on] Build with overhead estimation.
+   DOCUM=[off|on] Build documentation.
+   STRIP=[off|on] Build only selected algorithms.
+   QUIET=[off|on] Build with printing disabled.
+   COLOR=[off|on] Build with colored output.
+   BIGED=[off|on] Build with big-endian support.
+   SHLIB=[off|on] Build shared library.
+   STLIB=[off|on] Build static library.
+   STBIN=[off|on] Build static binaries.
+   AMALG=[off|on] Build amalgamation for better performance.
+   AUSAN=[off|on] Build with ASan and UBSan (gcc/clang only).
+
+-- Number of times each test or benchmark is ran (default = 50, 1000):
+
+   TESTS=n        If n > 0, build automated tests and run them n times.
+   BENCH=n        If n > 0, build automated benchmarks and run them n * n times.
+
+-- Number of available processor cores (default = 1):
+
+   CORES=n        If n > 1, enable multithreading support.
+
+-- Available modules (default = ALL)
+
+   WITH=BN       Multiple precision arithmetic.
+   WITH=DV       Temporary double-precision digit vectors.
+   WITH=FP       Prime field arithmetic.
+   WITH=FPX      Prime extension field arithmetic.
+   WITH=FB       Binary field arithmetic.
+   WITH=EP       Elliptic curves over prime fields.
+   WITH=EPX      Elliptic curves over extensions of prime fields.
+   WITH=EB       Elliptic curves over binary fields.
+   WITH=ED       Elliptic Edwards curves over prime fields.
+   WTTH=EC       Elliptic curve cryptography.
+   WITH=PB       Pairings over binary elliptic curves.
+   WITH=PP       Pairings over prime elliptic curves.
+   WTTH=PC       Pairing-based cryptography.
+   WITH=BC       Block ciphers (symmetric encryption).
+   WITH=MD       Message digests (hash functions).
+   WITH=CP       Cryptographic protocols.
+   WITH=MPC      Multi-party computation primitives.
+   WITH=ALL      All of the above.
+   Note: the programmer is responsible for not using unselected modules.
+
+-- Available arithmetic backends (default = easy):
+
+   ARITH=easy     Easy-to-understand and portable, but slow backend.
+   ARITH=fiat     Backend based on code generated from Fiat-Crypto.
+   ARITH=gmp      Backend based on GNU Multiple Precision library.
+
+   ARITH=gmp-sec  Same as above, but using constant-time code.
+
+-- Available memory-allocation policies (default = AUTO):
+
+   ALLOC=AUTO     All memory is automatically allocated.
+   ALLOC=DYNAMIC  All memory is allocated dynamically on demand.
+
+-- Supported operating systems (default = LINUX):
+
+   OPSYS=         Undefined/No specific operating system.
+   OPSYS=LINUX    GNU/Linux operating system.
+   OPSYS=FREEBSD  FreeBSD operating system.
+   OPSYS=NETBSD   NetBSD operating system.
+   OPSYS=MACOSX   Mac OS X operating system.
+   OPSYS=WINDOWS  Windows operating system.
+   OPSYS=DROID    Android operating system.
+   OPSYS=DUINO    Arduino platform.
+
+-- Supported multithreading APIs (default = UNDEF):
+
+   MULTI=         No multithreading support.
+   MULTI=OPENMP   Open Multi-Processing.
+   MULTI=PTHREAD  POSIX threads.
+
+-- Supported timers (default = HREAL):
+
+   TIMER=         No timer.
+   TIMER=HREAL    GNU/Linux realtime high-resolution timer.
+   TIMER=HPROC    GNU/Linux per-process high-resolution timer.
+   TIMER=HTHRD    GNU/Linux per-thread high-resolution timer.
+   TIMER=ANSI     ANSI-compatible timer.
+   TIMER=POSIX    POSIX-compatible timer.
+   TIMER=CYCLE    Cycle-counting timer. (architecture-dependant)
+   TIMER=PERF     GNU/Linux performance monitoring framework.
+
+-- Prefix to identify this build of the library (default = ""):
+
+   LABEL=relic
+
+-- Available switches (default = CHECK, VERBS, DOCUM):
+
+   RLC_DEPTH=w    Width w in [2,8] of table for fixed exponentiation.
+   RLC_WIDTH=w    Width w in [2,6] of table for exponentiation.
+
+-- Available architectures (default = X64):
+
+   ARCH=          No specific architecture (disable some features).
+   ARCH=AVR       Atmel AVR ATMega128 8-bit architecture.
+   ARCH=MSP       TI MSP430 16-bit architecture.
+   ARCH=ARM       ARM 32-bit architecture.
+   ARCH=A64       ARM 64-bit architecture.
+   ARCH=X86       Intel x86-compatible 32-bit architecture.
+   ARCH=X64       AMD x86_64-compatible 64-bit architecture.
+
+-- Available word sizes (default = 64):
+
+   WSIZE=8        Build a 8-bit library.
+   WSIZE=16       Build a 16-bit library.
+   WSIZE=32       Build a 32-bit library.
+   WSIZE=64       Build a 64-bit library.
+
+-- Byte boundary to align digit vectors (default = 1):
+
+   ALIGN=1        Do not align digit vectors.
+   ALIGN=2        Align digit vectors into 16-bit boundaries.
+   ALIGN=8        Align digit vectors into 64-bit boundaries.
+   ALIGN=16       Align digit vectors into 128-bit boundaries.
+
+-- Multiple precision arithmetic configuration (BN module):
+
+   ** Options for the multiple precision module (default = 1024,DOUBLE,0):
+
+      BN_PRECI=n        The base precision in bits. Let w be n in words.
+      BN_MAGNI=DOUBLE   A multiple precision integer can store 2w words.
+      BN_MAGNI=CARRY    A multiple precision integer can store w+1 words.
+      BN_MAGNI=SINGLE   A multiple precision integer can store w words.
+      BN_KARAT=n        The number of Karatsuba steps.
+
+   ** Available multiple precision arithmetic methods (default = COMBA;COMBA;MONTY;SLIDE;BASIC;BASIC):
+
+      Integer multiplication:
+      BN_METHD=BASIC    Schoolbook multiplication.
+      BN_METHD=COMBA    Comba multiplication.
+
+      Integer squaring:
+      BN_METHD=BASIC    Schoolbook squaring.
+      BN_METHD=COMBA    Comba squaring.
+      BN_METHD=MULTP    Reuse multiplication for squaring.
+
+      Modular reduction:
+      BN_METHD=BASIC    Division-based modular reduction.
+      BN_METHD=BARRT    Barrett modular reduction.
+      BN_METHD=MONTY    Montgomery modular reduction.
+      BN_METHD=RADIX    Diminished radix modular reduction.
+
+      Modular exponentiation:
+      BN_METHD=BASIC    Binary modular exponentiation.
+      BN_METHD=MONTY    Montgomery powering ladder.
+      BN_METHD=SLIDE    Sliding window modular exponentiation.
+
+      Greatest Common Divisor:
+      BN_METHD=BASIC    Euclid's standard GCD algorithm.
+      BN_METHD=BINAR    Binary GCD algorithm.
+      BN_METHD=LEHME    Lehmer's fast GCD algorithm.
+
+      Prime generation:
+      BN_METHD=BASIC    Basic prime generation.
+      BN_METHD=SAFEP    Safe prime generation.
+      BN_METHD=STRON    Strong prime generation.
+
+-- Prime field arithmetic configuration (FP module):
+
+   ** Arithmetic precision of the prime field module (default = 256,0,off,off):
+
+      FP_PRIME=n        The prime modulus size in bits.
+      FP_KARAT=n        The number of Karatsuba levels.
+      FP_PMERS=[off|on] Prefer Pseudo-Mersenne primes over random primes.
+      FP_QNRES=[off|on] Use -1 as quadratic non-residue (make sure that p = 3 mod 8).
+   ** Available prime field arithmetic methods (default = BASIC;COMBA;COMBA;MONTY;JMPDS;JMPDS;SLIDE):
+      Field addition:
+      FP_METHD=BASIC    Schoolbook addition.
+      FP_METHD=INTEG    Integrated modular addition.
+
+      Field multiplication:
+      FP_METHD=BASIC    Schoolbook multiplication.
+      FP_METHD=INTEG    Integrated modular multiplication.
+      FP_METHD=COMBA    Comba multiplication.
+
+      Field squaring:
+      FP_METHD=BASIC    Schoolbook squaring.
+      FP_METHD=INTEG    Integrated modular squaring.
+      FP_METHD=COMBA    Comba squaring.
+      FP_METHD=MULTP    Reuse multiplication for squaring.
+
+      Modular reduction:
+      FP_METHD=BASIC    Division-based reduction.
+      FP_METHD=QUICK    Fast reduction modulo special form prime (2^t - c, c > 0).
+      FP_METHD=MONTY    Montgomery modular reduction.
+
+      Field inversion:
+      FP_METHD=BASIC    Inversion by Fermat's Little Theorem.
+      FP_METHD=BINAR    Binary Inversion algorithm.
+      FP_METHD=MONTY    Montgomery inversion.
+      FP_METHD=EXGCD    Inversion by the Extended Euclidean algorithm.
+      FP_METHD=DIVST    Constant-time inversion by division steps.
+      FP_METHD=LOWER    Pass inversion to the lower level.
+
+      Legendre symbol:
+      FP_METHD=BASIC    Computation by Fermat's Little Theorem.
+      FP_METHD=DIVST    Constant-time method by division steps.
+      FP_METHD=JMPDS    Constant-time method by jump division steps.
+      FP_METHD=LOWER    Pass call to the lower level.
+
+      Field exponentiation:
+      FP_METHD=BASIC    Binary exponentiation.
+      FP_METHD=SLIDE    Sliding window exponentiation.
+      FP_METHD=MONTY    Constant-time Montgomery powering ladder.
+
+-- Prime extension field arithmetic configuration (FPX module):
+
+   ** Available bilinear pairing methods (default = BASIC;BASIC;BASIC):
+      Quadratic extension arithmetic:
+      FPX_METHD=BASIC    Basic quadratic extension field arithmetic.
+      FPX_METHD=INTEG    Quadratic extension field arithmetic with embedded modular reduction.
+
+      Cubic extension arithmetic:
+      FPX_METHD=BASIC    Basic cubic extension field arithmetic.
+      FPX_METHD=INTEG    Cubic extension field arithmetic with embedded modular reduction.
+
+      Extension field arithmetic:
+      FPX_METHD=BASIC    Basic extension field arithmetic.
+      FPX_METHD=LAZYR    Lazy-reduced extension field arithmetic.
+
+-- Binary field arithmetic configuration (FB module):
+
+   ** Options for the binary elliptic curve module (default = 283,0,on,on,on):
+
+      FB_POLYN=n        The irreducible polynomial size in bits.
+      FB_KARAT=n        The number of Karatsuba levels.
+      FB_TRINO=[off|on] Prefer trinomials.
+      FB_SQRTF=[off|on] Prefer square-root friendly polynomials.
+      FB_PRECO=[off|on] Precompute multiplication table for sqrt(z).
+      RLC_WIDTH=w        Width w in [2,6] of window processing for exponentiation methods.
+
+   ** Available binary field arithmetic methods (default = LODAH;QUICK;QUICK;BASIC;QUICK;QUICK;EXGCD;SLIDE;QUICK):
+
+      Field multiplication:
+      FB_METHD=BASIC    Right-to-left shift-and-add multiplication.
+      FB_METHD=INTEG    Integrated modular multiplication.
+      FB_METHD=LODAH    L�pez-Dahab comb multiplication with window of width 4.
+
+      Field squaring:
+      FB_METHD=BASIC    Bit manipulation squaring.
+      FB_METHD=INTEG    Integrated modular squaring.
+      FB_METHD=QUICK    Table-based squaring.
+
+      Modular reduction:
+      FB_METHD=BASIC    Shift-and-add modular reduction.
+      FB_METHD=QUICK    Fast reduction modulo a trinomial or pentanomial.
+
+      Field square root:
+      FB_METHD=BASIC    Square root by repeated squaring.
+      FB_METHD=QUICK    Fast square root extraction.
+
+      Trace computation:
+      FB_METHD=BASIC    Trace computation by repeated squaring.
+      FB_METHD=QUICK    Fast trace computation.
+
+      Quadratic equation solver:
+      FB_METHD=BASIC    Solve a quadratic equation by half-trace computation.
+      FB_METHD=QUICK    Fast solving with precomputed half-traces.
+
+      Field inversion:
+      FB_METHD=BASIC    Inversion by Fermat's Little Theorem.
+      FB_METHD=BINAR    Binary Inversion algorithm.
+      FB_METHD=ALMOS    Inversion by the Amost inverse algorithm.
+      FB_METHD=EXGCD    Inversion by the Extended Euclidean algorithm.
+      FB_METHD=ITOHT    Inversion by Itoh-Tsuji.
+      FB_METHD=CTAIA    Constant-time almost inversion algorithm.
+      FB_METHD=BRUCH    Hardware-friendly inversion by Brunner et al.
+      FB_METHD=LOWER    Pass inversion to the lower level.
+
+      Field exponentiation:
+      FB_METHD=BASIC    Binary exponentiation.
+      FB_METHD=SLIDE    Sliding window exponentiation.
+      FB_METHD=MONTY    Constant-time Montgomery powering ladder.
+
+      Iterated squaring/square-root:
+      FB_METHD=BASIC    Iterated squaring/square-root by consecutive squaring/square-root.
+      FB_METHD=QUICK    Iterated squaring/square-root by table-based method.
+
+-- Prime elliptic curve arithmetic configuration (EP module):
+
+   ** Options for the prime elliptic curve module (default = all on):
+
+      EP_PLAIN=[off|on] Support for ordinary curves without endomorphisms.
+      EP_SUPER=[off|on] Support for supersingular curves.
+      EP_ENDOM=[off|on] Support for ordinary curves with endomorphisms.
+      EP_MIXED=[off|on] Use mixed coordinates.
+      EP_CTMAP=[off|on] Use contant-time SSWU and isogeny map for hashing.
+
+      EP_PRECO=[off|on] Build precomputation table for generator.
+      RLC_DEPTH=w        Width w in [2,8] of precomputation table for fixed point methods.
+   ** Available prime elliptic curve methods (default = PROJC;LWNAF;COMBS;INTER;SSWUM):
+
+      Point representation:
+      EP_METHD=BASIC    Affine coordinates.
+      EP_METHD=PROJC    Homogeneous projective coordinates (complete formula).
+      EP_METHD=JACOB    Jacobian projective coordinates.
+
+      Variable-base scalar multiplication:
+      EB_METHD=BASIC    Binary double-and-add method.
+      EP_METHD=SLIDE    Sliding window method.
+      EP_METHD=MONTY    Montgomery ladder method.
+      EP_METHD=LWNAF    Left-to-right window NAF method.
+      EP_METHD=LWREG    Left-to-right regular recoding method (GLV for curves with endomorphisms).
+
+      Fixed-base scalar multiplication:
+      EP_METHD=BASIC    Binary method for fixed point multiplication.
+      EP_METHD=COMBS    Single-table Comb method for fixed point multiplication.
+      EP_METHD=COMBD    Double-table Comb method for fixed point multiplication.
+      EP_METHD=LWNAF    Left-to-right window NAF method (GLV for curves with endomorphisms).
+
+      Variable-base simultaneous scalar multiplication:
+      EP_METHD=BASIC    Multiplication-and-addition simultaneous multiplication.
+      EP_METHD=TRICK    Shamir's trick for simultaneous multiplication.
+      EP_METHD=INTER    Interleaving of window NAFs (GLV for Koblitz curves).
+      EP_METHD=JOINT    Joint sparse form.
+
+      Hash to point on the elliptic curve:
+      EP_METHD=BASIC    Hash to x-coordinate and increment.
+      EP_METHD=SSWUM    Simplified Shallue-van de Woestijne-Ulas method.
+      EP_METHD=SWIFT    SwiftEC hashing method.
+
+-- Binary elliptic curve arithmetic configuration (EB module):
+
+   ** Options for the binary elliptic curve module (default = on, w = 4):
+
+      EB_PLAIN=[off|on] Support for ordinary curves without endomorphisms.
+      EB_KBLTZ=[off|on] Support for Koblitz anomalous binary curves.
+      EB_MIXED=[off|on] Use mixed coordinates.
+      EB_PRECO=[off|on] Build precomputation table for generator.
+   ** Available binary elliptic curve methods (default = PROJC;LWNAF;COMBS;INTER):
+
+      Point representation:
+      EB_METHD=BASIC    Affine coordinates.
+      EB_METHD=PROJC    Projective coordinates (L�pez-Dahab for ordinary curves).
+
+      Variable-base scalar multiplication:
+      EB_METHD=BASIC    Binary double-and-add method.
+      EB_METHD=LODAH    Lopez-Dahab constant-time point multiplication.
+      EB_METHD=LWNAF    Left-to-right window (T)NAF method.
+      EB_METHD=RWNAF    Right-to-left window (T)NAF method.
+      EB_METHD=HALVE    Halving method.
+
+      Fixed-base scalar multiplication:
+      EB_METHD=BASIC    Binary method for fixed point multiplication.
+      EB_METHD=COMBS    Single-table Comb method for fixed point multiplication.
+      EB_METHD=COMBD    Double-table Comb method for fixed point multiplication.
+      EB_METHD=LWNAF    Left-to-right window (T)NAF method.
+
+      Variable-base simultaneous scalar multiplication:
+      EB_METHD=BASIC    Multiplication-and-addition simultaneous multiplication.
+      EB_METHD=TRICK    Shamir's trick for simultaneous multiplication.
+      EB_METHD=INTER    Interleaving of window (T)NAFs.
+      EB_METHD=JOINT    Joint sparse form.
+
+-- Elliptic Edwards curve over prime fields arithmetic configuration (ED module):
+
+   ** Options for the prime elliptic Edwards curve module (default = all on):
+      ED_PRECO=[off|on] Build precomputation table for generator.
+      RLC_DEPTH=w        Width w in [2,6] of precomputation table for fixed point methods.
+   ** Available prime elliptic Edwards curve methods (default = PROJC;LWNAF;COMBS;INTER):
+      ED_METHD=BASIC    Affine coordinates.
+      EP_METHD=PROJC  	 Simple projective twisted Edwards coordinates.
+      EP_METHD=EXTND 	 Extended projective twisted Edwards coordinates.
+
+      *** variable-base multiplication method ***
+      ED_METHD=BASIC    Binary method.
+      ED_METHD=SLIDE    Sliding window method.
+      ED_METHD=MONTY    Montgomery ladder method.
+      ED_METHD=LWNAF    Left-to-right window NAF method.
+      EP_METHD=LWREG    Left-to-right regular recoding method (GLV for curves with endomorphisms).
+
+      *** fixed-base multiplication method ***
+      ED_METHD=BASIC    Binary method for fixed point multiplication.
+      ED_METHD=COMBS    Single-table Comb method for fixed point multiplication.
+      ED_METHD=COMBD    Double-table Comb method for fixed point multiplication.
+      ED_METHD=LWNAF    Left-to-right window NAF method.
+
+      *** variable-base simultaneous multiplication method ***
+      ED_METHD=BASIC    Multiplication-and-addition simultaneous multiplication.
+      ED_METHD=TRICK    Shamir's trick for simultaneous multiplication.
+      ED_METHD=INTER    Interleaving of window NAFs (GLV for Koblitz curves).
+      ED_METHD=JOINT    Joint sparse form.
+
+      Note: these methods must be given in order. Ex: ED_METHD="EXTND;LWNAF;COMBD;TRICK"
+
+-- Elliptic curve cryptography configuration (EC module):
+
+   ** Options for the binary elliptic curve module (default = on):
+
+      EC_ENDOM=[off|on] Prefer (prime or binary) curves with endomorphisms.
+
+   ** Available elliptic curve methods (default = PRIME):
+
+      EC_METHD=PRIME    Use prime curves.
+      EC_METHD=CHAR2    Use binary curves.
+      EC_METHD=EDDIE    Use prime Edwards curves.
+
+-- Bilinear pairings arithmetic configuration (PP module):
+
+   ** Available bilinear pairing methods (default = BASIC;OATEP):
+
+      Extension field arithmetic:
+      PP_METHD=BASIC    Basic extension field arithmetic.
+      PP_METHD=LAZYR    Lazy reduced extension field arithmetic.
+
+      Pairing computation:
+      PP_METHD=TATEP    Tate pairing.
+      PP_METHD=WEILP    Weil pairing.
+      PP_METHD=OATEP    Optimal ate pairing.
+
+-- Message digest configuration (MD module):
+
+   ** Available hash functions (default = SH256):
+
+      MD_METHD=SH224        SHA-224 hash function.
+      MD_METHD=SH256        SHA-256 hash function.
+      MD_METHD=SH384        SHA-384 hash function.
+      MD_METHD=SH512        SHA-512 hash function.
+      MD_METHD=B2S160       BLAKE2s-160 hash function.
+      MD_METHD=B2S256       BLAKE2s-256 hash function.
+
+-- Cryptographic protocols configuration (CP module):
+
+   ** Options for the cryptographic protocols module (default = on, PKCS2):
+
+      CP_CRT=[off|on] Support for faster CRT-based exponentiation in factoring-based cryptosystems.
+
+      CP_RSAPD=BASIC    RSA with basic padding.
+      CP_RSAPD=PKCS1    RSA with PKCS#1 v1.5 padding.
+      CP_RSAPD=PKCS2    RSA with PKCS#1 v2.1 padding.
+
+-- Available pseudo-random number generators (default = HASHD):
+
+   RAND=HASHD     Use the HASH-DRBG generator. (recommended)
+   RAND=RDRND     Use Intel RdRand instruction directly.
+   RAND=UDEV      Use the operating system underlying generator.
+   RAND=CALL      Override the generator with a callback.
+
+-- Available random number generator seeders (default = UDEV):
+
+   SEED=          Use a zero seed. (horribly insecure!)
+   SEED=LIBC      Use rand()/random() functions. (insecure!)
+   SEED=RDRND     Use Intel RdRand instruction directly.
+   SEED=UDEV      Use non-blocking /dev/urandom. (recommended)
+   SEED=WCGR      Use Windows' CryptGenRandom. (recommended)
+
+-- Configured operating system: LINUX
+-- Compiler flags:  -Wall   -O3 -funroll-loops -fomit-frame-pointer -finline-small-functions -march=native -mtune=native -Wno-stringop-overflow -Wno-stringop-overread
+-- Linker flags: -L/home/julian/relic/src/low/x64-asm-8l/  -static
+-- Configured /home/julian/relic/include/relic_conf.h.in with backend x64-asm-8l
+-- Configured GMP: -I/usr/include/x86_64-linux-gnu -L/usr/lib/x86_64-linux-gnu/libgmp.a
+-- Could NOT find Doxygen (missing: DOXYGEN_EXECUTABLE) 
+-- Configuring done (0.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /home/julian/relic/build-bls12-455
+[  0%] Built target arith_objs
+[  1%] Building C object src/CMakeFiles/relic_s.dir/rand/relic_rand_core.c.o
+[  1%] Building C object src/CMakeFiles/relic_s.dir/relic_conf.c.o
+[  1%] Building C object src/CMakeFiles/relic_s.dir/rand/relic_rand_udev.c.o
+[  1%] Building C object src/CMakeFiles/relic_s.dir/relic_err.c.o
+[  1%] Building C object src/CMakeFiles/relic_s.dir/relic_util.c.o
+[  1%] Building C object src/CMakeFiles/relic_s.dir/arch/relic_arch_x64.c.o
+[  2%] Building C object src/CMakeFiles/relic_s.dir/relic_core.c.o
+[  2%] Building C object src/CMakeFiles/relic_s.dir/relic_test.c.o
+[  2%] Building C object src/CMakeFiles/relic_s.dir/relic_bench.c.o
+[  3%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_add.c.o
+[  3%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_cmp.c.o
+[  3%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_factor.c.o
+[  3%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_div.c.o
+[  4%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_gcd.c.o
+[  4%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_inv.c.o
+[  4%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_lag.c.o
+[  4%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_lcm.c.o
+[  5%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_mem.c.o
+[  5%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_mod.c.o
+[  5%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_mul.c.o
+[  5%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_mxp.c.o
+[  6%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_mxp_sim.c.o
+[  6%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_prime.c.o
+[  6%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_rec.c.o
+[  6%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_shift.c.o
+[  7%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_smb.c.o
+[  7%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_sqr.c.o
+[  7%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_srt.c.o
+[  7%] Building C object src/CMakeFiles/relic_s.dir/bn/relic_bn_util.c.o
+[  8%] Building C object src/CMakeFiles/relic_s.dir/dv/relic_dv_mem.c.o
+[  8%] Building C object src/CMakeFiles/relic_s.dir/dv/relic_dv_util.c.o
+[  8%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_add.c.o
+[  9%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_crt.c.o
+[  9%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_cmp.c.o
+[  9%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_div.c.o
+[  9%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_exp.c.o
+[ 10%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_mul.c.o
+[ 10%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_inv.c.o
+[ 10%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_param.c.o
+[ 10%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_prime.c.o
+[ 10%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_rdc.c.o
+[ 11%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_shift.c.o
+[ 11%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_smb.c.o
+[ 11%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_sqr.c.o
+[ 12%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_srt.c.o
+[ 12%] Building C object src/CMakeFiles/relic_s.dir/fp/relic_fp_util.c.o
+[ 12%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp12_mul.c.o
+[ 12%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp12_sqr.c.o
+[ 13%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp16_mul.c.o
+[ 13%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp16_sqr.c.o
+[ 13%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp18_mul.c.o
+[ 13%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp18_sqr.c.o
+[ 14%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp24_mul.c.o
+[ 14%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp24_sqr.c.o
+[ 14%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp2_mul.c.o
+[ 14%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp2_sqr.c.o
+[ 15%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp3_mul.c.o
+[ 15%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp3_sqr.c.o
+[ 15%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp48_mul.c.o
+[ 16%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp48_sqr.c.o
+[ 16%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp4_mul.c.o
+[ 16%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp4_sqr.c.o
+[ 16%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp54_mul.c.o
+[ 16%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp54_sqr.c.o
+[ 16%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp6_sqr.c.o
+[ 17%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp6_mul.c.o
+[ 17%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp8_mul.c.o
+[ 17%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp8_sqr.c.o
+[ 18%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp9_mul.c.o
+[ 18%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fp9_sqr.c.o
+[ 18%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_add.c.o
+[ 18%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_cmp.c.o
+[ 19%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_crt.c.o
+[ 19%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_cyc.c.o
+[ 19%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_exp.c.o
+[ 19%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_field.c.o
+[ 20%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_frb.c.o
+[ 20%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_inv.c.o
+[ 20%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_pck.c.o
+[ 20%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_rdc.c.o
+[ 21%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_srt.c.o
+[ 21%] Building C object src/CMakeFiles/relic_s.dir/fpx/relic_fpx_util.c.o
+[ 21%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_add.c.o
+[ 21%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_cmp.c.o
+[ 22%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_exp.c.o
+[ 22%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_inv.c.o
+[ 22%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_itr.c.o
+[ 22%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_mul.c.o
+[ 23%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_param.c.o
+[ 23%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_poly.c.o
+[ 23%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_rdc.c.o
+[ 23%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_shift.c.o
+[ 24%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_slv.c.o
+[ 24%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_sqr.c.o
+[ 24%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_srt.c.o
+[ 25%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_util.c.o
+[ 25%] Building C object src/CMakeFiles/relic_s.dir/fb/relic_fb_trc.c.o
+[ 25%] Building C object src/CMakeFiles/relic_s.dir/fbx/relic_fb2_mul.c.o
+[ 25%] Building C object src/CMakeFiles/relic_s.dir/fbx/relic_fb2_inv.c.o
+[ 25%] Building C object src/CMakeFiles/relic_s.dir/fbx/relic_fb2_slv.c.o
+[ 26%] Building C object src/CMakeFiles/relic_s.dir/fbx/relic_fb2_sqr.c.o
+[ 26%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_add.c.o
+[ 26%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_cmp.c.o
+[ 26%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_curve.c.o
+[ 27%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_dbl.c.o
+[ 27%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_map.c.o
+[ 27%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_mul.c.o
+[ 27%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_mul_cof.c.o
+[ 28%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_mul_fix.c.o
+[ 28%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_mul_sim.c.o
+[ 28%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_neg.c.o
+[ 28%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_norm.c.o
+[ 29%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_param.c.o
+[ 29%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_pck.c.o
+[ 29%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_psi.c.o
+[ 29%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_tpl.c.o
+[ 30%] Building C object src/CMakeFiles/relic_s.dir/ep/relic_ep_util.c.o
+[ 30%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_add.c.o
+[ 30%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_cmp.c.o
+[ 30%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_curve.c.o
+[ 31%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_dbl.c.o
+[ 31%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_frb.c.o
+[ 31%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_map.c.o
+[ 32%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_mul.c.o
+[ 32%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_mul_cof.c.o
+[ 32%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_mul_fix.c.o
+[ 32%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_mul_sim.c.o
+[ 33%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_neg.c.o
+[ 33%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_norm.c.o
+[ 33%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_pck.c.o
+[ 33%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep2_util.c.o
+[ 34%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_add.c.o
+[ 34%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_cmp.c.o
+[ 34%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_curve.c.o
+[ 34%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_dbl.c.o
+[ 35%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_frb.c.o
+[ 35%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_map.c.o
+[ 35%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_mul.c.o
+[ 35%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_mul_cof.c.o
+[ 36%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_mul_fix.c.o
+[ 36%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_mul_sim.c.o
+[ 36%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_neg.c.o
+[ 36%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_norm.c.o
+[ 37%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep3_util.c.o
+[ 37%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_add.c.o
+[ 37%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_cmp.c.o
+[ 37%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_curve.c.o
+[ 38%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_dbl.c.o
+[ 38%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_frb.c.o
+[ 38%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_map.c.o
+[ 38%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_mul.c.o
+[ 39%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_mul_cof.c.o
+[ 39%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_mul_fix.c.o
+[ 39%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_mul_sim.c.o
+[ 39%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_neg.c.o
+[ 40%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_norm.c.o
+[ 40%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep4_util.c.o
+[ 40%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_add.c.o
+[ 40%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_cmp.c.o
+[ 41%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_curve.c.o
+[ 41%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_dbl.c.o
+[ 41%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_frb.c.o
+[ 41%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_map.c.o
+[ 42%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_mul.c.o
+[ 42%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_mul_cof.c.o
+[ 42%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_mul_fix.c.o
+[ 42%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_mul_sim.c.o
+[ 43%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_neg.c.o
+[ 43%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_norm.c.o
+[ 43%] Building C object src/CMakeFiles/relic_s.dir/epx/relic_ep8_util.c.o
+[ 43%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_add.c.o
+[ 44%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_cmp.c.o
+[ 44%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_curve.c.o
+[ 44%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_dbl.c.o
+[ 44%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_frb.c.o
+[ 45%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_hlv.c.o
+[ 45%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_map.c.o
+[ 45%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_mul.c.o
+[ 45%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_mul_fix.c.o
+[ 46%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_mul_sim.c.o
+[ 46%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_neg.c.o
+[ 46%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_norm.c.o
+[ 46%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_param.c.o
+[ 47%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_pck.c.o
+[ 47%] Building C object src/CMakeFiles/relic_s.dir/eb/relic_eb_util.c.o
+[ 47%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_add.c.o
+[ 47%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_cmp.c.o
+[ 48%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_curve.c.o
+[ 48%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_dbl.c.o
+[ 48%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_map.c.o
+[ 48%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_mul.c.o
+[ 49%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_mul_fix.c.o
+[ 49%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_mul_sim.c.o
+[ 49%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_neg.c.o
+[ 49%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_norm.c.o
+[ 50%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_param.c.o
+[ 50%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_pck.c.o
+[ 50%] Building C object src/CMakeFiles/relic_s.dir/ed/relic_ed_util.c.o
+[ 50%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k1.c.o
+[ 51%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k12.c.o
+[ 51%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k16.c.o
+[ 51%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k18.c.o
+[ 52%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k2.c.o
+[ 52%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k24.c.o
+[ 52%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k48.c.o
+[ 52%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k54.c.o
+[ 53%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_add_k8.c.o
+[ 53%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k1.c.o
+[ 53%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k12.c.o
+[ 53%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k16.c.o
+[ 54%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k18.c.o
+[ 54%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k2.c.o
+[ 54%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k24.c.o
+[ 54%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k48.c.o
+[ 54%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k8.c.o
+[ 55%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_dbl_k54.c.o
+[ 55%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k1.c.o
+[ 55%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k12.c.o
+[ 56%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k16.c.o
+[ 56%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k18.c.o
+[ 56%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k2.c.o
+[ 56%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k24.c.o
+[ 57%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k48.c.o
+[ 57%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k54.c.o
+[ 57%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_exp_k8.c.o
+[ 57%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map.c.o
+[ 58%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k1.c.o
+[ 58%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k12.c.o
+[ 58%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k16.c.o
+[ 58%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k18.c.o
+[ 59%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k2.c.o
+[ 59%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k24.c.o
+[ 59%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k48.c.o
+[ 59%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k54.c.o
+[ 60%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_map_k8.c.o
+[ 60%] Building C object src/CMakeFiles/relic_s.dir/pp/relic_pp_norm.c.o
+[ 60%] Building C object src/CMakeFiles/relic_s.dir/pc/relic_pc_core.c.o
+[ 60%] Building C object src/CMakeFiles/relic_s.dir/pc/relic_pc_exp.c.o
+[ 61%] Building C object src/CMakeFiles/relic_s.dir/pc/relic_pc_util.c.o
+[ 61%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_rsa.c.o
+[ 61%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_rabin.c.o
+[ 61%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_bdpe.c.o
+[ 62%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ghpe.c.o
+[ 62%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_phpe.c.o
+[ 62%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_shpe.c.o
+[ 62%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_rsapsi.c.o
+[ 63%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_shipsi.c.o
+[ 63%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecdh.c.o
+[ 63%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecmqv.c.o
+[ 63%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecies.c.o
+[ 64%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecdsa.c.o
+[ 64%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ecss.c.o
+[ 64%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_vbnn.c.o
+[ 64%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pok.c.o
+[ 65%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_sok.c.o
+[ 65%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ers.c.o
+[ 65%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_smlers.c.o
+[ 65%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_etrs.c.o
+[ 66%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ped.c.o
+[ 66%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_oprf.c.o
+[ 66%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pcdel.c.o
+[ 66%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pdbat.c.o
+[ 67%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_sokaka.c.o
+[ 67%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_bgn.c.o
+[ 67%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_ibe.c.o
+[ 67%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_bls.c.o
+[ 68%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_cls.c.o
+[ 68%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pss.c.o
+[ 68%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_bbs.c.o
+[ 68%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_zss.c.o
+[ 69%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_cmlhs.c.o
+[ 69%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_mklhs.c.o
+[ 69%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_pbpsi.c.o
+[ 69%] Building C object src/CMakeFiles/relic_s.dir/cp/relic_cp_mpss.c.o
+[ 70%] Building C object src/CMakeFiles/relic_s.dir/bc/relic_bc_aes.c.o
+[ 70%] Building C object src/CMakeFiles/relic_s.dir/bc/rijndael-alg-fst.c.o
+[ 70%] Building C object src/CMakeFiles/relic_s.dir/bc/rijndael-api-fst.c.o
+[ 70%] Building C object src/CMakeFiles/relic_s.dir/md/blake2s-ref.c.o
+[ 71%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_blake2s.c.o
+[ 71%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_hmac.c.o
+[ 71%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_kdf.c.o
+[ 72%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_sha224.c.o
+[ 72%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_sha256.c.o
+[ 72%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_sha384.c.o
+[ 72%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_sha512.c.o
+[ 73%] Building C object src/CMakeFiles/relic_s.dir/md/relic_md_xmd.c.o
+[ 73%] Building C object src/CMakeFiles/relic_s.dir/md/sha224-256.c.o
+[ 73%] Building C object src/CMakeFiles/relic_s.dir/md/sha384-512.c.o
+[ 73%] Building C object src/CMakeFiles/relic_s.dir/mpc/relic_mpc_mt.c.o
+[ 74%] Building C object src/CMakeFiles/relic_s.dir/mpc/relic_mpc_pc.c.o
+[ 74%] Building C object src/CMakeFiles/relic_s.dir/mpc/relic_mpc_sss.c.o
+[ 74%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_add_low.c.o
+[ 74%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_div_low.c.o
+[ 75%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_mod_low.c.o
+[ 75%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_bn_mul_low.c.o
+[ 75%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_shift_low.c.o
+[ 75%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_bn_sqr_low.c.o
+[ 76%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fp_inv_low.c.o
+[ 76%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_fp_mul_low.c.o
+[ 76%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_fp_rdc_low.c.o
+[ 76%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_fp_shift_low.c.o
+[ 77%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fp_smb_low.c.o
+[ 77%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_fp_sqr_low.c.o
+[ 77%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fpx_add_low.c.o
+[ 77%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_fpx_mul_low.c.o
+[ 78%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fpx_rdc_low.c.o
+[ 78%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_fpx_sqr_low.c.o
+[ 78%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fb_add_low.c.o
+[ 78%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_inv_low.c.o
+[ 79%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_itr_low.c.o
+[ 79%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_mul_low.c.o
+[ 79%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_rdc_low.c.o
+[ 79%] Building C object src/CMakeFiles/relic_s.dir/low/gmp/relic_fb_shift_low.c.o
+[ 80%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_slv_low.c.o
+[ 80%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_sqr_low.c.o
+[ 80%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_srt_low.c.o
+[ 80%] Building C object src/CMakeFiles/relic_s.dir/low/easy/relic_fb_trc_low.c.o
+[ 81%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_bn_mul_low.s.o
+[ 81%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_fp_mul_low.s.o
+[ 81%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_fp_add_low.s.o
+[ 81%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_fp_rdc_low.s.o
+[ 82%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_fp_shift_low.s.o
+[ 82%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_fpx_mul_low.s.o
+[ 82%] Building C object src/CMakeFiles/relic_s.dir/low/x64-asm-8l/relic_fpx_sqr_low.s.o
+[ 82%] Linking C static library ../lib/librelic_s.a
+[ 82%] Built target relic_s
+[ 84%] Building C object test/CMakeFiles/test_bn.dir/test_bn.c.o
+[ 84%] Building C object test/CMakeFiles/test_fpx.dir/test_fpx.c.o
+[ 84%] Building C object test/CMakeFiles/test_ep.dir/test_ep.c.o
+[ 84%] Building C object test/CMakeFiles/test_dv.dir/test_dv.c.o
+[ 84%] Building C object test/CMakeFiles/test_fp.dir/test_fp.c.o
+[ 85%] Building C object test/CMakeFiles/test_fbx.dir/test_fbx.c.o
+[ 86%] Building C object test/CMakeFiles/test_epx.dir/test_epx.c.o
+[ 86%] Building C object test/CMakeFiles/test_fb.dir/test_fb.c.o
+[ 86%] Linking C executable ../bin/test_dv
+[ 86%] Linking C executable ../bin/test_fbx
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 86%] Built target test_dv
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 87%] Building C object test/CMakeFiles/test_eb.dir/test_eb.c.o
+[ 87%] Built target test_fbx
+[ 88%] Building C object test/CMakeFiles/test_ed.dir/test_ed.c.o
+[ 88%] Linking C executable ../bin/test_fb
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 88%] Linking C executable ../bin/test_fp
+[ 88%] Built target test_fb
+[ 88%] Building C object test/CMakeFiles/test_ec.dir/test_ec.c.o
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 88%] Built target test_fp
+[ 88%] Building C object test/CMakeFiles/test_pc.dir/test_pc.c.o
+[ 88%] Linking C executable ../bin/test_ep
+[ 88%] Linking C executable ../bin/test_eb
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 88%] Built target test_ep
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 89%] Building C object test/CMakeFiles/test_pp.dir/test_pp.c.o
+[ 89%] Linking C executable ../bin/test_ec
+[ 89%] Built target test_eb
+[ 89%] Building C object test/CMakeFiles/test_md.dir/test_md.c.o
+[ 89%] Linking C executable ../bin/test_ed
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 89%] Built target test_ec
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 90%] Building C object test/CMakeFiles/test_cp.dir/test_cp.c.o
+[ 90%] Built target test_ed
+[ 91%] Building C object test/CMakeFiles/test_mpc.dir/test_mpc.c.o
+[ 91%] Linking C executable ../bin/test_bn
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 91%] Linking C executable ../bin/test_md
+[ 91%] Built target test_bn
+[ 91%] Building C object test/CMakeFiles/test_rand.dir/test_rand.c.o
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 91%] Built target test_md
+[ 91%] Linking C executable ../bin/test_mpc
+[ 91%] Building C object test/CMakeFiles/test_core.dir/test_core.c.o
+[ 92%] Linking C executable ../bin/test_rand
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 92%] Linking C executable ../bin/test_core
+[ 92%] Built target test_mpc
+[ 92%] Built target test_rand
+[ 92%] Linking C executable ../bin/test_pc
+[ 92%] Building C object bench/CMakeFiles/bench_bn.dir/bench_bn.c.o
+[ 92%] Building C object bench/CMakeFiles/bench_dv.dir/bench_dv.c.o
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 92%] Built target test_core
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 92%] Building C object bench/CMakeFiles/bench_fp.dir/bench_fp.c.o
+[ 92%] Built target test_pc
+[ 92%] Linking C executable ../bin/bench_dv
+[ 92%] Building C object bench/CMakeFiles/bench_fpx.dir/bench_fpx.c.o
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 92%] Built target bench_dv
+[ 92%] Building C object bench/CMakeFiles/bench_fb.dir/bench_fb.c.o
+[ 92%] Linking C executable ../bin/test_epx
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 92%] Built target test_epx
+[ 92%] Building C object bench/CMakeFiles/bench_fbx.dir/bench_fbx.c.o
+[ 92%] Linking C executable ../bin/bench_fb
+[ 93%] Linking C executable ../bin/bench_fbx
+[ 93%] Linking C executable ../bin/test_cp
+[ 93%] Linking C executable ../bin/bench_fp
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 93%] Linking C executable ../bin/test_pp
+[ 93%] Built target bench_fb
+[ 93%] Built target bench_fbx
+[ 93%] Built target bench_fp
+[ 93%] Built target test_cp
+[ 93%] Building C object bench/CMakeFiles/bench_ep.dir/bench_ep.c.o
+[ 93%] Building C object bench/CMakeFiles/bench_epx.dir/bench_epx.c.o
+[ 93%] Building C object bench/CMakeFiles/bench_eb.dir/bench_eb.c.o
+[ 93%] Building C object bench/CMakeFiles/bench_ed.dir/bench_ed.c.o
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 93%] Built target test_pp
+[ 93%] Building C object bench/CMakeFiles/bench_ec.dir/bench_ec.c.o
+[ 93%] Linking C executable ../bin/bench_bn
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 93%] Built target bench_bn
+[ 93%] Building C object bench/CMakeFiles/bench_pp.dir/bench_pp.c.o
+[ 93%] Linking C executable ../bin/bench_ec
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 93%] Built target bench_ec
+[ 93%] Building C object bench/CMakeFiles/bench_pc.dir/bench_pc.c.o
+[ 94%] Linking C executable ../bin/bench_eb
+[ 95%] Linking C executable ../bin/bench_ed
+[ 95%] Linking C executable ../bin/bench_ep
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 95%] Built target bench_eb
+[ 95%] Built target bench_ed
+[ 95%] Building C object bench/CMakeFiles/bench_md.dir/bench_md.c.o
+[ 95%] Built target bench_ep
+[ 95%] Building C object bench/CMakeFiles/bench_cp.dir/bench_cp.c.o
+[ 95%] Building C object bench/CMakeFiles/bench_mpc.dir/bench_mpc.c.o
+[ 95%] Linking C executable ../bin/bench_md
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 95%] Linking C executable ../bin/test_fpx
+[ 95%] Built target bench_md
+[ 95%] Building C object bench/CMakeFiles/bench_rand.dir/bench_rand.c.o
+/usr/bin/ld: warning: relic_bn_mul_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 95%] Linking C executable ../bin/bench_pc
+[ 95%] Built target test_fpx
+[ 95%] Linking C executable ../bin/bench_rand
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 96%] Linking C executable ../bin/bench_mpc
+[ 96%] Built target bench_pc
+[ 97%] Linking C executable ../bin/bench_pp
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 97%] Built target bench_rand
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 97%] Built target bench_pp
+[ 97%] Built target bench_mpc
+[ 98%] Linking C executable ../bin/bench_epx
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 98%] Built target bench_epx
+[ 99%] Linking C executable ../bin/bench_fpx
+/usr/bin/ld: warning: relic_fp_shift_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[ 99%] Built target bench_fpx
+[100%] Linking C executable ../bin/bench_cp
+/usr/bin/ld: warning: relic_fpx_sqr_low.s.o: missing .note.GNU-stack section implies executable stack
+/usr/bin/ld: NOTE: This behaviour is deprecated and will be removed in a future version of the linker
+[100%] Built target bench_cp
+[  0%] Built target arith_objs
+[ 82%] Built target relic_s
+[ 83%] Built target test_bn
+[ 83%] Built target test_dv
+[ 83%] Built target test_fp
+[ 84%] Built target test_fpx
+[ 84%] Built target test_fb
+[ 85%] Built target test_fbx
+[ 85%] Built target test_ep
+[ 86%] Built target test_epx
+[ 87%] Built target test_eb
+[ 88%] Built target test_ed
+[ 88%] Built target test_ec
+[ 88%] Built target test_pc
+[ 89%] Built target test_pp
+[ 89%] Built target test_md
+[ 90%] Built target test_cp
+[ 91%] Built target test_mpc
+[ 92%] Built target test_rand
+[ 92%] Built target test_core
+[ 92%] Built target bench_bn
+[ 92%] Built target bench_dv
+[ 92%] Built target bench_fp
+[ 93%] Built target bench_fpx
+[ 93%] Built target bench_fb
+[ 94%] Built target bench_fbx
+[ 94%] Built target bench_ep
+[ 95%] Built target bench_epx
+[ 96%] Built target bench_eb
+[ 97%] Built target bench_ed
+[ 97%] Built target bench_ec
+[ 98%] Built target bench_pp
+[ 98%] Built target bench_pc
+[ 98%] Built target bench_md
+[ 99%] Built target bench_cp
+[100%] Built target bench_mpc
+[100%] Built target bench_rand
+Install the project...
+-- Install configuration: ""
+-- Installing: /opt/relic-bls12-455/include/relic/relic.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_alloc.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_arch.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_bc.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_bench.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_bn.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_core.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_cp.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_dv.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_eb.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_ec.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_ed.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_ep.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_epx.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_err.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_fb.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_fbx.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_fp.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_fpx.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_label.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_md.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_mpc.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_multi.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_pc.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_pp.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_rand.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_test.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_types.h
+-- Installing: /opt/relic-bls12-455/include/relic/relic_util.h
+-- Installing: /opt/relic-bls12-455/include/relic/low/relic_bn_low.h
+-- Installing: /opt/relic-bls12-455/include/relic/low/relic_dv_low.h
+-- Installing: /opt/relic-bls12-455/include/relic/low/relic_fb_low.h
+-- Installing: /opt/relic-bls12-455/include/relic/low/relic_fp_low.h
+-- Installing: /opt/relic-bls12-455/include/relic/low/relic_fpx_low.h
+-- Up-to-date: /opt/relic-bls12-455/include/relic
+-- Installing: /opt/relic-bls12-455/include/relic/relic_conf.h
+-- Installing: /opt/relic-bls12-455/cmake/relic-config.cmake
+-- Installing: /opt/relic-bls12-455/lib/librelic_s.a

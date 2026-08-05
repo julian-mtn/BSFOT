@@ -1,3 +1,8 @@
+## Benchmark results
+
+![Benchmark results](results/images/benchmark.png)
+
+
 ## Compilation & Exécution
 
 Le projet peut être compilé et exécuté de deux manières :

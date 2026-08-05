@@ -16,13 +16,13 @@ Mode : Classic OT
 [--- Signature Valide ---]
 
 ----- Benchmark -----
-Params      : 236.754 ms
-OT          : 422.091 ms
-KeyGen      : 0.249 ms
-Signer      : 635.805 ms
-Signature   : 158.333 ms
-Verify      : 2.368 ms
+Params      : 241.590 ms
+OT          : 520.867 ms
+KeyGen      : 0.227 ms
+Signer      : 645.030 ms
+Signature   : 161.975 ms
+Verify      : 2.303 ms
 ---------------------
-Crypto      : 1455.602 ms
-Total       : 1550.511 ms
+Crypto      : 1571.992 ms
+Total       : 1669.077 ms
 ---------------------

@@ -1,6 +1,6 @@
 Mode : Classic OT
 
--- Curve B12-P377:
+-- Curve FM16-P765:
 
 [OK] RELIC initialisé
 [OK] Paramètres publics générés -> [MESSAGE_LENGTH : 2048 bits]
@@ -16,13 +16,13 @@ Mode : Classic OT
 [--- Signature Valide ---]
 
 ----- Benchmark -----
-Params      : 245.951 ms
-OT          : 618.785 ms
-KeyGen      : 0.282 ms
-Signer      : 651.378 ms
-Signature   : 163.957 ms
-Verify      : 2.956 ms
+Params      : 2115.758 ms
+OT          : 3740.178 ms
+KeyGen      : 3.280 ms
+Signer      : 5273.552 ms
+Signature   : 1307.542 ms
+Verify      : 31.244 ms
 ---------------------
-Crypto      : 1683.308 ms
-Total       : 1950.825 ms
+Crypto      : 12471.553 ms
+Total       : 13685.568 ms
 ---------------------

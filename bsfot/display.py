@@ -60,72 +60,21 @@ def load_results():
     return benchmarks
 
 
-def plot_total(results):
-
-    curves = list(results.keys())
-
-    totals = [
-        results[c]["Total"]
-        for c in curves
-        if "Total" in results[c]
-    ]
-
-    curves = [
-        c for c in curves
-        if "Total" in results[c]
-    ]
-
-    plt.figure(figsize=(8, 5))
-
-    bars = plt.bar(
-        curves,
-        totals,
-        color="steelblue"
-    )
-
-    plt.ylabel("Temps (ms)")
-    plt.xlabel("Courbe RELIC")
-    plt.title("Temps total du protocole")
-
-    plt.grid(
-        axis="y",
-        alpha=0.3
-    )
-
-    for bar, value in zip(bars, totals):
-        plt.text(
-            bar.get_x() + bar.get_width() / 2,
-            value,
-            f"{value:.1f}",
-            ha="center",
-            va="bottom"
-        )
-
-    plt.tight_layout()
-
-    plt.savefig(
-        f"{IMAGE_DIR}/total_time.png",
-        dpi=300
-    )
-
-    plt.close()
-
-
 def plot_breakdown(results):
 
     curves = list(results.keys())
 
     bottom = [0] * len(curves)
 
-    plt.figure(figsize=(10, 6))
+    plt.figure(figsize=(12, 6))
 
     colors = [
-        "royalblue",
-        "orange",
-        "green",
-        "red",
-        "purple",
-        "brown"
+        "#1D3557",
+        "#457B9D",
+        "#A8DADC",
+        "#2A9D8F",
+        "#6D597A",
+        "#B8C0FF",
     ]
 
     for metric, color in zip(METRICS, colors):
@@ -148,9 +97,20 @@ def plot_breakdown(results):
             for b, v in zip(bottom, values)
         ]
 
+    # Affichage du temps total au-dessus de chaque barre
+    for i, total in enumerate(bottom):
+        plt.text(
+            i,
+            total,
+            f"{total:.1f}",
+            ha="center",
+            va="bottom",
+            fontsize=9
+        )
+
     plt.ylabel("Temps (ms)")
     plt.xlabel("Courbe RELIC")
-    plt.title("Décomposition du temps d'exécution")
+    plt.title("Temps d'exécution de BSFOT en fonction des courbes de pairing")
 
     plt.legend()
     plt.grid(
@@ -158,10 +118,12 @@ def plot_breakdown(results):
         alpha=0.3
     )
 
+    plt.xticks(rotation=60, ha="right")
+
     plt.tight_layout()
 
     plt.savefig(
-        f"{IMAGE_DIR}/breakdown.png",
+        f"{IMAGE_DIR}/benchmark.png",
         dpi=300
     )
 
@@ -181,11 +143,9 @@ def main():
         print("Aucun résultat trouvé dans results/logs/")
         return
 
-    plot_total(results)
     plot_breakdown(results)
 
-    print("Graphiques générés :")
-    print(" - results/images/total_time.png")
+    print("Graphique généré :")
     print(" - results/images/breakdown.png")
 
 
