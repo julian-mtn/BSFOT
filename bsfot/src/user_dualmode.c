@@ -137,8 +137,8 @@ void user_write_dualmod_ot_keys_to_file(const dualmod_user_state_t *st){
         write_g1(file, st->ek0[i]);
         write_g1(file, st->tek0[i]);
 
-        write_g1(file, st->ek1[i]);
-        write_g1(file, st->tek1[i]);
+        //write_g1(file, st->ek1[i]);
+        //write_g1(file, st->tek1[i]);
 
     }
 
@@ -157,6 +157,7 @@ void user_dualmod_compute_signature(signature_t *sig, const dualmod_user_state_t
 
     /* F(M) */
     waters_hash(sig->fm, params->u, params->l, st->message);
+    g1_add(sig->fm, sig->fm, params->u0);   /* F(M) = u0 * prod(u_i^{M_i}) */
 
     /* sigma1 = produit des alpha_i */
     g1_set_infty(sig->sigma1);

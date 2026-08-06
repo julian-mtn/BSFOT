@@ -119,7 +119,7 @@ void signer_dualmod_compute_response(dualmod_signer_response_t *resp, const dual
     g1_new(target);
 
     /* target = t*u0 */
-    g1_mul(target, params->u[0],t);
+    g1_mul(target, params->u0,t);
 
     /*target = bsk + t*u0*/
     g1_add(target, target, sk->bsk);

@@ -95,10 +95,37 @@ void init_params(public_params_t *params, int l, int mode){
         g1_new(params->dm_w_tilde);
 
 
-        g1_rand(params->dm_g);
-        g1_rand(params->dm_h);
-        g1_rand(params->dm_w);
-        g1_rand(params->dm_w_tilde);
+        bn_t eta;
+        bn_null(eta);
+        bn_new(eta);
+
+        /* générateur */
+        g1_get_gen(params->dm_g);
+
+        /* eta <- Zp */
+        do {
+            bn_rand_mod(eta, order);
+        } while (bn_is_zero(eta));
+
+        /* dm_h = eta * dm_g */
+        g1_mul(params->dm_h, params->dm_g, eta);
+
+        bn_t r;
+        bn_null(r);
+        bn_new(r);
+
+        do {
+            bn_rand_mod(r, order);
+        } while (bn_is_zero(r));
+
+        /* w = g^r */
+        g1_mul(params->dm_w, params->dm_g, r);
+
+        /* w_tilde = h^r = (g^eta)^r */
+        g1_mul(params->dm_w_tilde, params->dm_h, r);
+
+        bn_free(r);
+        bn_free(eta);
     }
 
 

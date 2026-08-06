@@ -113,7 +113,6 @@ int verifier_check_classic_signature(const signature_t *sig, public_params_t *pa
 
     waters_hash(fm, params->u, params->l, message);
 
-
     /* gauche : e(h_s, bvk) * e(F(M), sigma2)*/
     gt_t left;
     gt_null(left);
@@ -170,7 +169,7 @@ int verifier_check_dualmod_signature(const signature_t *sig, public_params_t *pa
     g1_new(fm);
 
     waters_hash(fm, params->u, params->l, message);
-
+    g1_add(fm, fm, params->u0);  
 
     /* e(sigma2_prime, g2) =? e(g1, sigma2) */
 
