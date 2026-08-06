@@ -2,38 +2,39 @@
 
 ![Benchmark](bsfot/results/images/benchmark.png)
 
-## Environnement
+## Environment
 
-- **OS:** Ubuntu 24.04.4 LTS
-- **Kernel:** 6.8.0-136-generic
-- **CPU:** 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
-- **Logical cores:** 8
-- **Memory:** 7,5Gi
-- **Compiler:** gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
-- **Python:** Python 3.12.3
+* **OS:** Ubuntu 24.04.4 LTS
+* **Kernel:** 6.8.0-136-generic
+* **CPU:** 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+* **Logical cores:** 8
+* **Memory:** 7,5Gi
+* **Compiler:** gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+* **Python:** Python 3.12.3
 
-## Prérequis 
+## Requirements
 
-Ce projet demande:
-- GCC >= 13
-- GNU Make
-- Python >= 3.12
-- RELIC toolkit
+This project requires:
 
-## Compilation & Exécution
+* GCC >= 13
+* GNU Make
+* Python >= 3.12
+* RELIC toolkit
 
-Le projet peut être compilé et exécuté de deux manières :
+## Compilation & Execution
 
-| Commande | Description |
-|----------|-------------|
-| `make` | Compile le projet avec la courbe RELIC sélectionnée (`bn254` par défaut). |
-| `make CURVE=<courbe>` | Compile le projet avec une autre installation de RELIC (ex. `bls381`, `kss18-638`). |
-| `./main <mode>` | Exécute le protocole pour le mode choisi. |
-| `./run_benchmarks.sh` | Lance automatiquement les benchmarks sur toutes les courbes définies dans `curves.txt`. |
+The project can be compiled and executed in two ways:
 
-Le fichier `curves.txt` contient la liste des courbes RELIC utilisées pour les benchmarks.
+| Command               | Description                                                                        |
+| --------------------- | ---------------------------------------------------------------------------------- |
+| `make`                | Compiles the project with the selected RELIC curve (`bn254` by default).           |
+| `make CURVE=<curve>`  | Compiles the project with another RELIC installation (e.g. `bls381`, `kss18-638`). |
+| `./main <mode>`       | Executes the protocol for the selected mode.                                       |
+| `./run_benchmarks.sh` | Automatically runs benchmarks on all curves defined in `curves.txt`.               |
 
-Exemple :
+The `curves.txt` file contains the list of RELIC curves used for benchmarks.
+
+Example:
 
 ```text
 bn254
@@ -41,117 +42,124 @@ bls12-381
 kss18-638
 ...
 ```
-Chaque courbe correspond directement au nom du preset RELIC utilisé lors de l'installation.
 
-### Mode d'exécution
+Each curve directly corresponds to the name of the RELIC preset used during installation.
 
-Les modes correspondent à différentes versions de la phase OT (Oblivious Tranfer).
-Modes disponibles :
+### Execution Mode
 
-| Mode | Protocole |
-|------|-----------|
-| `0` | Classic OT |
-| `1` | Dual-Mode OT |
+The modes correspond to different versions of the OT (Oblivious Transfer) phase.
 
-Exemples :
+Available modes:
+
+| Mode | Protocol     |
+| ---- | ------------ |
+| `0`  | Classic OT   |
+| `1`  | Dual-Mode OT |
+
+Examples:
 
 ```bash
 make
 ./main 0
 ```
-Exécute le protocole avec Classic OT.
+
+Runs the protocol with Classic OT.
 
 ```bash
 make CURVE=bls12-381
 ./main 1
 ```
-Exécute le protocole avec Dual-Mode OT sur la courbe BLS12-381.
 
-### Benchmarks automatiques
+Runs the protocol with Dual-Mode OT on the BLS12-381 curve.
 
-Le script `run_benchmarks.sh` permet d'automatiser l'évaluation des performances sur plusieurs courbes RELIC.
+### Automatic Benchmarks
 
-Les courbes testées sont définies dans le fichier :
+The `run_benchmarks.sh` script automates performance evaluation on several RELIC curves.
+
+The tested curves are defined in:
 
 ```text
 curves.txt
 ```
 
-Pour chaque courbe, le script :
-1. Vérifie si l'installation RELIC correspondante existe.
-2. Installe automatiquement la courbe si nécessaire dans `/opt/`.
-3. Compile le projet avec cette courbe.
-4. Exécute le protocole.
-5. Enregistre les temps d'exécution.
-6. Génère automatiquement un graphiques de comparaison.
+For each curve, the script:
 
-Lancement :
+1. Checks whether the corresponding RELIC installation exists.
+2. Automatically installs the curve if necessary in `/opt/`.
+3. Compiles the project with this curve.
+4. Executes the protocol.
+5. Records execution times.
+6. Automatically generates comparison graphs.
+
+Launch:
+
 ```bash
 ./run_benchmarks.sh
 ```
 
-Le script demande les droits administrateur (sudo) lorsqu'une installation RELIC est nécessaire.
-Les résultats sont rangés dans :
+The script requests administrator privileges (sudo) when a RELIC installation is required.
+
+Results are stored in:
 
 ```text
 results/
-├── logs/        # Logs d'exécution, compilation et installation RELIC
-└── images/      # Graphiques générés automatiquement
+├── logs/        # Execution, compilation and RELIC installation logs
+└── images/      # Automatically generated graphs
 ```
 
-#### Nettoyage
+#### Cleaning
 
-Supprimer les fichiers générés par la compilation :
+Remove compilation-generated files:
 
 ```bash
 make clean
 ```
 
-## Structure générale du projet
+## General Project Structure
 
 ```text
 bsfot/
-├── build/                          # Fichiers objets générés
-├── outputs/                        # Fichiers échangés lors des communications
-│   ├── classic_ot_keys.bin         # Clés OT générées par l'utilisateur (Classic OT)
-│   ├── classic_signer_response.bin # Réponse du signer (Classic OT)
-│   ├── classic_signature.bin       # Signature finale (Classic OT)
-│   ├── dualmod_ot_keys.bin         # Clés OT générées par l'utilisateur (Dual-Mode OT)
-│   ├── dualmod_signer_response.bin # Réponse du signer (Dual-Mode OT)
-│   └── dualmod_signature.bin       # Signature finale (Dual-Mode OT)
+├── build/                          # Generated object files
+├── outputs/                        # Files exchanged during communications
+│   ├── classic_ot_keys.bin         # OT keys generated by the user (Classic OT)
+│   ├── classic_signer_response.bin # Signer response (Classic OT)
+│   ├── classic_signature.bin       # Final signature (Classic OT)
+│   ├── dualmod_ot_keys.bin         # OT keys generated by the user (Dual-Mode OT)
+│   ├── dualmod_signer_response.bin # Signer response (Dual-Mode OT)
+│   └── dualmod_signature.bin       # Final signature (Dual-Mode OT)
 │
-├── results/                        # Résultats des benchmarks
-│   ├── logs/                       # Logs d'exécution, compilation et installation RELIC
+├── results/                        # Benchmark results
+│   ├── logs/                       # Execution, compilation and RELIC installation logs
 │   │   ├── *.log
 │   │   ├── build_logs/
 │   │   └── install_logs/
 │   │
-│   └── images/                     # Graphiques générés par display.py
+│   └── images/                     # Graphs generated by display.py
 │       ├── total_time.png
 │       └── breakdown.png
 │
-├── curves.txt                      # Liste des courbes RELIC à tester
-├── display.py                      # Génération des graphiques de benchmark
+├── curves.txt                      # List of RELIC curves to test
+├── display.py                      # Benchmark graph generation
 ├── main.c                          # main
 ├── makefile                        # makefile
-├── run_benchmarks.sh               # Installation RELIC et benchmarks multi-courbes
-├── compile_commands.json           # Base de compilation
+├── run_benchmarks.sh               # RELIC installation and multi-curve benchmarks
+├── compile_commands.json           # Compilation database
 │
 ├── include/
-│   ├── benchmark.h                 # Mesures de performances
-│   ├── config.h                    # Constantes globales
-│   ├── io.h                        # Lecture / écriture des données
-│   ├── keys.h                      # Génération des clés
-│   ├── message.h                   # Génération des messages
-│   ├── params.h                    # Paramètres publics
-│   ├── timer.h                     # Chrono
-│   ├── run.h                       # Pipeline du protocole
-│   ├── signer.h                    # Fonctions du signer (Classic OT)
-│   ├── signer_dualmode.h           # Fonctions du signer (Dual-Mode OT)
-│   ├── user.h                      # Fonctions de l'utilisateur (Classic OT)
-│   ├── user_dualmode.h             # Fonctions de l'utilisateur (Dual-Mode OT)
-│   ├── waters.h                    # Fonction de hachage de Waters
-│   └── verifier.h                  # Vérification des signatures
+│   ├── benchmark.h                 # Performance measurements
+│   ├── config.h                    # Global constants
+│   ├── io.h                        # Data reading / writing
+│   ├── keys.h                      # Key generation
+│   ├── message.h                   # Message generation
+│   ├── params.h                    # Public parameters
+│   ├── timer.h                     # Timer
+│   ├── run.h                       # Protocol pipeline
+│   ├── signer.h                    # Signer functions (Classic OT)
+│   ├── signer_dualmode.h            # Signer functions (Dual-Mode OT)
+│   ├── user.h                      # User functions (Classic OT)
+│   ├── user_dualmode.h             # User functions (Dual-Mode OT)
+│   ├── waters.h                    # Waters hash function
+│   └── verifier.h                  # Signature verification
 │
 └── src/
     ├── benchmark.c
@@ -169,7 +177,7 @@ bsfot/
     └── waters.c
 ```
 
-## Étapes de génération de la signature
+## Signature Generation Steps
 
 ```text
 User
