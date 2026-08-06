@@ -166,6 +166,81 @@ def plot_breakdown(results):
 
     plt.close()
 
+def plot_single_metric(results, metric, color, filename, title):
+
+    # Trie les courbes par temps de calcul croissant
+    results = dict(
+        sorted(
+            results.items(),
+            key=lambda x: x[1].get("Crypto", float("inf"))
+        )
+    )
+
+    curves = list(results.keys())
+
+    values = [
+        results[c].get(metric, 0)
+        for c in curves
+    ]
+
+    plt.figure(figsize=(12, 6))
+
+    plt.bar(
+        curves,
+        values,
+        label=metric,
+        color=color
+    )
+
+    # Affichage du temps au-dessus des barres
+    for i, value in enumerate(values):
+
+        plt.text(
+            i,
+            value,
+            f"{value:.1f}",
+            ha="center",
+            va="bottom",
+            fontsize=9
+        )
+
+    message_bits = next(iter(results.values())).get("Message", "?")
+
+    plt.ylabel("Time (ms)")
+    plt.xlabel("RELIC curves")
+
+    plt.title(
+        title,
+        fontsize=14,
+        fontweight="bold"
+    )
+
+    plt.suptitle(
+        f"Message size: {message_bits} bits",
+        fontsize=11,
+        color="dimgray"
+    )
+
+    plt.legend()
+
+    plt.grid(
+        axis="y",
+        alpha=0.3
+    )
+
+    plt.xticks(
+        rotation=60,
+        ha="right"
+    )
+
+    plt.tight_layout()
+
+    plt.savefig(
+        f"{IMAGE_DIR}/{filename}",
+        dpi=300
+    )
+
+    plt.close()
 
 def main():
 
@@ -177,13 +252,31 @@ def main():
     results = load_results()
 
     if not results:
-        print("Aucun résultat trouvé dans results/logs/")
+        print("No results found in results/logs/")
         return
 
     plot_breakdown(results)
+    plot_breakdown(results)
 
-    print("Graphique généré :")
+    plot_single_metric(
+        results,
+        "KeyGen",
+        "#A8DADC",
+        "keygen.png",
+        "BSFOT Key Generation Time"
+    )
+
+    plot_single_metric(
+        results,
+        "Verify",
+        "#B8C0FF",
+        "verify.png",
+        "BSFOT Verification Time"
+    )
+
+    print("Graphs generated:")
     print(" - results/images/benchmark.png")
+    print(" - results/images/keygen_verify.png")
 
 
 if __name__ == "__main__":

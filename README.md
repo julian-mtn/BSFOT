@@ -1,6 +1,8 @@
 # BSFOT (Blind Signatures from Oblivious Transfer)
 
-![Benchmark](bsfot/results/images/benchmark.png)
+![Benchmark0](bsfot/results/images/benchmark.png)
+![Benchmark1](bsfot/results/images/keygen.png)
+![Benchmark2](bsfot/results/images/verify.png)
 
 ## Environment
 
