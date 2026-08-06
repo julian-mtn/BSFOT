@@ -1,0 +1,74 @@
+# =========================
+# C / Make / GCC
+# =========================
+*.o
+*.obj
+*.d
+*.a
+*.so
+*.dll
+*.dylib
+*.exe
+*.out
+
+# Répertoires de compilation
+build/
+bin/
+dist/
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Environnements virtuels
+.venv/
+venv/
+env/
+
+# Outils Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# =========================
+# LaTeX
+# =========================
+*.aux
+*.log
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.nav
+*.snm
+*.vrb
+*.xdv
+*.idx
+*.ind
+*.ilg
+
+# =========================
+# Éditeurs
+# =========================
+.vscode/
+.idea/
+*.swp
+*~
+
+# =========================
+# Système
+# =========================
+.DS_Store
+Thumbs.db
