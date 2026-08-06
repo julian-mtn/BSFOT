@@ -2,6 +2,24 @@
 
 ![Benchmark](bsfot/results/images/benchmark.png)
 
+## Environnement
+
+- **OS:** Ubuntu 24.04.4 LTS
+- **Kernel:** 6.8.0-136-generic
+- **CPU:** 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+- **Logical cores:** 8
+- **Memory:** 7,5Gi
+- **Compiler:** gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+- **Python:** Python 3.12.3
+
+## Prérequis 
+
+Ce projet demande:
+- GCC >= 13
+- GNU Make
+- Python >= 3.12
+- RELIC toolkit
+
 ## Compilation & Exécution
 
 Le projet peut être compilé et exécuté de deux manières :
