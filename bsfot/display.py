@@ -42,6 +42,15 @@ def parse_log(filepath):
         if match:
             results[metric] = float(match.group(1))
 
+    # Nombre d'itérations du benchmark
+    match = re.search(
+        r"Iterations\s*:\s*(\d+)",
+        content
+    )
+
+    if match:
+        results["Iterations"] = int(match.group(1))
+
     return results
 
 
@@ -129,6 +138,7 @@ def plot_breakdown(results):
         )
 
     message_bits = next(iter(results.values())).get("Message", "?")
+    iterations = next(iter(results.values())).get("Iterations", "?")
 
     plt.ylabel("Time (ms)")
     plt.xlabel("RELIC curves")
@@ -140,7 +150,8 @@ def plot_breakdown(results):
     )
 
     plt.suptitle(
-        f"Message size: {message_bits} bits",
+        f"Message size: {message_bits} bits\n"
+        f"Benchmark iterations: {iterations}",
         fontsize=11,
         color="dimgray"
     )
