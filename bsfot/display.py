@@ -134,7 +134,7 @@ def plot_breakdown(results):
     plt.xlabel("RELIC curves")
 
     plt.title(
-        "BSFOT computation time depending on pairing curves",
+        "BSFOT Execution Time by Pairing Curve",
         fontsize=14,
         fontweight="bold"
     )
