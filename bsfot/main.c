@@ -40,7 +40,7 @@ int main(int argc, char **argv){
     }
 
 
-    benchmark_print(&result);
+    benchmark_print(&result,mode);
 
     return 0;
 }

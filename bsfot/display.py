@@ -51,6 +51,15 @@ def parse_log(filepath):
     if match:
         results["Iterations"] = int(match.group(1))
 
+    # Mode du protocole
+    match = re.search(
+        r"Mode\s*:\s*(.+)",
+        content
+    )
+
+    if match:
+        results["Mode"] = match.group(1).strip()
+
     return results
 
 
@@ -139,6 +148,7 @@ def plot_breakdown(results):
 
     message_bits = next(iter(results.values())).get("Message", "?")
     iterations = next(iter(results.values())).get("Iterations", "?")
+    mode = next(iter(results.values())).get("Mode", "?")
 
     plt.ylabel("Time (ms)")
     plt.xlabel("RELIC curves")
@@ -150,6 +160,7 @@ def plot_breakdown(results):
     )
 
     plt.suptitle(
+        f"Mode: {mode}\n"
         f"Message size: {message_bits} bits\n"
         f"Benchmark iterations: {iterations}",
         fontsize=11,
@@ -217,6 +228,7 @@ def plot_single_metric(results, metric, color, filename, title):
 
     message_bits = next(iter(results.values())).get("Message", "?")
     iterations = next(iter(results.values())).get("Iterations", "?")
+    mode = next(iter(results.values())).get("Mode", "?")
     
     plt.ylabel("Time (ms)")
     plt.xlabel("RELIC curves")
@@ -228,10 +240,11 @@ def plot_single_metric(results, metric, color, filename, title):
     )
 
     plt.suptitle(
-            f"Message size: {message_bits} bits\n"
-            f"Benchmark iterations: {iterations}",
-            fontsize=11,
-            color="dimgray"
+        f"Mode: {mode}\n"
+        f"Message size: {message_bits} bits\n"
+        f"Benchmark iterations: {iterations}",
+        fontsize=11,
+        color="dimgray"
     )
 
     plt.legend()

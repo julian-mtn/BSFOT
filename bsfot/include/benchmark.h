@@ -45,7 +45,7 @@ int benchmark_run(benchmark_result_t *result, int mode);
  *
  * @param result Résultats du benchmark à afficher.
  */
-void benchmark_print(const benchmark_result_t *result);
+void benchmark_print(const benchmark_result_t *result, int mode);
 
 
 #endif

@@ -1,21 +1,5 @@
 #!/bin/bash
-#
-# Installe (si besoin) puis benchmark RELIC sur les courbes définies dans curves.txt.
-#
-# Usage :
-#   ./run_benchmarks.sh
-#
-# Le fichier curves.txt contient une courbe par ligne.
-#
-# Exemple curves.txt :
-#   bn254
-#   bls12-381
-#   kss18-638
-#
-# Variables d'environnement optionnelles :
-#   MODE=0             argument passé à ./main (défaut: 0)
-#   RELIC_SRC=~/relic  chemin vers le clone git de RELIC
-#   NPROC=4            nombre de jobs de compilation
+
 
 set -uo pipefail
 
@@ -38,7 +22,14 @@ if [ "${#CURVES[@]}" -eq 0 ]; then
 fi
 
 
-MODE="${MODE:-0}"
+MODE="${1:-${MODE:-0}}"
+
+
+if [[ "$MODE" != "0" && "$MODE" != "1" ]]; then
+    echo "[ERREUR] MODE doit être 0 (Classic OT) ou 1 (Dual-Mode OT)"
+    exit 1
+fi
+
 RELIC_SRC="${RELIC_SRC:-$HOME/relic}"
 JOBS="${NPROC:-$(nproc)}"
 

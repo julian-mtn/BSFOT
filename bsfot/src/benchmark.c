@@ -67,11 +67,12 @@ int benchmark_run(benchmark_result_t *result, int mode) {
 
 
 
-void benchmark_print(const benchmark_result_t *result) {
+void benchmark_print(const benchmark_result_t *result, int mode) {
 
     printf("\n----- Benchmark -----\n");
     printf("Message     : %d bits\n", MESSAGE_LENGTH);
     printf("Iterations  : %d\n", NB_BENCHMARKS);
+    printf("Mode        : %s\n", (mode == 0) ? "Classic OT" : "Dual-Mode OT");
     printf("---------------------\n");
     printf("Params      : %.3f ms\n", result->params_ms);
     printf("OT          : %.3f ms\n", result->ot_ms);
