@@ -128,18 +128,19 @@ def plot_breakdown(results):
             fontsize=9
         )
 
-    plt.ylabel("Temps (ms)")
-    plt.xlabel("Courbes RELIC")
     message_bits = next(iter(results.values())).get("Message", "?")
 
+    plt.ylabel("Time (ms)")
+    plt.xlabel("RELIC curves")
+
     plt.title(
-        "Temps de calcul de BSFOT en fonction des courbes de pairing",
+        "BSFOT computation time depending on pairing curves",
         fontsize=14,
         fontweight="bold"
     )
 
     plt.suptitle(
-        f"Taille du message : {message_bits} bits",
+        f"Message size: {message_bits} bits",
         fontsize=11,
         color="dimgray"
     )
