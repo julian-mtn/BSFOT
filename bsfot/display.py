@@ -216,7 +216,8 @@ def plot_single_metric(results, metric, color, filename, title):
         )
 
     message_bits = next(iter(results.values())).get("Message", "?")
-
+    iterations = next(iter(results.values())).get("Iterations", "?")
+    
     plt.ylabel("Time (ms)")
     plt.xlabel("RELIC curves")
 
@@ -227,9 +228,10 @@ def plot_single_metric(results, metric, color, filename, title):
     )
 
     plt.suptitle(
-        f"Message size: {message_bits} bits",
-        fontsize=11,
-        color="dimgray"
+            f"Message size: {message_bits} bits\n"
+            f"Benchmark iterations: {iterations}",
+            fontsize=11,
+            color="dimgray"
     )
 
     plt.legend()
