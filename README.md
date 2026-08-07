@@ -2,34 +2,88 @@
 
 <table>
   <tr>
+    <th align="center">Classic OT</th>
+    <th align="center">Dual-mode OT</th>
+  </tr>
+
+  <tr>
     <td align="center">
-      <b>Classic OT</b><br>
+      <b>Benchmark</b><br>
       <img src="bsfot/results/images/benchmark_classicot.png" width="400">
     </td>
     <td align="center">
-      <b>Dual-mode OT</b><br>
+      <b>Benchmark</b><br>
       <img src="bsfot/results/images/benchmark_dual-modeot.png" width="400">
     </td>
   </tr>
 
   <tr>
     <td align="center">
+      <b>Parameters</b><br>
+      <img src="bsfot/results/images/params_classicot.png" width="400">
+    </td>
+    <td align="center">
+      <b>Parameters</b><br>
+      <img src="bsfot/results/images/params_dual-modeot.png" width="400">
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <b>Key Generation</b><br>
       <img src="bsfot/results/images/keygen_classicot.png" width="400">
     </td>
     <td align="center">
+      <b>Key Generation</b><br>
       <img src="bsfot/results/images/keygen_dual-modeot.png" width="400">
     </td>
   </tr>
 
   <tr>
     <td align="center">
+      <b>Signer</b><br>
+      <img src="bsfot/results/images/signer_classicot.png" width="400">
+    </td>
+    <td align="center">
+      <b>Signer</b><br>
+      <img src="bsfot/results/images/signer_dual-modeot.png" width="400">
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <b>Signature</b><br>
+      <img src="bsfot/results/images/signature_classicot.png" width="400">
+    </td>
+    <td align="center">
+      <b>Signature</b><br>
+      <img src="bsfot/results/images/signature_dual-modeot.png" width="400">
+    </td>
+  </tr>
+
+  <tr>
+    <td align="center">
+      <b>Verification</b><br>
       <img src="bsfot/results/images/verify_classicot.png" width="400">
     </td>
     <td align="center">
+      <b>Verification</b><br>
       <img src="bsfot/results/images/verify_dual-modeot.png" width="400">
     </td>
   </tr>
+
+  <tr>
+    <td align="center">
+      <b>OT Phase</b><br>
+      <img src="bsfot/results/images/ot_classicot.png" width="400">
+    </td>
+    <td align="center">
+      <b>OT Phase</b><br>
+      <img src="bsfot/results/images/ot_dual-modeot.png" width="400">
+    </td>
+  </tr>
 </table>
+
 
 ## Environment
 

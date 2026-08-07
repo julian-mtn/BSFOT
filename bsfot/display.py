@@ -289,24 +289,16 @@ def main():
         return
 
     plot_breakdown(results)
-    plot_breakdown(results)
 
-    plot_single_metric(
-        results,
-        "KeyGen",
-        "#A8DADC",
-        "keygen.png",
-        "BSFOT Key Generation Time"
-    )
-
-    plot_single_metric(
-        results,
-        "Verify",
-        "#B8C0FF",
-        "verify.png",
-        "BSFOT Verification Time"
-    )
-
+    for m in METRICS:
+        plot_single_metric(
+            results,
+            m,
+            "#A8DADC",
+            f"{m.lower()}.png",
+            f"BSFOT {m} Time"
+        )
+ 
     print("Graphs generated:")
     print(" - results/images/benchmark.png")
     print(" - results/images/keygen_verify.png")
