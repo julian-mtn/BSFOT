@@ -1,8 +1,5 @@
-#include "keys.h"
-#include <stdio.h>
 
-
-#include "keys.h"
+#include "common/keys.h"
 #include <stdio.h>
 
 

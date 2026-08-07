@@ -1,8 +1,8 @@
-#include "waters.h"
+#include "common/waters.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "params.h"
+#include "common/params.h"
 
 void waters_hash(g1_t result, g1_t *u, int l, uint8_t *m){
     

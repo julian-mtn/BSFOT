@@ -1,7 +1,7 @@
 
-#include "verifier.h"
-#include "io.h"
-#include "waters.h"
+#include "common/verifier.h"
+#include "common/io.h"
+#include "common/waters.h"
 
 int verifier_read_classic_signature_from_file(signature_t *sig, const char *filename){
 

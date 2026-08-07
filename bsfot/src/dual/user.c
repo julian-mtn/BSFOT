@@ -1,9 +1,9 @@
-#include "user_dualmode.h"
-#include "params.h"
-#include "config.h"
+#include "dual/user.h"
+#include "common/params.h"
+#include "common/config.h"
 #include <stdlib.h>
 #include <string.h>
-#include "io.h"
+#include "common/io.h"
 
 void user_dualmod_ot_init(dualmod_user_state_t *st, const public_params_t *params, const uint8_t *message){
 

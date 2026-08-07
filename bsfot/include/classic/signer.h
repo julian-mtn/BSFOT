@@ -1,11 +1,11 @@
-#ifndef SIGNER_H
-#define SIGNER_H
+#ifndef SIGNER_CLASSIC_H
+#define SIGNER_CLASSIC_H
 
 #include <relic/relic.h>
 
-#include "params.h"
-#include "keys.h"
-#include "config.h"
+#include "common/params.h"
+#include "common/keys.h"
+#include "common/config.h"
 
 
 

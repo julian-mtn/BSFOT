@@ -7,19 +7,19 @@
 #include <relic/relic.h>
 #include <relic/relic_pp.h>
 
-#include "params.h"
+#include "common/params.h"
 
-#include "user.h"
-#include "user_dualmode.h"
+#include "classic/user.h"
+#include "dual/user.h"
 
-#include "signer.h"
-#include "signer_dualmode.h"
+#include "classic/signer.h"
+#include "dual/signer.h"
 
-#include "keys.h"
-#include "verifier.h"
+#include "common/keys.h"
+#include "common/verifier.h"
 
-#include "benchmark.h"
-#include "timer.h"
+#include "common/benchmark.h"
+#include "common/timer.h"
 
 
 

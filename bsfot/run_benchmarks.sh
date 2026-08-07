@@ -1,8 +1,6 @@
 #!/bin/bash
 
-
 set -uo pipefail
-
 
 CURVES_FILE="curves.txt"
 
@@ -10,7 +8,6 @@ if [ ! -f "$CURVES_FILE" ]; then
     echo "[ERREUR] Fichier $CURVES_FILE introuvable."
     exit 1
 fi
-
 
 mapfile -t CURVES < <(
     grep -v '^#' "$CURVES_FILE" | grep -v '^$'
@@ -24,11 +21,11 @@ fi
 
 MODE="${1:-${MODE:-0}}"
 
-
 if [[ "$MODE" != "0" && "$MODE" != "1" ]]; then
     echo "[ERREUR] MODE doit être 0 (Classic OT) ou 1 (Dual-Mode OT)"
     exit 1
 fi
+
 
 RELIC_SRC="${RELIC_SRC:-$HOME/relic}"
 JOBS="${NPROC:-$(nproc)}"
@@ -49,14 +46,15 @@ mkdir -p \
 
 
 # Nettoyage des anciens résultats
+
 rm -f "$LOG_DIR"/*.log
 rm -f "$BUILD_LOG_DIR"/*.log
-#rm -f "$IMAGE_DIR"/*.png
+# rm -f "$IMAGE_DIR"/*.png
 
 
-# --- Garde les credentials sudo actifs pendant toute la durée du script ---
-echo "Ce script a besoin de 'sudo' pour installer dans /opt — mot de passe si demandé :"
+echo "Ce script nécessite sudo pour installer les bibliothèques RELIC manquantes dans /opt"
 sudo -v
+
 
 (
     while true
@@ -66,6 +64,7 @@ sudo -v
         kill -0 "$$" 2>/dev/null || exit
     done
 ) 2>/dev/null &
+
 
 SUDO_KEEPALIVE_PID=$!
 
@@ -126,6 +125,7 @@ install_curve()
 }
 
 
+
 echo
 echo "=== Benchmark ${#CURVES[@]} courbes : ${CURVES[*]} ==="
 echo
@@ -134,7 +134,7 @@ echo
 for curve in "${CURVES[@]}"
 do
 
-    #echo "--- Courbe : $curve ---"
+    echo "=== Courbe : $curve ==="
 
 
     if ! install_curve "$curve"; then
@@ -191,7 +191,9 @@ then
     echo
     echo "=== Génération des graphiques ==="
 
+
     python3 display.py
+
 
     if [ $? -eq 0 ]
     then
@@ -201,5 +203,7 @@ then
     fi
 
 else
+
     echo "[INFO] display.py introuvable, graphiques ignorés."
+
 fi

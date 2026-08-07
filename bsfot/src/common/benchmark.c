@@ -1,7 +1,7 @@
-#include "benchmark.h"
-#include "timer.h"
-#include "run.h"
-#include "config.h"
+#include "common/benchmark.h"
+#include "common/timer.h"
+#include "common/run.h"
+#include "common/config.h"
 
 #include <stdio.h>
 

@@ -1,10 +1,10 @@
-#include "run.h"
-#include "timer.h"
-#include "message.h"
-#include "config.h"
+#include "common/run.h"
+#include "common/timer.h"
+#include "common/message.h"
+#include "common/config.h"
 
-#include "signer_dualmode.h"
-#include "user_dualmode.h"
+#include "dual/signer.h"
+#include "dual/user.h"
 
 
 static int protocol_init(protocol_ctx_t *ctx,  benchmark_result_t *result, int mode);

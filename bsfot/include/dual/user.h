@@ -1,10 +1,10 @@
 #ifndef USER_DUALMOD_H
 #define USER_DUALMOD_H
 
-#include "params.h"
-#include "signer_dualmode.h"
-#include "waters.h"
-#include "user.h"
+#include "common/params.h"
+#include "dual/signer.h"
+#include "common/waters.h"
+#include "classic/user.h"
 
 typedef struct {
 

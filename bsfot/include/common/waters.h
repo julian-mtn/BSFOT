@@ -5,7 +5,7 @@
 
 #include <relic/relic.h>
 #include <relic/relic_pp.h>
-#include "params.h"
+#include "common/params.h"
 /**
  * Calcule le hachage de Waters
  *

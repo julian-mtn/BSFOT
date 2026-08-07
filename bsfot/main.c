@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "benchmark.h"
-#include "config.h"
+#include "common/benchmark.h"
+#include "common/config.h"
 
 
 int main(int argc, char **argv){

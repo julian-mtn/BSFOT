@@ -1,6 +1,6 @@
-#include "signer_dualmode.h"
-#include "io.h"
-#include "config.h"
+#include "dual/signer.h"
+#include "common/io.h"
+#include "common/config.h"
 
 #include <stdio.h>
 #include <stdlib.h>

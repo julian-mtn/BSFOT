@@ -1,10 +1,10 @@
-#ifndef SIGNER_DUALMODE_H
-#define SIGNER_DUALMODE_H
+#ifndef SIGNER_DUAL_H
+#define SIGNER_DUAL_H
 
 #include <relic/relic.h>
 
-#include "params.h"
-#include "keys.h"
+#include "common/params.h"
+#include "common/keys.h"
 
 
 typedef struct {

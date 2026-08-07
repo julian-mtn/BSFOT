@@ -1,13 +1,13 @@
-#ifndef USER_H
-#define USER_H
+#ifndef USER_CLASSIC_H
+#define USER_CLASSIC_H
 
 #include <stdint.h>
 #include <stdio.h>
 #include <relic/relic.h>
 
-#include "params.h"
-#include "config.h"
-#include "signer.h"
+#include "common/params.h"
+#include "common/config.h"
+#include "classic/signer.h"
 
 /**
  * État local de l'user durant le protocole de signature aveugle

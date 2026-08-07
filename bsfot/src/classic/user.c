@@ -1,7 +1,7 @@
-#include "user.h"
-#include "params.h"
-#include "io.h"
-#include "waters.h"
+#include "classic/user.h"
+#include "common/params.h"
+#include "common/io.h"
+#include "common/waters.h"
 
 void user_ot_init(user_state_t *st, const public_params_t *params, const uint8_t *message){
     st->l = params->l;
