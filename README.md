@@ -56,28 +56,17 @@ The project can be compiled and executed in two ways:
 
 | Command               | Description                                                                        |
 | --------------------- | ---------------------------------------------------------------------------------- |
-| `make`                | Compiles the project with the selected RELIC curve (`bn254` by default).           |
-| `make CURVE=<curve>`  | Compiles the project with another RELIC installation (e.g. `bls381`, `kss18-638`). |
-| `./main <mode>`       | Executes the protocol for the selected mode.                                       |
-| `./run_benchmarks.sh` | Automatically runs benchmarks on all curves defined in `curves.txt`.               |
+| `make`                | Compiles the project with the selected RELIC curve (`bn254` by default)           |
+| `make CURVE=<curve>`  | Compiles the project with another RELIC installation (e.g. `bls381`, `kss18-638`) |
+| `./main <mode>`       | Executes the protocol for the selected mode                                       |
+| `./run_benchmarks.sh <mode>` | Automatically runs benchmarks on all curves defined in `curves.txt` for the selected mode |
 
 The `curves.txt` file contains the list of RELIC curves used for benchmarks.
-
-Example:
-
-```text
-bn254
-bls12-381
-kss18-638
-...
-```
-
-Each curve directly corresponds to the name of the RELIC preset used during installation.
+Each curve must be specified using the exact name of the corresponding RELIC preset.
 
 ### Execution Mode
 
 The modes correspond to different versions of the OT (Oblivious Transfer) phase.
-
 Available modes:
 
 | Mode | Protocol     |
@@ -91,26 +80,18 @@ Examples:
 make
 ./main 0
 ```
-
 Runs the protocol with Classic OT.
 
 ```bash
 make CURVE=bls12-381
 ./main 1
 ```
-
 Runs the protocol with Dual-Mode OT on the BLS12-381 curve.
 
 ### Automatic Benchmarks
 
 The `run_benchmarks.sh` script automates performance evaluation on several RELIC curves.
-
-The tested curves are defined in:
-
-```text
-curves.txt
-```
-
+The tested curves are defined in curves.txt.
 For each curve, the script:
 
 1. Checks whether the corresponding RELIC installation exists.
@@ -120,14 +101,7 @@ For each curve, the script:
 5. Records execution times.
 6. Automatically generates comparison graphs.
 
-Launch:
-
-```bash
-./run_benchmarks.sh
-```
-
 The script requests administrator privileges (sudo) when a RELIC installation is required.
-
 Results are stored in:
 
 ```text

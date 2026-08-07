@@ -168,8 +168,7 @@ int verifier_check_dualmod_signature(const signature_t *sig, public_params_t *pa
     g1_null(fm);
     g1_new(fm);
 
-    waters_hash(fm, params->u, params->l, message);
-    g1_add(fm, fm, params->u0);  
+    waters_hash_dualmode(fm, params->u, params->l, message, params);
 
     /* e(sigma2_prime, g2) =? e(g1, sigma2) */
 

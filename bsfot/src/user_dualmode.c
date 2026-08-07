@@ -156,8 +156,7 @@ void user_dualmod_compute_signature(signature_t *sig, const dualmod_user_state_t
     g2_new(sig->sigma2);
 
     /* F(M) */
-    waters_hash(sig->fm, params->u, params->l, st->message);
-    g1_add(sig->fm, sig->fm, params->u0);   /* F(M) = u0 * prod(u_i^{M_i}) */
+    waters_hash_dualmode(sig->fm, params->u, params->l, st->message,params); /* F(M) = u0 * prod(u_i^{M_i}) */
 
     /* sigma1 = produit des alpha_i */
     g1_set_infty(sig->sigma1);

@@ -5,7 +5,7 @@
 
 #include <relic/relic.h>
 #include <relic/relic_pp.h>
-
+#include "params.h"
 /**
  * Calcule le hachage de Waters
  *
@@ -17,5 +17,11 @@
  * @param m Message représenté comme un vecteur d'octets
  */
 void waters_hash(g1_t result, g1_t *u, int l, uint8_t *m);
+
+
+/*
+Comme water_hash mais multipli par params->u0
+*/
+void waters_hash_dualmode(g1_t result, g1_t *u, int l, uint8_t *m, public_params_t *params);
 
 #endif 
