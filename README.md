@@ -14,60 +14,6 @@
       <img src="bsfot/results/images/benchmark_dual-modeot.png" width="400">
     </td>
   </tr>
-
-  <tr>
-    <td align="center">
-      <img src="bsfot/results/images/params_classicot.png" width="400">
-    </td>
-    <td align="center">
-      <img src="bsfot/results/images/params_dual-modeot.png" width="400">
-    </td>
-  </tr>
-
-  <tr>
-    <td align="center">
-      <img src="bsfot/results/images/keygen_classicot.png" width="400">
-    </td>
-    <td align="center">
-      <img src="bsfot/results/images/keygen_dual-modeot.png" width="400">
-    </td>
-  </tr>
-
-  <tr>
-    <td align="center">
-      <img src="bsfot/results/images/signer_classicot.png" width="400">
-    </td>
-    <td align="center">
-      <img src="bsfot/results/images/signer_dual-modeot.png" width="400">
-    </td>
-  </tr>
-
-  <tr>
-    <td align="center">
-      <img src="bsfot/results/images/signature_classicot.png" width="400">
-    </td>
-    <td align="center">
-      <img src="bsfot/results/images/signature_dual-modeot.png" width="400">
-    </td>
-  </tr>
-
-  <tr>
-    <td align="center">
-      <img src="bsfot/results/images/verify_classicot.png" width="400">
-    </td>
-    <td align="center">
-      <img src="bsfot/results/images/verify_dual-modeot.png" width="400">
-    </td>
-  </tr>
-
-  <tr>
-    <td align="center">
-      <img src="bsfot/results/images/ot_classicot.png" width="400">
-    </td>
-    <td align="center">
-      <img src="bsfot/results/images/ot_dual-modeot.png" width="400">
-    </td>
-  </tr>
 </table>
 
 
