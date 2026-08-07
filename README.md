@@ -67,16 +67,7 @@ Runs the protocol with Dual-Mode OT on the BLS12-381 curve.
 
 The `run_benchmarks.sh` script automates performance evaluation on several RELIC curves.
 The tested curves are defined in curves.txt.
-For each curve, the script:
-
-1. Checks whether the corresponding RELIC installation exists.
-2. Automatically installs the curve if necessary in `/opt/`.
-3. Compiles the project with this curve.
-4. Executes the protocol.
-5. Records execution times.
-6. Automatically generates comparison graphs.
-
-The script requests administrator privileges (sudo) when a RELIC installation is required.
+It requests administrator privileges (sudo) when a RELIC installation is required.
 Results are stored in:
 
 ```text
