@@ -51,7 +51,7 @@ mkdir -p \
 # Nettoyage des anciens résultats
 rm -f "$LOG_DIR"/*.log
 rm -f "$BUILD_LOG_DIR"/*.log
-rm -f "$IMAGE_DIR"/*.png
+#rm -f "$IMAGE_DIR"/*.png
 
 
 # --- Garde les credentials sudo actifs pendant toute la durée du script ---

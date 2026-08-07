@@ -181,8 +181,12 @@ def plot_breakdown(results):
 
     plt.tight_layout()
 
+    
+    mode = next(iter(results.values())).get("Mode", "unknown")
+    mode_filename = mode.lower().replace(" ", "")
+
     plt.savefig(
-        f"{IMAGE_DIR}/benchmark.png",
+        f"{IMAGE_DIR}/benchmark_{mode_filename}.png",
         dpi=300
     )
 
@@ -261,8 +265,11 @@ def plot_single_metric(results, metric, color, filename, title):
 
     plt.tight_layout()
 
+    mode = next(iter(results.values())).get("Mode", "unknown")
+    mode_filename = mode.lower().replace(" ", "")
+
     plt.savefig(
-        f"{IMAGE_DIR}/{filename}",
+        f"{IMAGE_DIR}/{filename.replace('.png', f'_{mode_filename}.png')}",
         dpi=300
     )
 
