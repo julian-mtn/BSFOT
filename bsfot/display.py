@@ -290,11 +290,11 @@ def main():
 
     plot_breakdown(results)
 
-    for m in METRICS:
+    for m,color in zip(METRICS, ["#A8DADC", "#457B9D", "#1D3557", "#2A9D8F", "#6D597A", "#B8C0FF"]):
         plot_single_metric(
             results,
             m,
-            "#A8DADC",
+            color,
             f"{m.lower()}.png",
             f"BSFOT {m} Time"
         )
