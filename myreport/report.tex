@@ -1119,67 +1119,125 @@ branche messy est uniformément distribué dans $G_1^2$ et sa
 distribution est indépendante du message chiffré.
 On peut donc remplacer tous les chiffrés des branches messy par des
 couples uniformes sans modifier la vue du signataire. Et donc
-$
+\[
 \mathrm G_0 \approx \mathrm G_1.
-$
+\]
 
-\transition{\textit{On remplace le message $m_0$ par le message $m_1$.}}
+\transition{\textit{On rend les branches DH indépendantes du message.}}
 
 \noindent\textbf{G$_2$.}
 
 Dans le jeu précédent, toutes les branches qui ne correspondent pas au
 message sont déjà indépendantes de leur contenu
 grâce à la propriété de distribution uniforme des branches messy.
-Les seules branches déchiffrables correspondent aux branches DH
-déterminées par le choix de l'utilisateur. Comme les valeurs
-$(ek_{i,M_i},\widetilde{ek}_{i,M_i})=(g^{y_i},h^{y_i})$
+Les seules branches restantes sont les branches DH correspondant au
+choix de l'utilisateur.
+Comme les valeurs
+\[
+(ek_{i,M_i},\widetilde{ek}_{i,M_i})
+=
+(g^{y_i},h^{y_i})
+\]
 sont distribuées uniformément grâce au choix uniforme de
 $y_i\leftarrow\mathbb Z_p$, leur distribution est identique pour
-$m_0$ et $m_1$.
-La vue complète du signer est donc identique lorsque le message
-signé est remplacé par $m_1$, c'est-à-dire
-$
+tous les messages possibles.
+Ainsi, la vue complète du signer ne dépend plus du message utilisé par
+l'utilisateur :
+\[
 \mathrm G_1 \approx \mathrm G_2.
-$
+\]
 
-\transition{\textit{}}
+\transition{\textit{On applique la même technique de randomisation que dans le schéma OT classique.}}
 
 \noindent\textbf{G$_3$.}
 
-TODO : phase de randomisation de la signature.
+Dans ce jeu, on considère la signature intermédiaire obtenue par
+l'utilisateur après la récupération des branches correspondant aux bits du
+messsage. Grâce aux propriétés de l'OT, l'utilisateur reconstruit une 
+composante de signature de Waters de la forme :
+\[
+\sigma_1=h_s^aF(M)^t,
+\qquad
+\sigma_2=g_2^t.
+\]
+L'utilisateur choisit ensuite un nouvel aléa
+$t'\sample\mathbb{Z}_p$
+et calcule :
+\[
+\widehat{\sigma}_1=\sigma_1F(M)^{t'},
+\qquad
+\widehat{\sigma}_2=\sigma_2g_2^{t'}.
+\]
+Comme montré dans la preuve de randomisation de Waters
+(voir Section~\ref{sec:randomisation-waters}),
+la valeur finale $t+t'$ est uniformément distribuée dans
+$\mathbb{Z}_p$ et masque complètement l'aléa utilisé lors de la
+génération initiale de la signature.
+Ainsi, la distribution de la signature randomisée est indépendante
+de la phase d'obtention des composantes issues de l'OT.
+Cette transition est donc identique à celle utilisée dans le schéma OT
+classique.
+On obtient donc :
+\[
+\mathrm G_2\approx \mathrm G_3.
+\]
 
-\transition{\textit{}}
+\transition{\textit{On remplace le message $m_0$ par le message $m_1$.}}
 
 \noindent\textbf{G$_4$.}
 
-TODO : phase de randomisation de la signature.
+Dans le jeu précédent, toutes les composantes visibles par le signer sont
+indépendantes du message.
+Les branches messy ont été remplacées par des distributions uniformes et ne
+révèlent aucune information sur le bit sélectionné.
+De plus, les branches DH sont distribuées uniformément grâce au choix
+aléatoire des valeurs $y_i$.
+Enfin, la signature obtenue après randomisation possède une distribution
+indépendante de l'aléa initial de génération, comme montré dans la preuve
+de randomisation de Waters.
+On peut donc remplacer le message $m_0$ par le message $m_1$ sans modifier
+la distribution de la vue du signer :
+\[
+\mathrm G_3\approx \mathrm G_4.
+\]
+
+\transition{\textit{On revient à l'exécution réelle avec le message $m_1$.}}
+
+\noindent\textbf{G$_5$.}
+
+Ce jeu correspond à l'exécution réelle du protocole avec le message $m_1$.
+Les modifications introduites dans les jeux hybrides précédents peuvent être
+inversées avec les mêmes arguments :
+\[
+\mathrm G_4\approx\mathrm G_5.
+\]
 
 \bigskip
 
-
-
 \noindent\textbf{Conclusion}
 
-En combinant les transitions précédentes, on obtient
+En combinant les transitions précédentes, on obtient:
 
 \[
 \mathrm G_0
 \approx
 \mathrm G_1
 \approx
-\mathrm G_2.
+\mathrm G_2
 \approx
 \mathrm G_3
 \approx
 \mathrm G_4
+\approx
+\mathrm G_5.
 \]
 
 Par conséquent,
-$
+\[
 \operatorname{View}_{\mathcal A}(m_0)
 \approx
 \operatorname{View}_{\mathcal A}(m_1),
-$
+\]
 et le signer ne peut distinguer lequel des deux messages a été
 signé avec un avantage non négligeable.
 Le protocole satisfait donc la propriété de blindness contre un
