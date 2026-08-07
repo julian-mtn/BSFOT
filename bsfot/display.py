@@ -4,7 +4,6 @@ import os
 import re
 import matplotlib.pyplot as plt
 
-
 LOG_DIR = "results/logs"
 IMAGE_DIR = "results/images"
 
@@ -14,8 +13,18 @@ METRICS = [
     "KeyGen",
     "Signer",
     "Signature",
-    "Verify"
+    "Verify",
 ]
+
+# Couleurs fixes pour chaque métrique
+METRIC_COLORS = {
+    "Params": "#1D3557",
+    "OT": "#457B9D",
+    "KeyGen": "#A8DADC",
+    "Signer": "#2A9D8F",
+    "Signature": "#6D597A",
+    "Verify": "#B8C0FF",
+}
 
 
 def parse_log(filepath):
@@ -25,38 +34,22 @@ def parse_log(filepath):
         content = file.read()
 
     # Taille du message
-    match = re.search(
-        r"Message\s*:\s*(\d+)\s*bits",
-        content
-    )
-
+    match = re.search(r"Message\s*:\s*(\d+)\s*bits", content)
     if match:
         results["Message"] = int(match.group(1))
 
     for metric in METRICS + ["Crypto", "Total"]:
-        match = re.search(
-            rf"{metric}\s*:\s*([0-9.]+)\s*ms",
-            content
-        )
-
+        match = re.search(rf"{metric}\s*:\s*([0-9.]+)\s*ms", content)
         if match:
             results[metric] = float(match.group(1))
 
-    # Nombre d'itérations du benchmark
-    match = re.search(
-        r"Iterations\s*:\s*(\d+)",
-        content
-    )
-
+    # Nombre d'itérations
+    match = re.search(r"Iterations\s*:\s*(\d+)", content)
     if match:
         results["Iterations"] = int(match.group(1))
 
-    # Mode du protocole
-    match = re.search(
-        r"Mode\s*:\s*(.+)",
-        content
-    )
-
+    # Mode
+    match = re.search(r"Mode\s*:\s*(.+)", content)
     if match:
         results["Mode"] = match.group(1).strip()
 
@@ -74,7 +67,6 @@ def load_results():
         if not filename.endswith(".log"):
             continue
 
-        # Ignore les logs de compilation
         if filename.endswith("_build.log"):
             continue
 
@@ -89,7 +81,7 @@ def load_results():
 
 def plot_breakdown(results):
 
-    # Trie les courbes par temps de calcul croissant
+    # Trie par temps crypto croissant
     results = dict(
         sorted(
             results.items(),
@@ -103,16 +95,7 @@ def plot_breakdown(results):
 
     plt.figure(figsize=(12, 6))
 
-    colors = [
-        "#1D3557",
-        "#457B9D",
-        "#A8DADC",
-        "#2A9D8F",
-        "#6D597A",
-        "#B8C0FF",
-    ]
-
-    for metric, color in zip(METRICS, colors):
+    for metric in METRICS:
 
         values = [
             results[c].get(metric, 0)
@@ -124,7 +107,7 @@ def plot_breakdown(results):
             values,
             bottom=bottom,
             label=metric,
-            color=color
+            color=METRIC_COLORS[metric]
         )
 
         bottom = [
@@ -132,7 +115,7 @@ def plot_breakdown(results):
             for b, v in zip(bottom, values)
         ]
 
-    # Affichage du temps de calcul total au-dessus des barres
+    # Temps total crypto au-dessus des barres
     for i, curve in enumerate(curves):
 
         crypto_time = results[curve].get("Crypto", 0)
@@ -169,20 +152,12 @@ def plot_breakdown(results):
 
     plt.legend()
 
-    plt.grid(
-        axis="y",
-        alpha=0.3
-    )
+    plt.grid(axis="y", alpha=0.3)
 
-    plt.xticks(
-        rotation=60,
-        ha="right"
-    )
+    plt.xticks(rotation=60, ha="right")
 
     plt.tight_layout()
 
-    
-    mode = next(iter(results.values())).get("Mode", "unknown")
     mode_filename = mode.lower().replace(" ", "")
 
     plt.savefig(
@@ -192,9 +167,10 @@ def plot_breakdown(results):
 
     plt.close()
 
-def plot_single_metric(results, metric, color, filename, title):
 
-    # Trie les courbes par temps de calcul croissant
+def plot_single_metric(results, metric, filename, title):
+
+    # Trie par temps crypto croissant
     results = dict(
         sorted(
             results.items(),
@@ -214,11 +190,10 @@ def plot_single_metric(results, metric, color, filename, title):
     plt.bar(
         curves,
         values,
-        label=metric,
-        color=color
+        color=METRIC_COLORS[metric],
+        label=metric
     )
 
-    # Affichage du temps au-dessus des barres
     for i, value in enumerate(values):
 
         plt.text(
@@ -233,7 +208,7 @@ def plot_single_metric(results, metric, color, filename, title):
     message_bits = next(iter(results.values())).get("Message", "?")
     iterations = next(iter(results.values())).get("Iterations", "?")
     mode = next(iter(results.values())).get("Mode", "?")
-    
+
     plt.ylabel("Time (ms)")
     plt.xlabel("RELIC curves")
 
@@ -253,19 +228,12 @@ def plot_single_metric(results, metric, color, filename, title):
 
     plt.legend()
 
-    plt.grid(
-        axis="y",
-        alpha=0.3
-    )
+    plt.grid(axis="y", alpha=0.3)
 
-    plt.xticks(
-        rotation=60,
-        ha="right"
-    )
+    plt.xticks(rotation=60, ha="right")
 
     plt.tight_layout()
 
-    mode = next(iter(results.values())).get("Mode", "unknown")
     mode_filename = mode.lower().replace(" ", "")
 
     plt.savefig(
@@ -274,6 +242,7 @@ def plot_single_metric(results, metric, color, filename, title):
     )
 
     plt.close()
+
 
 def main():
 
@@ -288,20 +257,23 @@ def main():
         print("No results found in results/logs/")
         return
 
+    # Graphique empilé
     plot_breakdown(results)
 
-    for m,color in zip(METRICS, ["#1D3557", "#457B9D", "#A8DADC","#2A9D8F","#6D597A", "#B8C0FF",]):
+    # Un graphique par métrique
+    for metric in METRICS:
         plot_single_metric(
             results,
-            m,
-            color,
-            f"{m.lower()}.png",
-            f"BSFOT {m} Time"
+            metric,
+            f"{metric.lower()}.png",
+            f"BSFOT {metric} Time"
         )
- 
+
     print("Graphs generated:")
-    print(" - results/images/benchmark.png")
-    print(" - results/images/keygen_verify.png")
+    print(f" - {IMAGE_DIR}/benchmark_*.png")
+
+    for metric in METRICS:
+        print(f" - {IMAGE_DIR}/{metric.lower()}_*.png")
 
 
 if __name__ == "__main__":
