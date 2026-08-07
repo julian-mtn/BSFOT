@@ -1081,6 +1081,108 @@ En résumé, pour un utilisateur honnête, chaque position contient exactement u
 (la bonne branche, correspondant au bit du message) et une branche messy (la mauvaise branche). 
 Elle ne transporte aucune information utile.
 
+\subsection{Preuve : Blindness du schéma avec Dual-Mode OT}
 
+Dans cette version du protocole, on considère un \textbf{signer honnête},
+c'est-à-dire que les paramètres publics du Dual-Mode OT
+$(g,h,w,\widetilde w)$ sont générés honnêtement lors de
+\textsf{BSGen}.
+On veut montrer que, pour deux messages
+$m_0,m_1\in\{0,1\}^{\ell}$, la vue du signataire est
+indistinguable :
+$
+\operatorname{View}_{\mathcal A}(m_0)
+\approx
+\operatorname{View}_{\mathcal A}(m_1),
+$ où $\mathcal A$ désigne le signataire honnête.
+Comme pour la précédente preuve, nous raisonnons par une suite de jeux.
+
+\bigskip
+
+\noindent\textbf{G$_0$.}
+
+Il s'agit de l'exécution réelle du protocole avec le message $m_0$.
+L'utilisateur construit les clés OT correspondant aux bits de $m_0$,
+le signer chiffre les différentes composantes de la signature,
+puis l'utilisateur déchiffre uniquement les branches correspondant à
+son message.
+
+\transition{\textit{On remplace les chiffrés des branches messy par des
+éléments uniformes.}}
+
+\noindent\textbf{G$_1$.}
+
+Dans un CRS honnêtement généré, chaque position possède au plus une
+branche DH. L'autre branche est donc une branche messy.
+Or, d'après le Lemme 5, un chiffrement réalisé sur une
+branche messy est uniformément distribué dans $G_1^2$ et sa
+distribution est indépendante du message chiffré.
+On peut donc remplacer tous les chiffrés des branches messy par des
+couples uniformes sans modifier la vue du signataire. Et donc
+$
+\mathrm G_0 \approx \mathrm G_1.
+$
+
+\transition{\textit{On remplace le message $m_0$ par le message $m_1$.}}
+
+\noindent\textbf{G$_2$.}
+
+Dans le jeu précédent, toutes les branches qui ne correspondent pas au
+message sont déjà indépendantes de leur contenu
+grâce à la propriété de distribution uniforme des branches messy.
+Les seules branches déchiffrables correspondent aux branches DH
+déterminées par le choix de l'utilisateur. Comme les valeurs
+$(ek_{i,M_i},\widetilde{ek}_{i,M_i})=(g^{y_i},h^{y_i})$
+sont distribuées uniformément grâce au choix uniforme de
+$y_i\leftarrow\mathbb Z_p$, leur distribution est identique pour
+$m_0$ et $m_1$.
+La vue complète du signer est donc identique lorsque le message
+signé est remplacé par $m_1$, c'est-à-dire
+$
+\mathrm G_1 \approx \mathrm G_2.
+$
+
+\transition{\textit{}}
+
+\noindent\textbf{G$_3$.}
+
+TODO : phase de randomisation de la signature.
+
+\transition{\textit{}}
+
+\noindent\textbf{G$_4$.}
+
+TODO : phase de randomisation de la signature.
+
+\bigskip
+
+
+
+\noindent\textbf{Conclusion}
+
+En combinant les transitions précédentes, on obtient
+
+\[
+\mathrm G_0
+\approx
+\mathrm G_1
+\approx
+\mathrm G_2.
+\approx
+\mathrm G_3
+\approx
+\mathrm G_4
+\]
+
+Par conséquent,
+$
+\operatorname{View}_{\mathcal A}(m_0)
+\approx
+\operatorname{View}_{\mathcal A}(m_1),
+$
+et le signer ne peut distinguer lequel des deux messages a été
+signé avec un avantage non négligeable.
+Le protocole satisfait donc la propriété de blindness contre un
+\textbf{signer honnête}.
 
 \end{document}

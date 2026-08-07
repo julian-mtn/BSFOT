@@ -1,4 +1,4 @@
-# BSFOT (Blind Signatures from Oblivious Transfer)
+# BSFOT (Blind Signatures From Oblivious Transfer)
 
 <table>
   <tr>
@@ -15,17 +15,6 @@
     </td>
   </tr>
 </table>
-
-
-## Environment
-
-* **OS:** Ubuntu 24.04.4 LTS
-* **Kernel:** 6.8.0-136-generic
-* **CPU:** 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
-* **Logical cores:** 8
-* **Memory:** 7,5Gi
-* **Compiler:** gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
-* **Python:** Python 3.12.3
 
 ## Requirements
 
@@ -178,9 +167,9 @@ bsfot/
 │   └── dualmod_signature.bin       # Final signature (Dual-Mode OT)
 │
 ├── build/                          # Generated object files
-│   ├── classic/
-│   ├── common/
-│   └── dual/
+│   ├── classic/*.o
+│   ├── common/*.o
+│   └── dual/*.o
 │
 
 
@@ -213,3 +202,13 @@ Verifier
  ├─ verifier_read_signature_from_file()
  └─ verifier_check_signature()
 ```
+
+## Environment Used
+
+* **OS:** Ubuntu 24.04.4 LTS
+* **Kernel:** 6.8.0-136-generic
+* **CPU:** 11th Gen Intel(R) Core(TM) i7-1165G7 @ 2.80GHz
+* **Logical cores:** 8
+* **Memory:** 7,5Gi
+* **Compiler:** gcc (Ubuntu 13.3.0-6ubuntu2~24.04.1) 13.3.0
+* **Python:** Python 3.12.3

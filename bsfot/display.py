@@ -16,7 +16,7 @@ METRICS = [
     "Verify",
 ]
 
-# Couleurs fixes pour chaque métrique
+# Couleurs pour chaque métrique
 METRIC_COLORS = {
     "Params": "#1D3557",
     "OT": "#457B9D",
@@ -79,7 +79,7 @@ def load_results():
     return benchmarks
 
 
-def plot_breakdown(results):
+def plot_benchmark(results):
 
     # Trie par temps crypto croissant
     results = dict(
@@ -258,7 +258,7 @@ def main():
         return
 
     # Graphique empilé
-    plot_breakdown(results)
+    plot_benchmark(results)
 
     # Un graphique par métrique
     for metric in METRICS:
@@ -269,7 +269,7 @@ def main():
             f"BSFOT {metric} Time"
         )
 
-    print("Graphs generated:")
+    print("Graphiques générés:")
     print(f" - {IMAGE_DIR}/benchmark_*.png")
 
     for metric in METRICS:
