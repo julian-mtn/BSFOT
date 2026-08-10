@@ -1081,20 +1081,115 @@ En résumé, pour un utilisateur honnête, chaque position contient exactement u
 (la bonne branche, correspondant au bit du message) et une branche messy (la mauvaise branche). 
 Elle ne transporte aucune information utile.
 
-\subsection{Preuve : Blindness du schéma avec Dual-Mode OT}
+\subsubsection{Lemme : Uniformité des branches messy (non-DH)}\label{lem:lossy}
 
-Dans cette version du protocole, on considère un \textbf{signer honnête},
-c'est-à-dire que les paramètres publics du Dual-Mode OT
-$(g,h,w,\widetilde w)$ sont générés honnêtement lors de
-\textsf{BSGen}.
+
+Supposons que $g\neq 1$ et que $\eta=\log_g h$. Soit
+$(u,v)\in\mathbb{G}_1^2$ une paire \emph{non-DH}, c'est-à-dire telle que
+$v\neq u^{\eta}$. Alors la variable aléatoire
+\[
+\bigl(C,\mathsf{mask}\bigr)
+:=
+\bigl(g^{s}h^{s'},u^{s}v^{s'}\bigr),
+\qquad
+(s,s')\sample\mathbb{Z}_p^2,
+\]
+est uniformément distribuée sur $\mathbb{G}_1^2$. Par conséquent, pour
+tout message clair $m\in\mathbb{G}_1$, le chiffré défini par
+\[
+(C,D)
+=
+\bigl(g^{s}h^{s'},u^{s}v^{s'}\cdot m\bigr)
+\]
+est uniformément distribué sur $\mathbb{G}_1^2$, avec une distribution
+qui ne dépend pas de $m$.
+
+\begin{proof}
+Puisque $g$ est un générateur de $\mathbb{G}_1$, on peut écrire
+$u=g^c$ et $v=g^e$ pour des $c,e\in\mathbb{Z}_p$ uniques.
+L'hypothèse $v\neq u^\eta$ implique
+$e\neq c\eta\pmod p$.
+Considérons l'application $\mathbb{Z}_p$-linéaire
+\[
+\varphi:\mathbb{Z}_p^2\to\mathbb{Z}_p^2,
+\qquad
+\varphi(s,s')
+=
+\bigl(s+\eta s',cs+es'\bigr),
+\]
+dont la matrice est
+\[
+\begin{pmatrix}
+1 & \eta\\
+c & e
+\end{pmatrix},
+\qquad
+\det=e-c\eta.
+\]
+Comme $e-c\eta\neq 0$ dans le corps $\mathbb{Z}_p$,
+$\varphi$ est une bijection de $\mathbb{Z}_p^2$.
+Puisque $(s,s')$ est uniformément distribué sur $\mathbb{Z}_p^2$,
+$\varphi(s,s')$ l'est également.
+Enfin, l'application $x\mapsto g^x$ est une bijection de
+$\mathbb{Z}_p$ vers $\mathbb{G}_1$ puisque $g$ est un générateur d'un
+groupe d'ordre premier. Appliquée à chaque coordonnée, elle transforme
+donc $\varphi(s,s')$ en $(C,\mathsf{mask})$, qui est ainsi uniformément
+distribué sur $\mathbb{G}_1^2$.
+Pour la seconde affirmation, $D=\mathsf{mask}\cdot m$.
+Pour tout $m$ fixé, la multiplication par $m$ est une bijection de
+$\mathbb{G}_1$. Ainsi, $(C,D)$ est uniformément distribué sur
+$\mathbb{G}_1^2$ ; en particulier, sa distribution est la même pour
+tout $m$.
+\end{proof}
+
+
+\subsection{Preuve : Blindness pour un signataire honnête}
+
+Pour ce protocole, on ne prouve pas le blindness sous clés malveillantes
+(comme pour le protocole précédent), mais une version plus faible où
+$(\mathsf{bvk},\mathsf{bsk})$ et le CRS
+$(g,h,w,\widetilde w)$ sont générés honnêtement par
+$\mathsf{BSGen}$.
+
+\begin{definition}[Blindness, clés honnêtes]
+Un schéma de signature aveugle est aveugle pour un signataire honnête si
+pour tout adversaire PPT $\mathcal A$,
+\[
+\left|
+\Pr\!\left[
+\begin{array}{l}
+(\mathsf{bvk},\mathsf{bsk})\gets\mathsf{BSGen}(1^\lambda),\
+(m_0,m_1)\gets\mathcal A(\mathsf{bvk}),\
+b\sample\{0,1\},\\
+(\rho_{1,i},st_i)\gets\mathsf{BSUser}(\mathsf{bvk},m_i)
+\quad(i\in\{0,1\}),\\
+(\rho_{2,b},\rho_{2,1-b})\gets
+\mathcal A(\rho_{1,b},\rho_{1,1-b}),\\
+\sigma_i\gets\mathsf{BSDerive}(st_i,\rho_{2,i})
+\quad(i\in\{0,1\}),\\
+\text{si }\exists i,\
+\mathsf{BSVerify}(\mathsf{bvk},m_i,\sigma_i)=0:
+\ \sigma_0=\sigma_1=\bot,\\
+b=\mathcal A(\sigma_0,\sigma_1)
+\end{array}
+\right]
+-\frac12
+\right|
+=\negl(\lambda).
+\]
+La seule différence avec la définition du blindness du protocole
+précédent est que $\mathsf{bvk}$ n'est plus choisi par $\mathcal A$,
+mais généré honnêtement.
+\end{definition}
+
 On veut montrer que, pour deux messages
-$m_0,m_1\in\{0,1\}^{\ell}$, la vue du signataire est
-indistinguable :
+$m_0,m_1\in\{0,1\}^{\ell}$, la vue du signataire est indistinguable :
 $
 \operatorname{View}_{\mathcal A}(m_0)
 \approx
 \operatorname{View}_{\mathcal A}(m_1),
-$ où $\mathcal A$ désigne le signataire honnête.
+$
+où $\mathcal A$ désigne le signataire honnête.
 Comme pour la précédente preuve, nous raisonnons par une suite de jeux.
 
 \bigskip
@@ -1102,122 +1197,145 @@ Comme pour la précédente preuve, nous raisonnons par une suite de jeux.
 \noindent\textbf{G$_0$.}
 
 Il s'agit de l'exécution réelle du protocole avec le message $m_0$.
-L'utilisateur construit les clés OT correspondant aux bits de $m_0$,
-le signer chiffre les différentes composantes de la signature,
-puis l'utilisateur déchiffre uniquement les branches correspondant à
-son message.
+Pour chaque position $i$, l'utilisateur construit une branche DH
+correspondant au bit $m_{0,i}$ et une branche messy correspondant à
+l'autre valeur. Le signataire calcule ensuite les chiffrés des deux
+branches et les transmet à l'utilisateur.
 
 \transition{\textit{On remplace les chiffrés des branches messy par des
-éléments uniformes.}}
+couples uniformes.}}
 
 \noindent\textbf{G$_1$.}
 
-Dans un CRS honnêtement généré, chaque position possède au plus une
-branche DH. L'autre branche est donc une branche messy.
-Or, d'après le Lemme 5, un chiffrement réalisé sur une
-branche messy est uniformément distribué dans $G_1^2$ et sa
-distribution est indépendante du message chiffré.
-On peut donc remplacer tous les chiffrés des branches messy par des
-couples uniformes sans modifier la vue du signataire. Et donc
+Dans un CRS honnêtement généré, chaque position possède une branche DH
+et une branche messy. Pour la branche messy, le couple
+$
+(\mathsf{ek}_{i,1-M_i},
+\widetilde{\mathsf{ek}}_{i,1-M_i})
+$
+est une paire non-DH. D'après le lemme~\ref{lem:lossy}, le chiffrement
+réalisé sur cette branche est uniformément distribué sur
+$\mathbb{G}_1^2$, avec une distribution indépendante du message
+chiffré.
+On peut donc remplacer, pour chaque position, le chiffré de la branche
+messy par un couple uniformément distribué dans $\mathbb{G}_1^2$ sans
+modifier la vue du signataire. Ainsi,
 \[
-\mathrm G_0 \approx \mathrm G_1.
+\mathrm{G}_0\approx\mathrm{G}_1.
 \]
 
-\transition{\textit{On rend les branches DH indépendantes du message.}}
+\transition{\textit{On remplace les branches DH par des branches
+indépendantes du bit du message.}}
 
 \noindent\textbf{G$_2$.}
 
-Dans le jeu précédent, toutes les branches qui ne correspondent pas au
-message sont déjà indépendantes de leur contenu
-grâce à la propriété de distribution uniforme des branches messy.
-Les seules branches restantes sont les branches DH correspondant au
-choix de l'utilisateur.
-Comme les valeurs
+Après le jeu précédent, les chiffrés des branches messy sont
+uniformes et ne dépendent plus du message. Il reste à traiter les
+branches DH (non messy).
+Pour une branche DH correspondant au bit $M_i$, on a
 \[
-(ek_{i,M_i},\widetilde{ek}_{i,M_i})
+(\mathsf{ek}_{i,M_i},\widetilde{\mathsf{ek}}_{i,M_i})
 =
-(g^{y_i},h^{y_i})
-\]
-sont distribuées uniformément grâce au choix uniforme de
-$y_i\leftarrow\mathbb Z_p$, leur distribution est identique pour
-tous les messages possibles.
-Ainsi, la vue complète du signer ne dépend plus du message utilisé par
-l'utilisateur :
-\[
-\mathrm G_1 \approx \mathrm G_2.
+(g^{y_i},h^{y_i}),
+\qquad
+y_i\sample\mathbb{Z}_p.
 \]
 
-\transition{\textit{On applique la même technique de randomisation que dans le schéma OT classique.}}
+Le signataire observe les deux branches sans savoir laquelle
+correspond au bit $M_i$. Sous l'hypothèse DDH, il ne peut pas distinguer
+la paire
+$
+(g^{y_i},h^{y_i})
+$
+d'une paire de la forme
+$
+(g^{y_i},z_i),
+$
+$
+y_i,z_i\sample\mathbb{Z}_p.
+$
+On peut donc remplacer la branche DH par une paire
+indépendante de la branche correspondant au bit du message.
+Après cela, les deux branches associées à chaque position
+ont la même distribution quel que soit le bit $M_i$. Par conséquent,
+la distribution de l'ensemble du premier message envoyé par
+l'utilisateur ne dépend plus de $M$.
+Ainsi,
+\[
+\mathrm{G}_1\approx\mathrm{G}_2
+\]
+
+\transition{\textit{On applique la réduction DDH de la
+section~\ref{sec:DDH-waters} pour remplacer $F(M)$ par
+$F(\mathbf{0})$ dans la signature.}}
 
 \noindent\textbf{G$_3$.}
 
-Dans ce jeu, on considère la signature intermédiaire obtenue par
-l'utilisateur après la récupération des branches correspondant aux bits du
-messsage. Grâce aux propriétés de l'OT, l'utilisateur reconstruit une 
-composante de signature de Waters de la forme :
+Après le jeu précédent, les branches envoyées par l'utilisateur sont indépendantes du message $M$.
+Après la réponse du signataire, le déchiffrement de la branche DH donne la même forme que dans le protocole classique :
 \[
 \sigma_1=h_s^aF(M)^t,
 \qquad
-\sigma_2=g_2^t.
-\]
-L'utilisateur choisit ensuite un nouvel aléa
-$t'\sample\mathbb{Z}_p$
-et calcule :
-\[
-\widehat{\sigma}_1=\sigma_1F(M)^{t'},
+\sigma_2=g_2^t,
 \qquad
-\widehat{\sigma}_2=\sigma_2g_2^{t'}.
+\sigma'_2=g_1^t.
 \]
-Comme montré dans la preuve de randomisation de Waters
-(voir Section~\ref{sec:randomisation-waters}),
-la valeur finale $t+t'$ est uniformément distribuée dans
-$\mathbb{Z}_p$ et masque complètement l'aléa utilisé lors de la
-génération initiale de la signature.
-Ainsi, la distribution de la signature randomisée est indépendante
-de la phase d'obtention des composantes issues de l'OT.
-Cette transition est donc identique à celle utilisée dans le schéma OT
-classique.
-On obtient donc :
+On applique alors la réduction DDH de la
+section~\ref{sec:DDH-waters}. Celle-ci permet de remplacer, sous
+l'hypothèse DDH, le terme $F(M)$ par $F(\mathbf{0})$ dans la signature.
+Ainsi, la signature simulée ne dépend plus du message $M$ et
 \[
-\mathrm G_2\approx \mathrm G_3.
+\mathrm{G}_2\approx\mathrm{G}_3.
 \]
 
-\transition{\textit{On remplace le message $m_0$ par le message $m_1$.}}
+
+\transition{\textit{On applique la randomisation de Waters (voir section~\ref{sec:randomisation-waters})}}
 
 \noindent\textbf{G$_4$.}
 
-Dans le jeu précédent, toutes les composantes visibles par le signer sont
-indépendantes du message.
-Les branches messy ont été remplacées par des distributions uniformes et ne
-révèlent aucune information sur le bit sélectionné.
-De plus, les branches DH sont distribuées uniformément grâce au choix
-aléatoire des valeurs $y_i$.
-Enfin, la signature obtenue après randomisation possède une distribution
-indépendante de l'aléa initial de génération, comme montré dans la preuve
-de randomisation de Waters.
-On peut donc remplacer le message $m_0$ par le message $m_1$ sans modifier
-la distribution de la vue du signer :
+Après avoir reçu la réponse du signer, l'utilisateur effectue la phase de
+déchiffrement. Puis, comme dans le protocole précédent, il effectue la
+randomisation de Waters en choisissant un aléa
+$t'\sample\mathbb{Z}_p$ et en calculant
 \[
-\mathrm G_3\approx \mathrm G_4.
+\widehat{\sigma}_1
+=
+\sigma_1 F(M)^{t'},
+\qquad
+\widehat{\sigma}_2
+=
+\sigma_2 g_2^{t'},
+\qquad
+\widehat{\sigma}'_2
+=
+\sigma'_2 g_1^{t'}.
+\]
+Comme $t'$ est choisi uniformément dans $\mathbb{Z}_p$, la valeur
+$t+t'$ est également uniformément distribuée dans $\mathbb{Z}_p$.
+Ainsi, la distribution de la signature finale est indépendante du message.
+Elle peut donc être remplacée par une signature simulée utilisant un aléa
+indépendant du message. Ainsi,
+\[
+\mathrm{G}_3\approx\mathrm{G}_4.
 \]
 
-\transition{\textit{On revient à l'exécution réelle avec le message $m_1$.}}
+
+\transition{\textit{On remplace $m_0$ par $m_1$.}}
 
 \noindent\textbf{G$_5$.}
 
-Ce jeu correspond à l'exécution réelle du protocole avec le message $m_1$.
-Les modifications introduites dans les jeux hybrides précédents peuvent être
-inversées avec les mêmes arguments :
+Dans ce jeu, le message $m_0$ est remplacé par $m_1$. D'après la transition
+précédente, la distribution de la signature finale est indépendante du
+message. Ainsi,
 \[
-\mathrm G_4\approx\mathrm G_5.
+\mathrm G_4 \approx \mathrm G_5.
 \]
 
 \bigskip
 
-\noindent\textbf{Conclusion}
+\noindent\textbf{Conclusion.}
 
-En combinant les transitions précédentes, on obtient:
-
+On a
 \[
 \mathrm G_0
 \approx
@@ -1229,18 +1347,14 @@ En combinant les transitions précédentes, on obtient:
 \approx
 \mathrm G_4
 \approx
-\mathrm G_5.
+\mathrm G_5
 \]
-
 Par conséquent,
 \[
 \operatorname{View}_{\mathcal A}(m_0)
 \approx
 \operatorname{View}_{\mathcal A}(m_1),
 \]
-et le signer ne peut distinguer lequel des deux messages a été
-signé avec un avantage non négligeable.
-Le protocole satisfait donc la propriété de blindness contre un
-\textbf{signer honnête}.
+et le protocole satisfait le blindness pour un signataire honnête.
 
 \end{document}
