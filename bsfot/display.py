@@ -172,7 +172,7 @@ def plot_single_metric(results, metric, filename, title):
     results = dict(
         sorted(
             results.items(),
-            key=lambda x: x[1].get("Crypto", float("inf"))
+            key=lambda x: x[1].get("crypto_time", float("inf"))
         )
     )
 

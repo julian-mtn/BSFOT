@@ -45,7 +45,6 @@ mkdir -p \
     "$IMAGE_DIR"
 
 
-# Nettoyage des anciens résultats
 
 rm -f "$LOG_DIR"/*.log
 rm -f "$BUILD_LOG_DIR"/*.log
