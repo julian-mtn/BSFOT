@@ -107,7 +107,7 @@
 
     \vspace*{2cm}
 
-    {\LARGE \textbf{Blind Signatures from Oblivious Transfer:\\ A Detailed Analysis}}\\[1.5cm]
+    {\LARGE \textbf{Signatures Aveugles à partir du Transfert Inconscient : \\Analyse et Implémentation}}\\[1.5cm]
 
     {\large Julian Mouthon}\\[0.5cm]
 
@@ -121,16 +121,9 @@
 
 \end{titlepage}
 
-
-
-
-
 \newpage
-
 \tableofcontents
 \newpage
-
-
 
 
 \section{Introduction}
@@ -177,16 +170,16 @@ et le transfert inconscient (OT), plus précisément le OT dual-mode, qui permet
 
 \subsection{Groupes bilinéaires}
 
-La construction repose sur un système de groupes bilinéaires.
+La construction étudiée repose principalement les groupes bilinéaires,
+que nous définissons ici.
 Soient $\mathbb{G}_1$, $\mathbb{G}_2$ et $\mathbb{G}_T$ trois groupes
 cycliques d'ordre premier $p$. Un couplage bilinéaire est une application :
-
-\[
+$
 e:\mathbb{G}_1\times\mathbb{G}_2
 \rightarrow
-\mathbb{G}_T 
-\]
-satisfaisant les propriétés suivantes:
+\mathbb{G}_T
+$
+satisfaisant les propriétés suivantes :
 
 \begin{itemize}
     \item \textbf{Bilinéarité :}
@@ -195,15 +188,18 @@ satisfaisant les propriétés suivantes:
     \[
     e(g_1^a,g_2^b)=e(g_1,g_2)^{ab}.
     \]
+
     \item \textbf{Non-dégénérescence :}
     si $g_1$ et $g_2$ sont des générateurs,
     alors
     \[
     e(g_1,g_2)\neq 1_{\mathbb{G}_T}.
     \]
+
     \item \textbf{Efficacité :}
     le calcul du couplage est réalisable en temps polynomial.
 \end{itemize}
+
 
 \subsection{Signature de Waters}
 
@@ -249,16 +245,18 @@ e(h_s,\mathsf{bvk})\cdot e(F(M),\sigma_2)
 e(\sigma_1,g_2).
 \]
 
-\subsection{Oblivious Transfer (OT)}
+\subsection{Transfert Inconscient (OT)}
 
-TODO : FAIRE PARTIE SUR OT
+Le transfert inconscient, que l'on nommera OT (Oblivious Transfer), 
+est un 
 
-\subsection{Signatures aveugles}
+TODO
+
+\subsection{Signatures aveugles}\label{sec:algo}
 
 Pour rappel, notre protocole vise à permettre à un utilisateur 
 d'obtenir une signature sur un message tout en préservant la 
 confidentialité de celui-ci vis-à-vis du signataire.
-
 Un schéma de signature aveugle est constitué des algorithmes suivants:
 
 \begin{itemize}
@@ -281,18 +279,145 @@ Un schéma de signature aveugle est constitué des algorithmes suivants:
 \end{itemize}
 
 Une signature est dite valide si
-\[
+$
 \mathsf{BSVerify}(\mathsf{bvk},M,\sigma)=1.
-\]
+$
 
 
 \section{Le protocole dual-OT}
 
 \subsection{Motivation : du mode OT classique au mode dual-OT}
 
-\subsection{Présentation}
+Notre étude portait originellement sur un schéma de signature aveugle 
+basé sur le mode OT classique, qui, comme le mode dual-OT, 
+permet de réaliser un transfert de messages de manière sécurisée. 
+Ce protocole a servi de base et est utilisé dans notre implémentation (voir section \ref{sec:impl}) 
+comme comparateur pour le protocole dual-OT. Il est présenté ci-dessous comme référence.
+
+De plus, le protocole OT classique n'est pas complet du point de vue des propriétés de sécurité, 
+puisqu'il ne dispose pas d'une preuve d'inforgeabilité, contrairement au protocole dual-OT.
+C'est pourquoi nous avons choisi de nous concentrer sur ce dernier pour la suite de notre étude.
+
+\subsection*{Paramètres publics}
+\begin{itemize}
+    \item un système de groupes bilinéaires $(\mathbb{G}_1,\mathbb{G}_2,\mathbb{G}_T,e,p)$,
+    où $\mathbb{G}_1$ et $\mathbb{G}_2$ sont des groupes cycliques d'ordre premier $p$, munis d'un couplage bilinéaire
+    $e:\mathbb{G}_1\times\mathbb{G}_2\rightarrow\mathbb{G}_T$,
+    avec des générateurs $g_1\in\mathbb{G}_1$ et $g_2\in\mathbb{G}_2$.
+
+    \item les paramètres de la fonction de hachage de Waters, constitués d'un élément aléatoire
+    $u_0\in\mathbb{G}_1$ ainsi que d'un vecteur $\mathbf{u}=(u_1,\ldots,u_\ell)\in\mathbb{G}_1^\ell$.
+
+    \item un vecteur $\mathsf{ek}=(h_i)_{i=1}^{\ell}$ avec $h_i=g_1^{x_i}$ obtenu à partir de scalaires aléatoires $x_i\sample\mathbb{Z}_p$.
+
+    \item la clé publique du schéma de signature $\mathsf{bvk}=g_2^a$, associée à la clé secrète $\mathsf{bsk}=h_s^a$, avec $h_s=\prod_{i=1}^{\ell} h_i$.
+\end{itemize}
+
+\subsection*{Schéma de signature}
+\begin{figure}[H]
+\centering
+\fbox{%
+\begin{minipage}{0.80\linewidth}
+
+\begin{pchstack}[center]
+
+\procedure{$\mathbf{Signer}$}
+{
+\\
+\\
+\\
+\\
+\forall i\in[\ell]: \mathsf{ek}_{i,0}\cdot \mathsf{ek}_{i,1}=g_1^{x_i} \\
+\forall i\in[\ell]: \text{choose }\alpha_i \text{ s.t. } \prod_i \alpha_i = h_s^a \\
+r,t \sample \mathbb{Z}_p \\
+\forall i\in[\ell]:
+\quad
+\mathsf{ct}_{i,0} \gets \mathsf{ek}_{i,0}^r \cdot \alpha_i,\quad \\
+\qquad \qquad \quad
+\mathsf{ct}_{i,1} \gets \mathsf{ek}_{i,1}^r \cdot \alpha_i (u_i)^t \\
+\mathsf{ct}_0 = g_1^r,\quad \sigma_2 = g_2^t \\
+\sendmessageright*{(\mathsf{ct}_{i,0},\mathsf{ct}_{i,1})_{i\in[\ell]}, ct_0, \sigma_2}
+}
+
+\pchspace
+
+\procedure{$\mathbf{User}$}
+{
+\forall i\in[\ell]: y_i \sample \mathbb{Z}_p \\
+\mathsf{ek}_{i,M_i} = g_1^{y_i} \\
+\mathsf{ek}_{i,1-M_i} = g_1^{x_i-y_i} \\
+\sendmessageleft*{(\mathsf{ek}_{i,0},\mathsf{ek}_{i,1})_{i\in[\ell]}} \\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\sigma_{1,i} = \frac{\mathsf{ct}_{i,M_i}}{\mathsf{ct}_0^{y_i}} \\
+\sigma_1 = \prod_{i\in[\ell]} \sigma_{1,i} \\
+t' \sample \mathbb{Z}_p \\
+\hat{\sigma}_1 = \sigma_1 \cdot F(M)^{t'} \\
+\hat{\sigma}_2 = \sigma_2 \cdot g_2^{t'} \\
+\textbf{return } \sigma=(F(M),\hat{\sigma}_1,\hat{\sigma}_2)
+}
+
+\end{pchstack}
+
+\end{minipage}
+}
+\caption{Schéma de signature aveugle basé sur le OT classique}
+\end{figure}
+
+\subsection*{Validité de la signature}
+
+La signature obtenue par l'utilisateur est une signature de Waters de la forme
+$\sigma=(F(M),\hat{\sigma}_1,\hat{\sigma}_2)$ avec :
+\[
+\hat{\sigma}_1
+=
+\sigma_1\cdot F(M)^{t'}
+=
+h_s^a\cdot F(M)^{t+t'},
+\qquad
+\hat{\sigma}_2
+=
+\sigma_2\cdot g_2^{t'}
+=
+g_2^{t+t'}.
+\]
+On remarque que le signataire ne connaît pas la valeur
+$t+t'$, car le terme $t'$ est choisi aléatoirement par l'utilisateur après
+la phase de signature. La vérification s'effectue ensuite à l'aide de la clé publique du signataire $\mathsf{bvk}=g_2^a$
+en vérifiant l'équation de couplage :
+\[
+e(h_s,\mathsf{bvk})\cdot e(F(M),\hat{\sigma}_2)
+\stackrel{?}{=}
+e(\hat{\sigma}_1,g_2).
+\]
+En remplaçant les valeurs obtenues par l'utilisateur :
+\[
+\begin{aligned}
+e(h_s,\mathsf{bvk})\cdot e(F(M),\hat{\sigma}_2)
+&=
+e(h_s,g_2^a)\cdot e(F(M),g_2^{t+t'})\\
+&=
+e(h_s^a,g_2)\cdot e(F(M)^{t+t'},g_2)
+&&\text{par bilinéarité du couplage}\\
+&=
+e(h_s^a\cdot F(M)^{t+t'},g_2)
+&&\text{par bilinéarité et multiplicativité}\\
+&=
+e(\hat{\sigma}_1,g_2)
+\end{aligned}
+\]
+Ainsi, l'équation de vérification est satisfaite et la signature obtenue est
+une signature de Waters valide. 
 
 \subsection{Paramètres publics}
+
+Durant l'éxécution du protocole, les deux parties (utilisateur et signataire) disposent de paramètres en commun et publiquement accessibles.
+Ces paramètres sont les suivants : 
 
 \begin{itemize}
     \item un système de groupes bilinéaires
@@ -311,11 +436,11 @@ Une signature est dite valide si
     ainsi que d'un vecteur
     $\mathbf{u}=(u_1,\ldots,u_\ell)\in\mathbb{G}_1^\ell$.
     La fonction de hachage associée est toujours :
-    \[
+    $
     F(M)=u_0\prod_{i=1}^{\ell}u_i^{M_i}.
-    \]
+    $
 
-    \item un CRS global pour l'OT dual-mode :
+    \item un CRS global:
     $
     \mathsf{OT\text{-}CRS}=(g,h,w,\widetilde{w}),
     $
@@ -338,9 +463,14 @@ Une signature est dite valide si
 
 \end{itemize}
 
-\subsection{Schéma de signature}
+\subsection{Schéma de signature}\label{sec:schema}
 
+Le protocole de signature se déroule comme ci-dessous, avec l'utilisateur à droite qui initie la communication
+et le signataire à gauche qui répond. Les messages échangés entre les deux parties sont représentés par des flèches horizontales.
+A la fin du protocole, l'utilisateur obtient une signature sur $M$, qui sera vérifiée après par le vérifieur (voir section~\ref{sec:verification}).
 
+\begin{figure}[H]
+\centering
 \fbox{%
 \begin{minipage}{0.95\linewidth}
 \centering
@@ -349,7 +479,6 @@ Une signature est dite valide si
 
 \procedure{$\mathbf{Signer}$}
 {
-\\
 \\
 \\
 \\
@@ -427,8 +556,6 @@ w\cdot\mathsf{ek}_{i,M_i}^{-1},
 \\
 \\
 \\
-\\
-\\
 e(\sigma'_2,g_2) \stackrel{?}{=} e(g_1,\sigma_2)
 \\
 \sigma_{1,i}
@@ -465,11 +592,14 @@ t'\sample\mathbb Z_p
 
 \end{minipage}
 }
+\caption{Schéma de signature aveugle basé sur le dual-OT}
+\end{figure}
 
-\subsection{Validité de la signature}
+\subsection{Validité de la signature}\label{sec:verification}
 
+Après voir obtenu la signature, l'utilisateur peut la transmettre à un vérifieur qui testera sa validité de la manière suivante : 
 \[
-\textsf{Le vérifieur accepte} \iff
+\text{Signature acceptée} \iff
 \begin{cases}
 e(\hat{\sigma}_2', g_2) = e(g_1, \hat{\sigma}_2), \\[0.5em]
 e(\hat{\sigma}_1, g_2) = e(h_s, \mathsf{bvk}) \cdot e(F(M), \hat{\sigma}_2).
@@ -489,7 +619,7 @@ e(g_1,g_2^{t+t'})\\
 e(g_1,\widehat{\sigma}_2).
 \end{aligned}
 \]
-Seconde équation (toujours pas bilinéarité):
+Seconde équation (toujours par bilinéarité):
 \[
 \begin{aligned}
 e(\widehat{\sigma}_1,g_2)
@@ -509,7 +639,8 @@ e(F(M),\widehat{\sigma}_2),
 
 \subsection{Les branches DH et messy}
 
-Pour chaque position $i$ du message, l'utilisateur construit deux branches.
+Durant l'exécution du protocole, plus précisément lors de l'étape $\mathsf{BSUser}$ (voir section~\ref{sec:algo}),
+l'utilisateur construit deux branches pour chaque position $i$ du message $M$.
 La première correspond à son vrai bit $M_i$ et est définie par
 \[
 (\mathsf{ek}_{i,M_i},\widetilde{\mathsf{ek}}_{i,M_i})
@@ -518,15 +649,15 @@ La première correspond à son vrai bit $M_i$ et est définie par
 \]
 où $y_i$ est choisi aléatoirement.
 Comme $h=g^\eta$, on obtient
-\[
+$
 h^{y_i}=(g^{y_i})^\eta,
-\]
+$
 c'est-à-dire
-\[
+$
 \widetilde{\mathsf{ek}}_{i,M_i}
 =
 \mathsf{ek}_{i,M_i}^{\,\eta}.
-\]
+$
 Cette branche vérifie donc la relation de Diffie--Hellman et est appelée \emph{branche DH}.
 C'est la branche sur laquelle le protocole fonctionne normalement.
 La seconde branche est construite à partir de la première :
@@ -553,19 +684,19 @@ Or,
 =
 \frac{w^\eta}{\widetilde{\mathsf{ek}}_{i,M_i}}.
 \]
-Ainsi, cette égalité serait satisfaite uniquement si
-\[
+Cette égalité serait satisfaite uniquement si
+$
 \widetilde w = w^\eta.
-\]
+$
 Cependant, le CRS est choisi de manière à vérifier
-\[
+$
 \widetilde w \neq w^\eta.
-\]
+$
 La seconde branche ne peut donc jamais être une paire DH. C'est une \emph{branche messy}.
+
 En résumé, pour un utilisateur honnête, chaque position contient exactement une branche DH 
 (la bonne branche, correspondant au bit du message) et une branche messy (la mauvaise branche). 
 Elle ne transporte aucune information utile.
-
 
 \section{Preuves de sécurité}
 
@@ -642,7 +773,6 @@ $
 \left(h_s^a F(M)^t,g_2^t\right)
 $
 une signature de Waters valide, où $t\sample\mathbb Z_p$.
-
 Pour tout $t'\sample\mathbb Z_p$, la signature
 $
 \widehat{\sigma}
@@ -678,29 +808,26 @@ uniforme, indépendamment de l'aléa initial $t$.
 \end{proof}
 \end{lemma}
 
-\begin{lemma}[Indistinguabilité sous DDH]
-\label{lem:ddh-waters}
+\begin{lemma}[Indistinguabilité sous DDH] \label{lem:ddh-waters}
 Sous l'hypothèse DDH dans $\mathbb G_1$, les distributions obtenues
-en utilisant $F(M)$ et $F(\mathbf{0})$ dans la randomisation sont
+en utilisant $F(M)$ et $F(0)$ dans la randomisation sont
 computationnellement indistinguables.
-
 
 \begin{proof}
 Supposons qu'il existe un adversaire $\mathcal A$ capable de distinguer
 ces deux distributions avec un avantage non négligeable. Nous
 construisons alors un distingueur DDH $\mathcal B$.
-
 $\mathcal B$ reçoit une instance
-\[
+$
 (g,g^a,g^b,c),
-\]
+$
 où $c$ est soit $g^{ab}$, soit un élément uniformément distribué de
 $\mathbb G_1$. Il utilise cette instance pour construire les paramètres
 de la simulation.
 
 Si $c=g^{ab}$, la distribution obtenue correspond au jeu dans lequel
 la valeur $F(M)$ est utilisée. Si $c$ est uniforme, elle correspond au
-jeu dans lequel $F(\mathbf{0})$ est utilisée.
+jeu dans lequel $F(0)$ est utilisée.
 
 Ainsi, un adversaire distinguant ces deux jeux permet à $\mathcal B$
 de distinguer une instance DDH réelle d'une instance aléatoire avec
@@ -711,12 +838,12 @@ le même avantage, ce qui contredit l'hypothèse DDH.
 \end{lemma}
 TODO : FINIR PREUVE INDISTINGUABILITE
 
-\subsection{Unforgeability}
+\subsection{Inforgeabilité}
 
-\subsection{Blindness}
+\subsection{Aveuglement}
 
 
-\begin{definition}[Blindness, signataire honnête]
+\begin{definition}[Propriété d'aveuglement, signataire honnête]
 Un schéma de signature aveugle est aveugle pour un signataire honnête si
 pour tout adversaire PPT $\mathcal A$,
 \[
@@ -742,21 +869,9 @@ b=\mathcal A(\sigma_0,\sigma_1)
 \right|
 =\negl(\lambda).
 \]
-La seule différence avec la définition du blindness du protocole
-précédent est que $\mathsf{bvk}$ n'est plus choisi par $\mathcal A$,
-mais généré honnêtement.
-
 \end{definition}
 
-\begin{proof}[Preuve : blindness pour un signataire honnête]
-
-
-Pour ce protocole, on ne prouve pas le blindness sous clés malveillantes
-(comme pour le protocole précédent), mais une version plus faible où
-$(\mathsf{bvk},\mathsf{bsk})$ et le CRS
-$(g,h,w,\widetilde w)$ sont générés honnêtement par
-$\mathsf{BSGen}$.
-
+\begin{proof}[Preuve : aveuglement pour un signataire honnête]
 
 On veut montrer que, pour deux messages
 $m_0,m_1\in\{0,1\}^{\ell}$, la vue du signataire est indistinguable :
@@ -766,7 +881,7 @@ $
 \operatorname{View}_{\mathcal A}(m_1),
 $
 où $\mathcal A$ désigne le signataire honnête.
-Comme pour la précédente preuve, nous raisonnons par une suite de jeux.
+Nous raisonnons par une suite de jeux.
 
 \bigskip
 
@@ -842,8 +957,7 @@ Ainsi,
 \]
 
 \transition{\textit{On applique la réduction DDH de la
-section~\ref{lem:ddh-waters} pour remplacer $F(M)$ par
-$F(\mathbf{0})$ dans la signature.}}
+section~\ref{lem:ddh-waters}}}
 
 \noindent\textbf{G$_3$.}
 
@@ -870,8 +984,7 @@ Ainsi, la signature simulée ne dépend plus du message $M$ et
 \noindent\textbf{G$_4$.}
 
 Après avoir reçu la réponse du signer, l'utilisateur effectue la phase de
-déchiffrement. Puis, comme dans le protocole précédent, il effectue la
-randomisation de Waters en choisissant un aléa
+déchiffrement. Puis, il effectue la randomisation de Waters en choisissant un aléa
 $t'\sample\mathbb{Z}_p$ et en calculant
 \[
 \widehat{\sigma}_1
@@ -929,18 +1042,94 @@ $
 \approx
 \operatorname{View}_{\mathcal A}(m_1),
 $
-et le protocole satisfait donc le blindness pour un signataire honnête.
+et le protocole satisfait donc la propriété d'aveuglement pour un signataire honnête.
 
 \end{proof}
-
 
 \section{Implémentation et évaluation expérimentale}
 
 \subsection{Objectifs}
 
-\subsection{Environnement expérimental}
+Le but d'avoir une implémentation de ces deux protocoles (OT et dual-OT), 
+est de pouvoir évaluer leur performance sur différentes tailles de messages et courbes elliptiques,
+et de les comparer.
+Pour avoir des résultats plus précis, il est intéressant de mesurer le temps d'exécution de chaque étape du protocole indépendamment (voir section \ref{sec:algo}, \ref{sec:schema}).
 
-\subsection{Implémentation du protocole}
+\subsection{Environnement}
+
+\subsection{Implémentation du protocole}\label{sec:impl}
+
+\subsubsection{Architecture}
+
+\subsubsection{Courbes elliptiques utilisées}
+Pour tester le protocole, nous avons utilisé plusieurs courbes elliptiques, 
+plus précisément des courbes dites ``pairing-friendly'', 
+c'est-à-dire des courbes permettant de calculer efficacement un couplage bilinéaire. 
+Afin d'obtenir des résultats variés et significatifs, 
+nous avons choisi un large panel de courbes présentant des tailles de corps et des degrés d'encastrement différents.
+Deux paramètres sont particulièrement importants pour caractériser ces courbes : la taille du corps fini, notée $p$, et le degré d'encastrement, noté $k$.
+
+\begin{itemize}
+    \item \textbf{Taille du corps fini $p$}
+
+    La courbe elliptique est définie sur un corps fini $\mathbb{F}_p$, où $p$ est un grand nombre premier. 
+    Les éléments manipulés sur la courbe sont donc représentés à l'aide d'éléments de ce corps, 
+    dont la taille est d'environ $\log_2(p)$ bits. 
+    Ainsi, une courbe ayant une taille de $p$ de 381 bits est 
+    définie sur un corps dont les éléments peuvent être représentés sur 381 bits. 
+    Cette taille influence notamment le coût des opérations arithmétiques effectuées sur la courbe.
+
+    \item \textbf{Degré d'encastrement $k$}
+
+    Le degré d'encastrement $k$ représente quant à lui la relation entre le corps $\mathbb{F}_p$ 
+    et le sous-groupe d'ordre $r$ utilisé pour le couplage.
+    Il est défini comme le plus petit entier strictement positif vérifiant
+    $
+    p^k \equiv 1 \mod r.
+    $
+    Il indique donc le plus petit degré d'extension du corps $\mathbb{F}_p$ 
+    dans lequel les valeurs du couplage peuvent être représentées. 
+    En effet, le couplage prend ses valeurs dans le corps étendu $\mathbb{F}_{p^k}$.
+    Par exemple, une courbe de degré d'encastrement $k=12$, comme BLS12-381, 
+    nécessite de travailler dans une extension $\mathbb{F}_{p^{12}}$ 
+    pour effectuer le couplage. Une courbe avec $k=24$, comme BLS24-315,
+    utilise quant à elle une extension $\mathbb{F}_{p^{24}}$. 
+    Plus $k$ est élevé, plus les opérations dans le corps d'extension peuvent être coûteuses.
+\end{itemize}
+
+Les courbes retenues couvrent ainsi plusieurs combinaisons de tailles de corps et de degrés d'encastrement, ce qui permet d'évaluer le comportement du protocole dans des configurations différentes.
+
+\begin{table}[H]
+\centering
+\label{tab:curves}
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Courbe} & \textbf{Degré d'encastrement $k$} & \textbf{Taille de $p$} \\
+\midrule
+BN254       & 12 & 254 bits \\
+BN446       & 12 & 446 bits \\
+\midrule
+BLS12-377   & 12 & 377 bits \\
+BLS12-381   & 12 & 381 bits \\
+BLS12-446   & 12 & 446 bits \\
+BLS12-455   & 12 & 455 bits \\
+\midrule
+KSS16-330   & 16 & 330 bits \\
+\midrule
+KSS18-354   & 18 & 354 bits \\
+KSS18-638   & 18 & 638 bits \\
+\midrule
+BLS24-315   & 24 & 315 bits \\
+\midrule
+BLS48-575   & 48 & 575 bits \\
+\midrule
+FM16-765    & 16 & 765 bits \\
+FM18-768    & 18 & 768 bits \\
+\bottomrule
+\end{tabular}
+\caption{Courbes elliptiques utilisées pour les expérimentations.}
+\end{table}
 
 \subsection{Résultats expérimentaux}
 
