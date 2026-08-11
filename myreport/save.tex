@@ -1,0 +1,505 @@
+
+\section{Protocole basé sur OTs}
+
+\subsection{Paramètres publics}
+
+\begin{itemize}
+    \item un système de groupes bilinéaires $(\mathbb{G}_1,\mathbb{G}_2,\mathbb{G}_T,e,p)$,
+    où $\mathbb{G}_1$ et $\mathbb{G}_2$ sont des groupes cycliques d'ordre premier $p$, munis d'un couplage bilinéaire
+    $e:\mathbb{G}_1\times\mathbb{G}_2\rightarrow\mathbb{G}_T$,
+    avec des générateurs $g_1\in\mathbb{G}_1$ et $g_2\in\mathbb{G}_2$.
+
+    \item les paramètres de la fonction de hachage de Waters, constitués d'un élément aléatoire
+    $u_0\in\mathbb{G}_1$ ainsi que d'un vecteur $\mathbf{u}=(u_1,\ldots,u_\ell)\in\mathbb{G}_1^\ell$.
+
+    \item un vecteur $\mathsf{ek}=(h_i)_{i=1}^{\ell}$ avec $h_i=g_1^{x_i}$ obtenu à partir de scalaires aléatoires $x_i\sample\mathbb{Z}_p$.
+
+    \item la clé publique du schéma de signature $\mathsf{bvk}=g_2^a$, associée à la clé secrète $\mathsf{bsk}=h_s^a$, avec $h_s=\prod_{i=1}^{\ell} h_i$.
+\end{itemize}
+
+
+\subsection{Schéma de signature}
+
+\fbox{%
+\begin{minipage}{0.95\linewidth}
+\centering
+
+\begin{pchstack}[center]
+
+\procedure{$\mathbf{Signer}$}
+{
+\\
+\\
+\\
+\\
+\\
+\forall i\in[\ell]: \mathsf{ek}_{i,0}\cdot \mathsf{ek}_{i,1}=g_1^{x_i} \\
+\forall i\in[\ell]: \text{choose }\alpha_i \text{ s.t. } \prod_i \alpha_i = h_s^a \\
+r,t \sample \mathbb{Z}_p \\
+\forall i\in[\ell]:
+\quad
+\mathsf{ct}_{i,0} \gets \mathsf{ek}_{i,0}^r \cdot \alpha_i,\quad \\
+\qquad \qquad \quad
+\mathsf{ct}_{i,1} \gets \mathsf{ek}_{i,1}^r \cdot \alpha_i (u_i)^t \\
+\mathsf{ct}_0 = g_1^r,\quad \sigma_2 = g_2^t \\
+\sendmessageright*{(\mathsf{ct}_{i,0},\mathsf{ct}_{i,1})_{i\in[\ell]}, ct_0, \sigma_2}
+}
+
+\pchspace
+
+\procedure{$\mathbf{User}$}
+{
+\forall i\in[\ell]: y_i \sample \mathbb{Z}_p \\
+\mathsf{ek}_{i,M_i} = g_1^{y_i} \\
+\mathsf{ek}_{i,1-M_i} = g_1^{x_i-y_i} \\
+\sendmessageleft*{(\mathsf{ek}_{i,0},\mathsf{ek}_{i,1})_{i\in[\ell]}} \\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\sigma_{1,i} = \frac{\mathsf{ct}_{i,M_i}}{\mathsf{ct}_0^{y_i}} \\
+\sigma_1 = \prod_{i\in[\ell]} \sigma_{1,i} \\
+t' \sample \mathbb{Z}_p \\
+\hat{\sigma}_1 = \sigma_1 \cdot F(M)^{t'} \\
+\hat{\sigma}_2 = \sigma_2 \cdot g_2^{t'} \\
+\textbf{return } \sigma=(F(M),\hat{\sigma}_1,\hat{\sigma}_2)
+}
+
+\end{pchstack}
+
+\end{minipage}
+}
+
+\subsection{Rôle de l'Oblivious Transfer}
+
+L'utilisation du transfert inconscient permet d'intégrer le message dans la signature sans que le signataire n'apprenne les bits qui le composent.
+Pour chaque bit $M_i$ du message $M$, deux branches sont construites :
+\[
+0 \longrightarrow \alpha_i,
+\qquad
+1 \longrightarrow \alpha_i u_i.
+\]
+
+où $\alpha_i$ est un facteur aléatoire choisi par le signataire et $u_i$ est le $i$-ème paramètre de la fonction de hachage de Waters.
+Ces deux branches sont ensuite masquées dans une structure compatible avec le chiffrement d'ElGamal à l'aide des clés d'évaluation
+\[
+\mathsf{ek}_{i,M_i}=g_1^{y_i},
+\qquad
+\mathsf{ek}_{i,1-M_i}=g_1^{x_i-y_i},
+\]
+où $y_i$ est choisi uniformément dans $\mathbb{Z}_p$. Cette construction garantit que l'utilisateur récupère uniquement la branche correspondant au bit $M_i$, sans révéler celui-ci au signataire.
+Après déchiffrement, l'utilisateur obtient pour chaque position $i$, la valeur
+\[
+\alpha_i (u_i^{M_i})^t.
+\]
+
+En multipliant toutes les composantes, il calcule
+\[
+\begin{aligned}
+\sigma_1
+&=
+\prod_{i=1}^{\ell}\alpha_i (u_i^{M_i})^t \\
+&=
+\left(\prod_{i=1}^{\ell}\alpha_i\right)
+\left(\prod_{i=1}^{\ell}u_i^{M_i}\right)^t.
+\end{aligned}
+\]
+
+Le premier facteur correspond au masquage par aléas, et le second à la partie dépendante du message dans la fonction de hachage de Waters.
+Ainsi, les bits $M_i$ sont encodés par le choix entre les deux branches $\alpha_i$ et $\alpha_i u_i$. Cette sélection introduit les facteurs $u_i^{M_i}$ dans la signature sans jamais révéler au signataire les valeurs des bits du message.\\
+
+Le rôle du bit $M_i$ apparaît dans l'affectation des deux clés d'évaluation. Si $M_i=0$, l'utilisateur construit
+($
+\mathsf{ek}_{i,0}=g_1^{y_i},
+\mathsf{ek}_{i,1}=g_1^{x_i-y_i}
+$),
+si $M_i=1$, il inverse les deux valeurs
+($
+\mathsf{ek}_{i,1}=g_1^{y_i},
+\mathsf{ek}_{i,0}=g_1^{x_i-y_i}
+$).
+Le signataire reçoit toujours le même couple $(\mathsf{ek}_{i,0},\mathsf{ek}_{i,1})$
+sans pouvoir distinguer lequel des deux éléments contient l'exposant $y_i$. Donc aucune information sur le bit $M_i$ n'est révélée. Seule l'affectation des deux composantes dépend du message.
+Il calcule ensuite
+\[
+\mathsf{ct}_{i,0}=\mathsf{ek}_{i,0}^{\,r}\,\alpha_i,
+\qquad
+\mathsf{ct}_{i,1}=\mathsf{ek}_{i,1}^{\,r}\,\alpha_i (u_i)^t.
+\]
+
+Lors du déchiffrement, l'utilisateur récupère la composante correspondant à son bit et élimine le terme aléatoire en calculant
+\[
+\sigma_{1,i}
+=
+\frac{\mathsf{ct}_{i,M_i}}{\mathsf{ct}_0^{\,y_i}}.
+\]
+
+\paragraph{Cas $M_i=0$:}
+
+\[
+\mathsf{ct}_{i,0}
+=
+(g_1^{y_i})^r\,\alpha_i
+=
+g_1^{ry_i}\alpha_i.
+\]
+
+Donc
+\[
+\sigma_{1,i}
+=
+\frac{\mathsf{ct}_{i,0}}{\mathsf{ct}_0^{\,y_i}}
+=
+\frac{g_1^{ry_i}\alpha_i}{(g_1^r)^{y_i}}
+=
+\frac{g_1^{ry_i}\alpha_i}{g_1^{ry_i}}
+=
+\alpha_i.
+\]
+
+\paragraph{Cas $M_i=1$:}
+
+\[
+\mathsf{ct}_{i,1}
+=
+(g_1^{y_i})^r\alpha_i (u_i)^t
+=
+g_1^{ry_i}\alpha_i (u_i)^t
+\]
+
+Donc
+\[
+\sigma_{1,i}
+=
+\frac{\mathsf{ct}_{i,1}}{\mathsf{ct}_0^{\,y_i}}
+=
+\frac{g_1^{ry_i}\alpha_i (u_i)^t}{(g_1^r)^{y_i}}
+=
+\frac{g_1^{ry_i}\alpha_i (u_i)^t}{g_1^{ry_i}}
+=
+\alpha_i (u_i)^t
+\]
+
+Ainsi, l'Oblivious Transfer permet donc de réaliser une sélection privée
+entre les deux branches associées à chaque bit du message. Le signataire construit
+les deux possibilités $\alpha_i$ et $\alpha_i u_i$ mais ne peut pas apprendre
+laquelle sera finalement utilisée par l'utilisateur. Cette propriété permet
+d'intégrer directement le message $M$ dans la signature de Waters tout en
+préservant l'aveuglement du protocole.
+
+\subsection{Rôle du chiffrement d'ElGamal}
+
+Dans cette construction, le chiffrement d'ElGamal est utilisé comme masquage temporaire permettant au signataire 
+de transmettre les deux valeurs possibles associées à chaque bit du message sans révéler laquelle sera sélectionnée par l'utilisateur.
+\begin{figure}[H]
+\centering
+\begin{pchstack}[center]
+\procedure{$\mathbf{Signer}$}
+{
+r,t \sample \mathbb{Z}_p \\
+\forall i\in[\ell]:
+\quad
+\mathsf{ct}_{i,0} \gets \mathsf{ek}_{i,0}^r \cdot \alpha_i,\quad \\
+\qquad \qquad \quad
+\mathsf{ct}_{i,1} \gets \mathsf{ek}_{i,1}^r \cdot \alpha_i (u_i)^t \\
+\mathsf{ct}_0 = g_1^r,\quad \sigma_2 = g_2^t \\
+\sendmessageright*{(\mathsf{ct}_{i,0},\mathsf{ct}_{i,1})_{i\in[\ell]}, ct_0, \sigma_2}
+}
+\end{pchstack}
+\caption{Masquage des branches par ElGamal}
+\end{figure}
+
+Les deux valeurs $m_{i,0}=\alpha_i, \quad m_{i,1}=\alpha_i u_i$
+peuvent être vues comme les deux messages chiffrés par ElGamal.
+Par comparaison avec un chiffrement ElGamal classique
+$(g^r,h^r\cdot M)$,
+notre construction utilise une structure similaire :
+\[
+(\mathsf{ct}_0,\mathsf{ct}_{i,M_i})
+=
+(g_1^r,\mathsf{ek}_{i,M_i}^{r}\cdot\alpha_i (u_i^{M_i})^t).
+\]
+Ici, les deux messages possibles sont
+\[
+\alpha_i \quad \text{si } M_i=0,
+\qquad
+\alpha_i u_i \quad \text{si } M_i=1.
+\]
+L'exposant $t$ permet de randomiser ces deux valeurs avant leur transmission.
+Ainsi, ElGamal masque temporairement les valeurs
+$\alpha_i$ et $\alpha_i u_i$ tout en permettant à l'utilisateur de récupérer
+uniquement la branche correspondant à son bit $M_i$.
+
+
+%------------------------------------------------------------
+
+\subsection{Correctness}
+
+La signature obtenue par l'utilisateur est une signature de Waters de la forme
+$\sigma=(F(M),\hat{\sigma}_1,\hat{\sigma}_2)$ avec :
+\[
+\hat{\sigma}_1
+=
+\sigma_1\cdot F(M)^{t'}
+=
+h_s^a\cdot F(M)^{t+t'},
+\qquad
+\hat{\sigma}_2
+=
+\sigma_2\cdot g_2^{t'}
+=
+g_2^{t+t'}.
+\]
+On remarque que le signataire ne connaît pas la valeur
+$t+t'$, car le terme $t'$ est choisi aléatoirement par l'utilisateur après
+la phase de signature. La vérification s'effectue ensuite à l'aide de la clé publique du signataire $\mathsf{bvk}=g_2^a$
+en vérifiant l'équation de couplage :
+\[
+e(h_s,\mathsf{bvk})\cdot e(F(M),\hat{\sigma}_2)
+\stackrel{?}{=}
+e(\hat{\sigma}_1,g_2).
+\]
+En remplaçant les valeurs obtenues par l'utilisateur :
+\[
+\begin{aligned}
+e(h_s,\mathsf{bvk})\cdot e(F(M),\hat{\sigma}_2)
+&=
+e(h_s,g_2^a)\cdot e(F(M),g_2^{t+t'})\\
+&=
+e(h_s^a,g_2)\cdot e(F(M)^{t+t'},g_2)
+&&\text{par bilinéarité du couplage}\\
+&=
+e(h_s^a\cdot F(M)^{t+t'},g_2)
+&&\text{par bilinéarité et multiplicativité}\\
+&=
+e(\hat{\sigma}_1,g_2)
+\end{aligned}
+\]
+Ainsi, l'équation de vérification est satisfaite et la signature obtenue est
+une signature de Waters valide. 
+
+\subsection{Aveuglement sous clés malveillantes}
+
+\subsubsection{Définition}
+
+\begin{definition}[Blindness]
+Un schéma de signature aveugle est dit aveugle sous clés malveillantes si pour tout adversaire PPT
+$\mathcal A$,
+\[
+\operatorname{Adv}^{\mathrm{blind}}_{\mathcal A}(\lambda)
+=
+\left|
+\Pr\!\left[
+\begin{array}{l}
+(\mathsf{bvk},m_0,m_1)\gets\mathcal A(1^\lambda),\
+b\sample\{0,1\},\\
+(\rho_{1,i},st_i)\gets\mathsf{BSUser}(\mathsf{bvk},m_i)
+\quad(i\in\{0,1\}),\\
+(\rho_{2,b},\rho_{2,1-b})\gets
+\mathcal A(\rho_{1,b},\rho_{1,1-b}),\\
+\sigma_i\gets
+\mathsf{BSDerive}(st_i,\rho_{2,i})
+\quad(i\in\{0,1\}),\\
+\text{if }\exists i,\
+\mathsf{BSVerify}(\mathsf{bvk},m_i,\sigma_i)=0:\\
+\qquad\text{then }\sigma_0=\sigma_1=\bot,\\
+b=\mathcal A(\sigma_0,\sigma_1)
+\end{array}
+\right]
+-\frac12
+\right|
+= \operatorname{negl}(\lambda).
+\]
+Autrement dit, aucun adversaire PPT $\mathcal A$ ne peut distinguer si la signature obtenue correspond au message $m_0$ ou au message $m_1$, avec un avantage non négligeable.
+\end{definition}
+
+\subsubsection{Preuve: Blindness du schéma de signature}
+On veut montrer que, pour deux messages $m_0$ et $m_1$, un signataire malveillant $\mathcal{A}$ ne peut pas distinguer lequel des deux messages a été signé par l'utilisateur. Autrement dit, les vues de $\mathcal{A}$ dans les deux exécutions sont indistinguables :
+\[
+\operatorname{View}_{\mathcal{A}}(m_0) \approx \operatorname{View}_{\mathcal{A}}(m_1).
+\]
+Cela signifie que, pour tout adversaire PPT $\mathcal{A}$, l'avantage de distinguer le bit $b$ choisi par l'utilisateur est négligeable :
+\[
+\left|\Pr[b'=b]-\frac{1}{2}\right|=\operatorname{negl}(\lambda), \text{ où $b'$ est le bit deviné par l'adversaire.}
+\]
+Pour montrer cette propriété, nous construisons une suite de jeux.
+
+\bigskip
+
+\noindent\textbf{G$_0$:}
+
+Le premier jeu correspond à l'exécution réelle du protocole avec le message $m_0$. L'utilisateur génère les clés OT $(ek_{i,0}, ek_{i,1})$ pour chaque bit du message $m_0$ et les envoie au signataire. Il obtient ensuite une réponse du signataire, effectue le déchiffrement et produit la signature.
+
+\transition{ \textit{On remplace les preuves NIZK par des preuves simulées produites par un simulateur de type Subversion Zero-Knowledge (sub-ZK).}}
+
+\noindent\textbf{G$_1$:}
+
+Ce jeu est identique à G$_0$, à l'exception que les preuves NIZK sont désormais simulées. Par définition de la propriété sub-ZK, même si les paramètres sont choisis (de manière malveillante ou non) par $\mathcal{A}$, les preuves simulées sont indistinguables des preuves réelles. Ainsi,
+$\text{G}_0 \approx \text{G}_1$.
+
+\transition{\textit{On applique la propriété sub-ZK à la preuve NIZK de randomisation afin
+de supprimer la dépendance à $F(M)$ et $t'$.}}
+
+\noindent\textbf{G$_2$:}
+
+Ce jeu est identique à G$_1$, à l'exception de la preuve NIZK utilisée
+pour montrer la validité de la randomisation. Cette preuve est désormais
+simulée par le simulateur sub-ZK. La randomisation réelle utilise:
+\[
+\widehat{\sigma}_1=\sigma_1F(M)^{t'},
+\qquad
+\widehat{\sigma}_2=\sigma_2g_2^{t'}.
+\]
+Ici, le simulateur utilise une relation équivalente indépendante
+du message :
+\[
+\widehat{\sigma}_1=\sigma_1F(\mathbf{0})^{t_0},
+\qquad
+\widehat{\sigma}_2=\sigma_2g_2^{t_0},
+\]
+Car d'après la propriété de randomisation de Waters démontrée dans
+la section \ref{sec:randomisation-waters}, l'aléa final $t+t'$ est
+uniformément distribué dans $\mathbb{Z}_p$ et peut être remplacé par un
+nouvel aléa $t_0\sample\mathbb{Z}_p$ indépendant.
+Le remplacement de $F(M)$ par $F(\mathbf{0})$ est justifié par une 
+réduction à l'hypothèse Decisional Diffie--Hellman (DDH),
+dont la preuve est présentée dans la section~\ref{sec:DDH-waters}.
+La signature finale produite par le simulateur devient alors :
+\[
+\sigma=(F(\mathbf{0}),\widehat{\sigma}_1,\widehat{\sigma}_2).
+\]
+Comme la preuve simulée est indistinguable d'une preuve réelle, 
+la vue du signataire reste indistinguable entre les deux jeux.
+Ainsi $\mathrm{G}_1\approx\mathrm{G}_2$.
+
+\transition{\textit{On simule les composantes $\sigma_{1,i}$ de manière à les rendre indépendantes du message tout en conservant leur produit égal à $\sigma_1$.}}
+
+\noindent\textbf{G$_3$:}
+
+Dans le jeu précédent, la valeur $\sigma_1$ a été simulée de manière
+indépendante du message grâce au remplacement de $F(M)$ par $F(\mathbf{0})$.
+Il reste toutefois à enlever la dépendance au message dans chacune des
+composantes $\sigma_{1,i}$, car la signature vérifie
+\[
+\sigma_1=\prod_{i=1}^{\ell}\sigma_{1,i}.
+\]
+Le simulateur choisit donc uniformément
+$\sigma_{1,1},\ldots,\sigma_{1,\ell-1}$, puis définit 
+\[
+\sigma_{1,\ell}
+=
+\sigma_1
+\left(
+\prod_{i=1}^{\ell-1}\sigma_{1,i}
+\right)^{-1}.
+\]
+Ainsi,
+$
+\prod_{i=1}^{\ell}\sigma_{1,i}
+=
+\sigma_1,
+$
+et la relation est préservée. Comme $\sigma_1$ est déjà indépendante du message dans G$_2$,
+la distribution des composantes simulées
+$\sigma_{1,1},\ldots,\sigma_{1,\ell}$ l'est également. Les jeux $\mathrm{G}_2$ et $\mathrm{G}_3$ 
+sont donc identiquement distribués, et donc
+$\mathrm{G}_2 \approx \mathrm{G}_3$.
+
+\transition{\textit{On utilise la propriété OT hiding pour montrer que la distribution des clés OT ne révèle aucune information sur le message.}}
+
+\noindent\textbf{G$_4$:}
+
+En effet, si $M_i=0$,
+$(ek_{i,0},ek_{i,1})=\left(g_1^{y_i},\,g_1^{x_i-y_i}\right)$,
+et si $M_i=1$,
+$(ek_{i,0},ek_{i,1})=\left(g_1^{x_i-y_i},\,g_1^{y_i}\right).$
+Comme $y_i$ est choisi uniformément dans $\mathbb{Z}_p$, la valeur $x_i-y_i$ l'est également. Les deux distributions sont donc identiques et ne révèlent aucune information sur les bits $M_i$. Ainsi,
+$\text{G}_3 \approx \text{G}_4$.
+
+\transition{\textit{On remplace le message $m_0$ par le message $m_1$.}}
+
+\noindent\textbf{G$_5$:}
+
+Ce jeu correspond à l'exécution réelle du protocole avec le message $m_1$.\\\\
+
+\noindent\textbf{Conclusion}
+
+Par les transitions effectuées entre les différents jeux, on obtient :
+\[
+\text{G}_0 \approx \text{G}_1 \approx \text{G}_2 \approx \text{G}_3 \approx \text{G}_4 \approx \text{G}_5.
+\]
+Ainsi, la vue du signataire malveillant dans l'exécution du protocole avec le message $m_0$ est indistinguable de celle obtenue dans l'exécution avec le message $m_1$ :
+\[
+\operatorname{View}_{\mathcal{A}}(m_0) \approx \operatorname{View}_{\mathcal{A}}(m_1).
+\]
+Par conséquent, l'adversaire $\mathcal{A}$ ne peut pas distinguer quel message a été signé par l'utilisateur. Le protocole satisfait donc la propriété de blindness.
+
+
+\subsubsection{Preuve: randomisation de Waters ($G_1 \rightarrow G_2$)}
+\label{sec:randomisation-waters}
+
+La signature obtenue après le déchiffrement est une signature de Waters
+de la forme :
+\[
+\sigma_1 = h_s^a \cdot F(M)^t,
+\qquad
+\sigma_2 = g_2^t,
+\]
+
+où $t\leftarrow\mathbb{Z}_p$ est un aléa choisi lors de la génération de la
+signature.
+Lors de l'étape de randomisation, l'utilisateur choisit un nouvel aléa
+$t'\leftarrow\mathbb{Z}_p$ et calcule :
+
+\[
+\begin{aligned}
+\widehat{\sigma}_1 &= \sigma_1 F(M)^{t'}
+= h_s^a F(M)^t F(M)^{t'}
+= h_s^a F(M)^{t+t'},\\
+\widehat{\sigma}_2 &= \sigma_2 g_2^{t'}
+= g_2^t g_2^{t'}
+= g_2^{t+t'}.
+\end{aligned}
+\]
+
+Or $t'$ est choisi uniformément dans $\mathbb{Z}_p$, donc
+$t+t'$ est également uniformément distribuée dans $\mathbb{Z}_p$.
+La valeur de l'aléa final $t+t'$ est indépendante de l'aléa
+initial $t$ et masque la dépendance du message dans la signature. La
+randomisation permet donc de générer une signature dont la distribution ne
+révèle aucune information supplémentaire sur le message.
+Cette propriété montre que la randomisation d'une signature de Waters
+produit une distribution indépendante de l'aléa initial de signature.
+Elle permet donc de remplacer, dans la transition entre G$_1$ et G$_2$,
+la randomisation réelle par une randomisation simulée utilisant un aléa
+indépendant du message.
+
+\subsubsection{Preuve: Réduction DDH ($G_1 \rightarrow G_2$)}
+\label{sec:DDH-waters}
+
+Nous montrons que la transition entre les jeux $G_1$ et $G_2$ est
+computationnellement indistinguable sous l'hypothèse Decisional
+Diffie--Hellman (DDH).
+Le simulateur reçoit une instance DDH
+$
+(g, g^a, g^b, c),
+$
+où il doit distinguer les deux cas suivants :
+\[
+c = g^{ab}
+\qquad \text{ou} \qquad
+c \xleftarrow{\$} G.
+\]
+
+À partir de cette instance, le simulateur exécute l'algorithme \textsf{Setup} et construit les paramètres publics ( les bases $u_0, u_1, \ldots$) tel que:
+\begin{itemize}
+    \item si $c = g^{ab}$, la distribution simulée corresponde au jeu contenant $F(M)$ ;
+    \item si $c$ est uniforme dans $G$, la distribution simulée corresponde au jeu contenant $F(\mathbf{0})$.
+\end{itemize}
+
+Ainsi, tout adversaire capable de distinguer ces deux jeux permet de résoudre le problème DDH avec un avantage non négligeable.

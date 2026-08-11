@@ -74,14 +74,13 @@ void benchmark_print(const benchmark_result_t *result, int mode) {
     printf("Iterations  : %d\n", NB_BENCHMARKS);
     printf("Mode        : %s\n", (mode == 0) ? "Classic OT" : "Dual-Mode OT");
     printf("---------------------\n");
-    printf("Params      : %.3f ms\n", result->params_ms);
-    printf("OT          : %.3f ms\n", result->ot_ms);
-    printf("KeyGen      : %.3f ms\n", result->keygen_ms);
-    printf("Signer      : %.3f ms\n", result->signer_ms);
-    printf("Signature   : %.3f ms\n", result->signature_ms);
-    printf("Verify      : %.3f ms\n", result->verify_ms);
+    printf("BS_Gen      : %.3f ms\n", result->params_ms);
+    printf("BS_User     : %.3f ms\n", result->ot_ms);
+    printf("BS_Signer   : %.3f ms\n", result->signer_ms);
+    printf("BS_Derive   : %.3f ms\n", result->signature_ms);
+    printf("BS_Verify   : %.3f ms\n", result->verify_ms);
     printf("---------------------\n");
-    printf("Crypto      : %.3f ms\n", result->crypto_ms);
+    printf("crypto_time : %.3f ms\n", result->crypto_ms);
     printf("Total       : %.3f ms\n", result->total_ms);
     printf("---------------------\n");
 }

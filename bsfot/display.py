@@ -8,22 +8,20 @@ LOG_DIR = "results/logs"
 IMAGE_DIR = "results/images"
 
 METRICS = [
-    "Params",
-    "OT",
-    "KeyGen",
-    "Signer",
-    "Signature",
-    "Verify",
+    "BS_Gen",
+    "BS_User",
+    "BS_Signer",
+    "BS_Derive",
+    "BS_Verify",
 ]
 
 # Couleurs pour chaque métrique
 METRIC_COLORS = {
-    "Params": "#1D3557",
-    "OT": "#457B9D",
-    "KeyGen": "#A8DADC",
-    "Signer": "#2A9D8F",
-    "Signature": "#6D597A",
-    "Verify": "#B8C0FF",
+    "BS_Gen": "#1D3557",
+    "BS_User": "#457B9D",
+    "BS_Signer": "#2A9D8F",
+    "BS_Derive": "#6D597A",
+    "BS_Verify": "#B8C0FF",
 }
 
 
@@ -38,7 +36,7 @@ def parse_log(filepath):
     if match:
         results["Message"] = int(match.group(1))
 
-    for metric in METRICS + ["Crypto", "Total"]:
+    for metric in METRICS + ["crypto_time", "Total"]:
         match = re.search(rf"{metric}\s*:\s*([0-9.]+)\s*ms", content)
         if match:
             results[metric] = float(match.group(1))
@@ -85,7 +83,7 @@ def plot_benchmark(results):
     results = dict(
         sorted(
             results.items(),
-            key=lambda x: x[1].get("Crypto", float("inf"))
+            key=lambda x: x[1].get("crypto_time", float("inf"))
         )
     )
 
@@ -118,7 +116,7 @@ def plot_benchmark(results):
     # Temps total crypto au-dessus des barres
     for i, curve in enumerate(curves):
 
-        crypto_time = results[curve].get("Crypto", 0)
+        crypto_time = results[curve].get("crypto_time", 0)
 
         plt.text(
             i,
