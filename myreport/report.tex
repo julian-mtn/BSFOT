@@ -200,58 +200,6 @@ satisfaisant les propriétés suivantes :
     le calcul du couplage est réalisable en temps polynomial.
 \end{itemize}
 
-
-\subsection{Signature de Waters}
-
-La construction utilise la fonction de hachage de Waters permettant
-d'encoder un message binaire dans un élément du groupe $\mathbb{G}_1$.
-Soit un message
-$
-M=(M_1,\ldots,M_\ell)\in\{0,1\}^{\ell}.
-$
-Les paramètres publics de la fonction sont constitués de
-$
-u_0,u_1,\ldots,u_\ell\in\mathbb{G}_1 .
-$
-La valeur associée au message est définie par :
-\[
-F(M)=u_0\prod_{i=1}^{\ell}u_i^{M_i}.
-\]
-Ainsi, chaque bit $M_i$ influence la valeur de hachage par
-l'intermédiaire du facteur $u_i^{M_i}$.
-
-
-Le schéma de signature de Waters utilise les paramètres publics
-précédents ainsi qu'une clé secrète $a\in\mathbb{Z}_p$.
-La clé publique est 
-$
-\mathsf{bvk}=g_2^a .
-$
-Pour signer un message $M$, le signataire choisit un aléa
-$t\sample\mathbb{Z}_p$ et calcule :
-\[
-\sigma_1=h_s^a F(M)^t,
-\qquad
-\sigma_2=g_2^t .
-\]
-La signature est alors 
-\[
-\sigma=(F(M),\sigma_1,\sigma_2).
-\]
-La vérification consiste à vérifier l'équation de couplage 
-\[
-e(h_s,\mathsf{bvk})\cdot e(F(M),\sigma_2)
-\stackrel{?}{=}
-e(\sigma_1,g_2).
-\]
-
-\subsection{Transfert Inconscient (OT)}
-
-Le transfert inconscient, que l'on nommera OT (Oblivious Transfer), 
-est un 
-
-TODO
-
 \subsection{Signatures aveugles}\label{sec:algo}
 
 Pour rappel, notre protocole vise à permettre à un utilisateur 
@@ -283,6 +231,107 @@ $
 \mathsf{BSVerify}(\mathsf{bvk},M,\sigma)=1.
 $
 
+\subsection{Transfert Inconscient (OT)}
+
+Une des notions fondamentales de notre construction
+est le transfert inconscient, que l'on nommera OT (Oblivious Transfer).
+C'est un protocole permettant à un destinataire d'obtenir une information 
+parmi plusieurs informations proposées par un émetteur,
+sans que ce dernier ne puisse déterminer le choix effectué, 
+et tel que le destinataire n'apprenne aucune information 
+sur les données qu'il n'a pas sélectionnées
+
+\begin{definition}[Transfert inconscient]
+Un protocole de transfert inconscient (1 parmi 2) est un protocole interactif entre
+un émetteur, en entrée $(m_0,m_1)$, et un récepteur, en entrée $b\in\{0,1\}$, tel
+qu'à l'issue de l'exécution~:
+\begin{itemize}
+    \item le récepteur apprend $m_b$ et n'obtient aucune information sur $m_{1-b}$~;
+    \item l'émetteur n'apprend aucune information sur le bit $b$.
+\end{itemize}
+\end{definition}
+
+Dans notre cas, il est exécuté indépendamment pour chaque position
+$i\in[\ell]$ du message $M=(M_1,\ldots,M_\ell)$ que l'utilisateur souhaite faire
+signer. Le signataire joue le rôle de l'émetteur, avec en entrée une paire de
+valeurs construites à partir d'un partage aléatoire de la clé secrète
+$\mathsf{bsk}$ et de l'aléa $t$ utilisé pour signer. L'utilisateur
+joue le rôle du récepteur, avec en entrée le bit $M_i$. À l'issue des $\ell$
+exécutions, l'utilisateur récupère exactement les valeurs nécessaires à
+la reconstruction d'une signature sur $M$, sans jamais révéler $M$ au
+signataire, et sans obtenir d'information sur les valeurs associées aux bits.
+
+
+\subsection{Transfert inconscient dual (dual-OT)}
+
+Notre protocole utilise plus précisément une variante du transfert inconscient,
+le dual-OT (dual Oblivious Tranfer), dans lequel
+chaque exécution repose sur deux branches, l'une associée au bit $0$ et
+l'autre au bit $1$, construites de sorte qu'une seule d'entre elles soit exploitable.
+
+\begin{definition}[Dual-OT]
+Un protocole dual-OT est un protocole interactif dans lequel,
+pour chaque choix $b\in\{0,1\}$ du récepteur, les deux branches
+associées à ce choix sont constituées de telle sorte que :
+\begin{itemize}
+    \item la branche correspondant au choix $b$ est une paire
+    Diffie-Hellman (DH) ;
+    \item la branche correspondant au choix $1-b$ est une paire
+    messy, c'est-à-dire une paire qui ne satisfait pas la
+    relation Diffie-Hellman.
+\end{itemize}
+\end{definition}
+
+Cette structure à deux branches, détaillée plus tard à la section \ref{sec:dh-messy}, est
+ce qui distingue le dual-OT du OT classique, un utilisateur malhonnête ne peut
+exploiter qu'une seule branche par position.
+
+
+\subsection{Signature de Waters}
+
+La construction utilise la fonction de hachage de Waters permettant
+d'encoder un message binaire dans un élément du groupe $\mathbb{G}_1$.
+Soit un message
+$
+M=(M_1,\ldots,M_\ell)\in\{0,1\}^{\ell}.
+$
+Les paramètres publics de la fonction sont constitués de
+$
+u_0,u_1,\ldots,u_\ell\in\mathbb{G}_1 .
+$
+La valeur associée au message est définie par :
+\[
+F(M)=u_0\prod_{i=1}^{\ell}u_i^{M_i}.
+\]
+Ainsi, chaque bit $M_i$ influence la valeur de hachage par
+l'intermédiaire du facteur $u_i^{M_i}$.\\
+
+En partant de cette fonction de hachage,
+il est possible d'arriver à un mécanisme de signature,
+c'est celui-ci que nous utilisons.
+Le schéma de signature de Waters utilise les paramètres publics
+précédents ainsi qu'une clé secrète $a\in\mathbb{Z}_p$.
+La clé publique est 
+$
+\mathsf{bvk}=g_2^a .
+$
+Pour signer un message $M$, le signataire choisit un aléa
+$t\sample\mathbb{Z}_p$ et calcule :
+\[
+\sigma_1=h_s^a F(M)^t,
+\qquad
+\sigma_2=g_2^t .
+\]
+La signature est alors 
+\[
+\sigma=(F(M),\sigma_1,\sigma_2).
+\]
+La vérification consiste à vérifier l'équation de couplage 
+\[
+e(h_s,\mathsf{bvk})\cdot e(F(M),\sigma_2)
+\stackrel{?}{=}
+e(\sigma_1,g_2).
+\]
 
 \section{Le protocole dual-OT}
 
@@ -294,7 +343,7 @@ permet de réaliser un transfert de messages de manière sécurisée.
 Ce protocole a servi de base et est utilisé dans notre implémentation (voir section \ref{sec:impl}) 
 comme comparateur pour le protocole dual-OT. Il est présenté ci-dessous comme référence.
 
-De plus, le protocole OT classique n'est pas complet du point de vue des propriétés de sécurité, 
+Le protocole OT classique n'est pas complet du point de vue des propriétés de sécurité, 
 puisqu'il ne dispose pas d'une preuve d'inforgeabilité, contrairement au protocole dual-OT.
 C'est pourquoi nous avons choisi de nous concentrer sur ce dernier pour la suite de notre étude.
 
@@ -637,7 +686,7 @@ e(F(M),\widehat{\sigma}_2),
 \end{aligned}
 \]
 
-\subsection{Les branches DH et messy}
+\subsection{Les branches DH et messy}\label{sec:dh-messy}
 
 Durant l'exécution du protocole, plus précisément lors de l'étape $\mathsf{BSUser}$ (voir section~\ref{sec:algo}),
 l'utilisateur construit deux branches pour chaque position $i$ du message $M$.
@@ -809,34 +858,102 @@ uniforme, indépendamment de l'aléa initial $t$.
 \end{lemma}
 
 \begin{lemma}[Indistinguabilité sous DDH] \label{lem:ddh-waters}
-Sous l'hypothèse DDH dans $\mathbb G_1$, les distributions obtenues
-en utilisant $F(M)$ et $F(0)$ dans la randomisation sont
-computationnellement indistinguables.
+Les distributions obtenues dans le protocole dual-OT en utilisant 
+$F(M)$ ou $F(0)$ sont computationnellement indistinguables.
 
 \begin{proof}
-Supposons qu'il existe un adversaire $\mathcal A$ capable de distinguer
-ces deux distributions avec un avantage non négligeable. Nous
-construisons alors un distingueur DDH $\mathcal B$.
-$\mathcal B$ reçoit une instance
+
+On suppose qu'il existe un adversaire $\mathcal{A}$ capable de distinguer
+les deux distributions.
+On va construire un distingueur DDH $\mathcal{B}$, qui a pout but de déterminer
+si une instance DDH est une instance réelleou une instance aléatoire.
+$\mathcal{B}$ reçoit une instance DDH
 $
-(g,g^a,g^b,c),
+(g_1,g_1^a,g_1^b,c),
 $
-où $c$ est soit $g^{ab}$, soit un élément uniformément distribué de
-$\mathbb G_1$. Il utilise cette instance pour construire les paramètres
-de la simulation.
+où $c$ est soit $g_1^{ab}$, soit un élément uniforme
+de $\mathbb{G}_1$.
+On va utiliser cette instance pour construire les paramètres de la simulation,
+tels que si $c=g_1^{ab}$, la distribution obtenue corresponde à l'exécution qui utilise
+$F(M)$, et tels que si $c$ est uniforme, elle corresponde à l'exécution avec
+$F(0)$.\\
 
-Si $c=g^{ab}$, la distribution obtenue correspond au jeu dans lequel
-la valeur $F(M)$ est utilisée. Si $c$ est uniforme, elle correspond au
-jeu dans lequel $F(0)$ est utilisée.
+On veut construire les paramètres de la fonction de Waters $u_0,u_1,\dots,u_{\ell}$ tels que dans le cas réel,
+la fonction contienne $g_1^{ab}$ et tels que dans le cas aléatoire elle
+contienne une valeur indépendante de $M$.
+Soit $M\in\{0,1\}^{\ell}$ et soit $j\in[\ell]$ tel que $M_j=1$.
+Le simulateur choisit
+$
+r_0,r_1,\ldots,r_\ell\sample\mathbb{Z}_p
+$
+et définit les paramètres de Waters par
+\[
+c=
+\begin{cases}
+g_1^{ab} & \text{si l'instance DDH est réelle},\\
+g_1^z,\quad z\sample\mathbb{Z}_p & \text{si l'instance DDH est aléatoire},
+\end{cases}
+\]
+et
+\[
+u_0=g_1^{r_0},
+\qquad
+u_j=cg_1^{-r_0},
+\qquad
+u_i=g_1^{r_i}
+\quad\text{pour } i\neq j.
+\]
+On a donc, pour la fonction de Waters, avec $M_j=1$,
+\[
+\begin{aligned}
+F(M)
+&=
+u_0\prod_{i=1}^{\ell}u_i^{M_i}\\
+&=
+u_0u_j
+\prod_{\substack{i=1\\i\neq j}}^{\ell}
+u_i^{M_i}\\
+&=
+g_1^{r_0}
+\left(cg_1^{-r_0}\right)
+\prod_{\substack{i=1\\i\neq j}}^{\ell}
+\left(g_1^{r_i}\right)^{M_i}\\
+&=
+g_1^{r_0}c g_1^{-r_0}
+\prod_{\substack{i=1\\i\neq j}}^{\ell}
+g_1^{r_iM_i}\\
+&=
+c
+\prod_{\substack{i=1\\i\neq j}}^{\ell}
+g_1^{r_iM_i}.
+\end{aligned}
+\]
+et pour $F(0)$,
+\[
+F(0)
+=
+u_0\prod_{i=1}^{\ell}u_i^0
+=
+u_0
+=
+g_1^{r_0},
+\]
+Par conséquent, lorsque $c=g_1^{ab}$, la valeur $F(M)$ contient le
+terme $g_1^{ab}$, tandis que lorsque $c$ est uniformément distribué
+dans $\mathbb{G}_1$, la valeur $F(M)$ est uniformément distribuée
+dans $\mathbb{G}_1$ et sa distribution est indépendante du message $M$.
 
-Ainsi, un adversaire distinguant ces deux jeux permet à $\mathcal B$
-de distinguer une instance DDH réelle d'une instance aléatoire avec
-le même avantage, ce qui contredit l'hypothèse DDH.
-
-
+Ainsi, si l'adversaire $\mathcal{A}$ était capable de distinguer les
+distributions obtenues avec $F(M)$ et $F(0)$, le distingueur $\mathcal{B}$ pourrait utiliser
+$\mathcal{A}$ pour déterminer si $c=g_1^{ab}$ ou si $c$ est uniformément
+distribué dans $\mathbb{G}_1$.
+Cela permettrait à $\mathcal{B}$ de distinguer une instance DDH réelle
+d'une instance aléatoire, ce qui contredit l'hypothèse DDH.
+On en déduit que les distributions obtenues en utilisant $F(M)$ et
+$F(0)$ sont computationnellement indistinguables.
 \end{proof}
 \end{lemma}
-TODO : FINIR PREUVE INDISTINGUABILITE
+
 
 \subsection{Inforgeabilité}
 
@@ -972,7 +1089,7 @@ Après la réponse du signataire, le déchiffrement de la branche DH donne la m�
 \]
 On applique alors la réduction DDH de la
 section~\ref{lem:ddh-waters}. Celle-ci permet de remplacer, sous
-l'hypothèse DDH, le terme $F(M)$ par $F(\mathbf{0})$ dans la signature.
+l'hypothèse DDH, le terme $F(M)$ par $F(0)$ dans la signature.
 Ainsi, la signature simulée ne dépend plus du message $M$ et
 \[
 \mathrm{G}_2\approx\mathrm{G}_3.
@@ -1131,9 +1248,71 @@ FM18-768    & 18 & 768 bits \\
 \caption{Courbes elliptiques utilisées pour les expérimentations.}
 \end{table}
 
-\subsection{Résultats expérimentaux}
+\subsection{Résultats expérimentaux}\label{sec:result_analysis}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{../bsfot/results/images/benchmark_OT_vs_dual-OT.png}
+  \caption{Benchmark global de comparaison entre le protocole OT et le protocole dual-OT pour différentes courbes elliptiques.}
+  \label{fig:global_benchmark}
+\end{figure}
+
 
 \subsection{Analyse des résultats}
+
+\newpage
+\appendix
+
+\section{Benchmarks détaillés}
+
+Cette annexe présente les mesures détaillées obtenues pour chacune
+des étapes des protocoles OT et dual-OT individuellement. Ces graphiques sont 
+présentés dans la section \ref{sec:result_analysis}.
+
+\subsection{Génération des clés}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{../bsfot/results/images/bs_gen_OT_vs_dual-OT.png}
+\caption{Temps d'exécution de la génération des clés pour les protocoles OT et dual-OT.}
+\label{fig:annexe_bs_gen}
+\end{figure}
+
+\subsection{Exécution côté utilisateur}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{../bsfot/results/images/bs_user_OT_vs_dual-OT.png}
+\caption{Temps d'exécution de l'étape utilisateur pour les protocoles OT et dual-OT.}
+\label{fig:annexe_bs_user}
+\end{figure}
+
+\subsection{Exécution côté signataire}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{../bsfot/results/images/bs_signer_OT_vs_dual-OT.png}
+\caption{Temps d'exécution de l'étape du signataire pour les protocoles OT et dual-OT.}
+\label{fig:annexe_bs_signer}
+\end{figure}
+
+\subsection{Dérivation de la signature}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{../bsfot/results/images/bs_derive_OT_vs_dual-OT.png}
+\caption{Temps d'exécution de la dérivation de la signature pour les protocoles OT et dual-OT.}
+\label{fig:annexe_bs_derive}
+\end{figure}
+
+\subsection{Vérification}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{../bsfot/results/images/bs_verify_OT_vs_dual-OT.png}
+\caption{Temps d'exécution de la vérification pour les protocoles OT et dual-OT.}
+\label{fig:annexe_bs_verify}
+\end{figure}
 
 
 \end{document}
