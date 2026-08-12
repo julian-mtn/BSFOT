@@ -865,8 +865,8 @@ $F(M)$ ou $F(0)$ sont computationnellement indistinguables.
 
 On suppose qu'il existe un adversaire $\mathcal{A}$ capable de distinguer
 les deux distributions.
-On va construire un distingueur DDH $\mathcal{B}$, qui a pout but de déterminer
-si une instance DDH est une instance réelleou une instance aléatoire.
+On va construire un distingueur DDH $\mathcal{B}$, qui a pour but de déterminer
+si une instance DDH est une instance réelle ou une instance aléatoire.
 $\mathcal{B}$ reçoit une instance DDH
 $
 (g_1,g_1^a,g_1^b,c),
@@ -888,20 +888,20 @@ r_0,r_1,\ldots,r_\ell\sample\mathbb{Z}_p
 $
 et définit les paramètres de Waters par
 \[
-c=
-\begin{cases}
-g_1^{ab} & \text{si l'instance DDH est réelle},\\
-g_1^z,\quad z\sample\mathbb{Z}_p & \text{si l'instance DDH est aléatoire},
-\end{cases}
-\]
-et
-\[
 u_0=g_1^{r_0},
 \qquad
 u_j=cg_1^{-r_0},
 \qquad
 u_i=g_1^{r_i}
 \quad\text{pour } i\neq j.
+\]
+avec
+\[
+c=
+\begin{cases}
+g_1^{ab} & \text{si l'instance DDH est réelle},\\
+g_1^z,\quad z\sample\mathbb{Z}_p & \text{si l'instance DDH est aléatoire},
+\end{cases}
 \]
 On a donc, pour la fonction de Waters, avec $M_j=1$,
 \[
