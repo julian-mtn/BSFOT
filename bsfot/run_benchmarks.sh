@@ -19,6 +19,10 @@ if [ "${#CURVES[@]}" -eq 0 ]; then
 fi
 
 
+# ============================================================
+# Mode
+# ============================================================
+
 MODE="${1:-${MODE:-0}}"
 
 if [[ "$MODE" != "0" && "$MODE" != "1" ]]; then
@@ -26,10 +30,19 @@ if [[ "$MODE" != "0" && "$MODE" != "1" ]]; then
     exit 1
 fi
 
+if [[ "$MODE" == "0" ]]; then
+    MODE_NAME="OT"
+else
+    MODE_NAME="dual_OT"
+fi
+
+
+# ============================================================
+# Configuration
+# ============================================================
 
 RELIC_SRC="${RELIC_SRC:-$HOME/relic}"
 JOBS="${NPROC:-$(nproc)}"
-
 
 RESULTS_DIR="results"
 LOG_DIR="$RESULTS_DIR/logs"
@@ -38,6 +51,10 @@ BUILD_LOG_DIR="$LOG_DIR/build_logs"
 IMAGE_DIR="$RESULTS_DIR/images"
 
 
+# ============================================================
+# Création des dossiers
+# ============================================================
+
 mkdir -p \
     "$LOG_DIR" \
     "$INSTALL_LOG_DIR" \
@@ -45,15 +62,31 @@ mkdir -p \
     "$IMAGE_DIR"
 
 
+# ============================================================
+# Nettoyage des logs de compilation uniquement
+# ============================================================
 
-rm -f "$LOG_DIR"/*.log
+# IMPORTANT :
+# On ne supprime PAS les logs de benchmark.
+#
+# Ainsi :
+#
+#   BLS12_381_OT.log
+#   BLS12_381_dual_OT.log
+#
+# peuvent coexister après deux lancements.
+
 rm -f "$BUILD_LOG_DIR"/*.log
-# rm -f "$IMAGE_DIR"/*.png
 
 
+# ============================================================
+# Sudo
+# ============================================================
+
+echo
 echo "Ce script nécessite sudo pour installer les bibliothèques RELIC manquantes dans /opt"
-sudo -v
 
+sudo -v
 
 (
     while true
@@ -64,12 +97,14 @@ sudo -v
     done
 ) 2>/dev/null &
 
-
 SUDO_KEEPALIVE_PID=$!
 
 trap 'kill "$SUDO_KEEPALIVE_PID" 2>/dev/null' EXIT
 
 
+# ============================================================
+# Installation RELIC
+# ============================================================
 
 install_curve()
 {
@@ -124,9 +159,16 @@ install_curve()
 }
 
 
+# ============================================================
+# Benchmark
+# ============================================================
 
 echo
-echo "=== Benchmark ${#CURVES[@]} courbes : ${CURVES[*]} ==="
+echo "============================================================"
+echo "Benchmark ${#CURVES[@]} courbes"
+echo "Mode : $MODE_NAME"
+echo "Courbes : ${CURVES[*]}"
+echo "============================================================"
 echo
 
 
@@ -136,11 +178,19 @@ do
     echo "=== Courbe : $curve ==="
 
 
+    # --------------------------------------------------------
+    # Installation RELIC
+    # --------------------------------------------------------
+
     if ! install_curve "$curve"; then
         echo
         continue
     fi
 
+
+    # --------------------------------------------------------
+    # Compilation
+    # --------------------------------------------------------
 
     make clean > /dev/null
 
@@ -156,20 +206,39 @@ do
     fi
 
 
+    # La compilation est terminée,
+    # on peut supprimer son log temporaire.
+
     rm -f "$BUILD_LOG"
 
 
-    LOGFILE="$LOG_DIR/${curve}.log"
+    # --------------------------------------------------------
+    # Benchmark
+    # --------------------------------------------------------
+
+    # Le mode fait maintenant partie du nom du fichier.
+    #
+    # MODE=0 :
+    #   BLS12_381_OT.log
+    #
+    # MODE=1 :
+    #   BLS12_381_dual_OT.log
+
+    LOGFILE="$LOG_DIR/${curve}_${MODE_NAME}.log"
 
 
     if ./main "$MODE" > "$LOGFILE" 2>&1
     then
-        echo "[OK] $curve -> $LOGFILE"
+
+        echo "[OK] $curve [$MODE_NAME] -> $LOGFILE"
         echo
+
         cat "$LOGFILE"
 
     else
+
         echo "[ERREUR] Exécution échouée pour $curve — voir $LOGFILE"
+
     fi
 
 
@@ -178,11 +247,20 @@ do
 done
 
 
+# ============================================================
+# Fin du benchmark
+# ============================================================
+
+echo "============================================================"
 echo "=== Done ==="
+echo "Mode exécuté : $MODE_NAME"
+echo "Logs disponibles dans : $LOG_DIR"
+echo "============================================================"
 
 
-
+# ============================================================
 # Génération automatique des graphiques
+# ============================================================
 
 if [ -f "display.py" ]
 then

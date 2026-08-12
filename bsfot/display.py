@@ -2,7 +2,14 @@
 
 import os
 import re
+import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib.patches import Patch
+
+
+# ============================================================
+# Configuration
+# ============================================================
 
 LOG_DIR = "results/logs"
 IMAGE_DIR = "results/images"
@@ -15,7 +22,6 @@ METRICS = [
     "BS_Verify",
 ]
 
-# Couleurs pour chaque métrique
 METRIC_COLORS = {
     "BS_Gen": "#1D3557",
     "BS_User": "#457B9D",
@@ -24,37 +30,81 @@ METRIC_COLORS = {
     "BS_Verify": "#B8C0FF",
 }
 
+# Opacité des deux modes
+OT_ALPHA = 0.70
+DUAL_OT_ALPHA = 1.0
+
+
+# ============================================================
+# Lecture d'un log
+# ============================================================
 
 def parse_log(filepath):
+
     results = {}
 
     with open(filepath, "r") as file:
         content = file.read()
 
+    # --------------------------------------------------------
     # Taille du message
-    match = re.search(r"Message\s*:\s*(\d+)\s*bits", content)
+    # --------------------------------------------------------
+
+    match = re.search(
+        r"Message\s*:\s*(\d+)\s*bits",
+        content
+    )
+
     if match:
         results["Message"] = int(match.group(1))
 
+    # --------------------------------------------------------
+    # Métriques
+    # --------------------------------------------------------
+
     for metric in METRICS + ["crypto_time", "Total"]:
-        match = re.search(rf"{metric}\s*:\s*([0-9.]+)\s*ms", content)
+
+        match = re.search(
+            rf"{metric}\s*:\s*([0-9.]+)\s*ms",
+            content
+        )
+
         if match:
             results[metric] = float(match.group(1))
 
+    # --------------------------------------------------------
     # Nombre d'itérations
-    match = re.search(r"Iterations\s*:\s*(\d+)", content)
+    # --------------------------------------------------------
+
+    match = re.search(
+        r"Iterations\s*:\s*(\d+)",
+        content
+    )
+
     if match:
         results["Iterations"] = int(match.group(1))
 
+    # --------------------------------------------------------
     # Mode
-    match = re.search(r"Mode\s*:\s*(.+)", content)
+    # --------------------------------------------------------
+
+    match = re.search(
+        r"Mode\s*:\s*(.+)",
+        content
+    )
+
     if match:
         results["Mode"] = match.group(1).strip()
 
     return results
 
 
+# ============================================================
+# Chargement des résultats
+# ============================================================
+
 def load_results():
+
     benchmarks = {}
 
     if not os.path.isdir(LOG_DIR):
@@ -65,182 +115,537 @@ def load_results():
         if not filename.endswith(".log"):
             continue
 
+        # Ignorer les build logs
         if filename.endswith("_build.log"):
             continue
 
-        curve = filename.replace(".log", "")
+        # ----------------------------------------------------
+        # Détection du mode depuis le nom du fichier
+        # ----------------------------------------------------
 
-        benchmarks[curve] = parse_log(
-            os.path.join(LOG_DIR, filename)
+        if filename.endswith("_dual_OT.log"):
+
+            curve = filename[:-len("_dual_OT.log")]
+            mode = "dual_OT"
+
+        elif filename.endswith("_OT.log"):
+
+            curve = filename[:-len("_OT.log")]
+            mode = "OT"
+
+        else:
+            continue
+
+        filepath = os.path.join(
+            LOG_DIR,
+            filename
         )
+
+        data = parse_log(filepath)
+
+        # Le nom du fichier fait autorité
+        data["Mode"] = mode
+
+        benchmarks[(curve, mode)] = data
 
     return benchmarks
 
 
-def plot_benchmark(results):
+# ============================================================
+# Tri des courbes par temps crypto
+# ============================================================
 
-    # Trie par temps crypto croissant
-    results = dict(
-        sorted(
-            results.items(),
-            key=lambda x: x[1].get("crypto_time", float("inf"))
+def sort_curves_by_crypto_time(results):
+
+    curves = sorted(
+        set(
+            curve
+            for curve, mode in results.keys()
         )
     )
 
-    curves = list(results.keys())
+    def average_crypto_time(curve):
 
-    bottom = [0] * len(curves)
+        values = []
 
-    plt.figure(figsize=(12, 6))
+        for mode in ["OT", "dual_OT"]:
+
+            data = results.get(
+                (curve, mode),
+                {}
+            )
+
+            if "crypto_time" in data:
+                values.append(
+                    data["crypto_time"]
+                )
+
+        # Si aucun crypto_time n'existe,
+        # on place la courbe à la fin.
+        if not values:
+            return float("inf")
+
+        return sum(values) / len(values)
+
+    return sorted(
+        curves,
+        key=average_crypto_time
+    )
+
+
+# ============================================================
+# Informations générales
+# ============================================================
+
+def get_benchmark_info(results):
+
+    if not results:
+        return "?", "?"
+
+    first = next(iter(results.values()))
+
+    message_bits = first.get(
+        "Message",
+        "?"
+    )
+
+    iterations = first.get(
+        "Iterations",
+        "?"
+    )
+
+    return message_bits, iterations
+
+
+# ============================================================
+# Graphique empilé OT vs dual_OT
+# ============================================================
+
+def plot_comparison_stacked(results):
+
+    curves = sort_curves_by_crypto_time(results)
+
+    if not curves:
+        return
+
+    x = np.arange(len(curves))
+    width = 0.36
+
+    # --------------------------------------------------------
+    # Figure
+    # --------------------------------------------------------
+
+    fig, ax = plt.subplots(
+        figsize=(14, 7)
+    )
+
+    # Laisse de la place en haut pour le titre/sous-titre
+    fig.subplots_adjust(
+        top=0.82,
+        bottom=0.12,
+        left=0.09,
+        right=0.97
+    )
+
+    ot_bottom = np.zeros(len(curves))
+    dual_bottom = np.zeros(len(curves))
+
+    # --------------------------------------------------------
+    # Barres empilées
+    # --------------------------------------------------------
 
     for metric in METRICS:
 
-        values = [
-            results[c].get(metric, 0)
-            for c in curves
-        ]
+        ot_values = np.array([
+            results.get(
+                (curve, "OT"),
+                {}
+            ).get(metric, 0)
+            for curve in curves
+        ])
 
-        plt.bar(
-            curves,
-            values,
-            bottom=bottom,
-            label=metric,
-            color=METRIC_COLORS[metric]
+        dual_values = np.array([
+            results.get(
+                (curve, "dual_OT"),
+                {}
+            ).get(metric, 0)
+            for curve in curves
+        ])
+
+        color = METRIC_COLORS[metric]
+
+        # OT
+        ax.bar(
+            x - width / 2,
+            ot_values,
+            width,
+            bottom=ot_bottom,
+            color=color,
+            alpha=OT_ALPHA
         )
 
-        bottom = [
-            b + v
-            for b, v in zip(bottom, values)
-        ]
+        # dual_OT
+        ax.bar(
+            x + width / 2,
+            dual_values,
+            width,
+            bottom=dual_bottom,
+            color=color,
+            alpha=DUAL_OT_ALPHA
+        )
 
-    # Temps total crypto au-dessus des barres
+        ot_bottom += ot_values
+        dual_bottom += dual_values
+
+    # --------------------------------------------------------
+    # Temps total au-dessus des barres
+    # --------------------------------------------------------
+
     for i, curve in enumerate(curves):
 
-        crypto_time = results[curve].get("crypto_time", 0)
-
-        plt.text(
-            i,
-            crypto_time,
-            f"{crypto_time:.1f}",
-            ha="center",
-            va="bottom",
-            fontsize=9
+        ot_total = sum(
+            results.get(
+                (curve, "OT"),
+                {}
+            ).get(metric, 0)
+            for metric in METRICS
         )
 
-    message_bits = next(iter(results.values())).get("Message", "?")
-    iterations = next(iter(results.values())).get("Iterations", "?")
-    mode = next(iter(results.values())).get("Mode", "?")
+        dual_total = sum(
+            results.get(
+                (curve, "dual_OT"),
+                {}
+            ).get(metric, 0)
+            for metric in METRICS
+        )
 
-    plt.ylabel("Time (ms)")
-    plt.xlabel("RELIC curves")
+        if ot_total > 0:
 
-    plt.title(
-        "BSFOT Execution Time by Pairing Curve",
-        fontsize=14,
-        fontweight="bold"
+            ax.text(
+                i - width / 2,
+                ot_total,
+                f"{ot_total:.1f}",
+                ha="center",
+                va="bottom",
+                fontsize=8
+            )
+
+        if dual_total > 0:
+
+            ax.text(
+                i + width / 2,
+                dual_total,
+                f"{dual_total:.1f}",
+                ha="center",
+                va="bottom",
+                fontsize=8
+            )
+
+    # --------------------------------------------------------
+    # Axes
+    # --------------------------------------------------------
+
+    message_bits, iterations = get_benchmark_info(
+        results
     )
 
-    plt.suptitle(
-        f"Mode: {mode}\n"
-        f"Message size: {message_bits} bits\n"
+    ax.set_ylabel(
+        "Time (ms)"
+    )
+
+    ax.set_xlabel(
+        "RELIC curves"
+    )
+
+    ax.set_xticks(x)
+
+    ax.set_xticklabels(
+        curves,
+        rotation=60,
+        ha="right"
+    )
+
+    # --------------------------------------------------------
+    # Titre
+    # --------------------------------------------------------
+
+    ax.set_title(
+    "BSFOT Execution Time : OT vs dual_OT",
+    fontsize=16,
+    fontweight="bold",
+    pad=28
+)
+    ax.text(
+        0.5,
+        1.015,
+        f"Message size: {message_bits} bits | "
         f"Benchmark iterations: {iterations}",
-        fontsize=11,
+        transform=ax.transAxes,
+        ha="center",
+        va="bottom",
+        fontsize=10,
         color="dimgray"
     )
 
-    plt.legend()
+    # --------------------------------------------------------
+    # Grille
+    # --------------------------------------------------------
 
-    plt.grid(axis="y", alpha=0.3)
-
-    plt.xticks(rotation=60, ha="right")
-
-    plt.tight_layout()
-
-    mode_filename = mode.lower().replace(" ", "")
-
-    plt.savefig(
-        f"{IMAGE_DIR}/benchmark_{mode_filename}.png",
-        dpi=300
+    ax.grid(
+        axis="y",
+        alpha=0.3
     )
 
-    plt.close()
+    # --------------------------------------------------------
+    # Légende des métriques
+    # --------------------------------------------------------
 
-
-def plot_single_metric(results, metric, filename, title):
-
-    # Trie par temps crypto croissant
-    results = dict(
-        sorted(
-            results.items(),
-            key=lambda x: x[1].get("crypto_time", float("inf"))
+    metric_handles = [
+        Patch(
+            facecolor=METRIC_COLORS[metric],
+            alpha=1.0,
+            label=metric
         )
-    )
-
-    curves = list(results.keys())
-
-    values = [
-        results[c].get(metric, 0)
-        for c in curves
+        for metric in METRICS
     ]
 
-    plt.figure(figsize=(12, 6))
-
-    plt.bar(
-        curves,
-        values,
-        color=METRIC_COLORS[metric],
-        label=metric
+    legend_metrics = ax.legend(
+        handles=metric_handles,
+        title="Operations",
+        loc="upper left",
+        frameon=True
     )
 
-    for i, value in enumerate(values):
+    ax.add_artist(legend_metrics)
 
-        plt.text(
-            i,
-            value,
-            f"{value:.1f}",
-            ha="center",
-            va="bottom",
-            fontsize=9
-        )
+    # --------------------------------------------------------
+    # Légende des modes
+    # --------------------------------------------------------
 
-    message_bits = next(iter(results.values())).get("Message", "?")
-    iterations = next(iter(results.values())).get("Iterations", "?")
-    mode = next(iter(results.values())).get("Mode", "?")
+    mode_handles = [
+        Patch(
+            facecolor="#555555",
+            alpha=OT_ALPHA,
+            label="OT"
+        ),
+        Patch(
+            facecolor="#555555",
+            alpha=DUAL_OT_ALPHA,
+            label="dual_OT"
+        ),
+    ]
 
-    plt.ylabel("Time (ms)")
-    plt.xlabel("RELIC curves")
-
-    plt.title(
-        title,
-        fontsize=14,
-        fontweight="bold"
+    ax.legend(
+        handles=mode_handles,
+        title="Mode",
+        loc="upper left",
+        bbox_to_anchor=(0.0, 0.67),
+        frameon=True
     )
 
-    plt.suptitle(
-        f"Mode: {mode}\n"
-        f"Message size: {message_bits} bits\n"
-        f"Benchmark iterations: {iterations}",
-        fontsize=11,
-        color="dimgray"
+    # --------------------------------------------------------
+    # Sauvegarde
+    # --------------------------------------------------------
+
+    filename = os.path.join(
+        IMAGE_DIR,
+        "benchmark_OT_vs_dual_OT.png"
     )
-
-    plt.legend()
-
-    plt.grid(axis="y", alpha=0.3)
-
-    plt.xticks(rotation=60, ha="right")
-
-    plt.tight_layout()
-
-    mode_filename = mode.lower().replace(" ", "")
 
     plt.savefig(
-        f"{IMAGE_DIR}/{filename.replace('.png', f'_{mode_filename}.png')}",
-        dpi=300
+        filename,
+        dpi=300,
+        bbox_inches="tight"
     )
 
     plt.close()
 
+    print(
+        f"[OK] {filename}"
+    )
+
+
+# ============================================================
+# Graphique individuel par métrique
+# ============================================================
+
+def plot_single_metric_comparison(
+    results,
+    metric
+):
+
+    curves = sort_curves_by_crypto_time(results)
+
+    if not curves:
+        return
+
+    x = np.arange(len(curves))
+    width = 0.36
+
+    ot_values = np.array([
+        results.get(
+            (curve, "OT"),
+            {}
+        ).get(metric, 0)
+        for curve in curves
+    ])
+
+    dual_values = np.array([
+        results.get(
+            (curve, "dual_OT"),
+            {}
+        ).get(metric, 0)
+        for curve in curves
+    ])
+
+    fig, ax = plt.subplots(
+        figsize=(14, 7)
+    )
+
+    fig.subplots_adjust(
+        top=0.82,
+        bottom=0.12,
+        left=0.09,
+        right=0.97
+    )
+
+    # --------------------------------------------------------
+    # OT
+    # --------------------------------------------------------
+
+    bars_ot = ax.bar(
+        x - width / 2,
+        ot_values,
+        width,
+        label="OT",
+        color=METRIC_COLORS[metric],
+        alpha=OT_ALPHA
+    )
+
+    # --------------------------------------------------------
+    # dual_OT
+    # --------------------------------------------------------
+
+    bars_dual = ax.bar(
+        x + width / 2,
+        dual_values,
+        width,
+        label="dual_OT",
+        color=METRIC_COLORS[metric],
+        alpha=DUAL_OT_ALPHA
+    )
+
+    # --------------------------------------------------------
+    # Valeurs
+    # --------------------------------------------------------
+
+    for bars in [bars_ot, bars_dual]:
+
+        for bar in bars:
+
+            value = bar.get_height()
+
+            if value > 0:
+
+                ax.text(
+                    bar.get_x() + bar.get_width() / 2,
+                    value,
+                    f"{value:.1f}",
+                    ha="center",
+                    va="bottom",
+                    fontsize=8
+                )
+
+    # --------------------------------------------------------
+    # Informations
+    # --------------------------------------------------------
+
+    message_bits, iterations = get_benchmark_info(
+        results
+    )
+
+    ax.set_ylabel(
+        "Time (ms)"
+    )
+
+    ax.set_xlabel(
+        "RELIC curves"
+    )
+
+    ax.set_xticks(x)
+
+    ax.set_xticklabels(
+        curves,
+        rotation=60,
+        ha="right"
+    )
+
+    # --------------------------------------------------------
+    # Titre + sous-titre
+    # --------------------------------------------------------
+
+    ax.set_title(
+        f"{metric} : OT vs dual_OT\n",
+        fontsize=15,
+        fontweight="bold",
+        pad=15
+    )
+
+    ax.text(
+            0.5,
+            1.015,
+            f"Message size: {message_bits} bits | "
+            f"Benchmark iterations: {iterations}",
+            transform=ax.transAxes,
+            ha="center",
+            va="bottom",
+            fontsize=10,
+            color="dimgray"
+    )
+
+    # --------------------------------------------------------
+    # Légende
+    # --------------------------------------------------------
+
+    ax.legend(
+        loc="upper left",
+        frameon=True
+    )
+
+    # --------------------------------------------------------
+    # Grille
+    # --------------------------------------------------------
+
+    ax.grid(
+        axis="y",
+        alpha=0.3
+    )
+
+    # --------------------------------------------------------
+    # Sauvegarde
+    # --------------------------------------------------------
+
+    filename = os.path.join(
+        IMAGE_DIR,
+        f"{metric.lower()}_OT_vs_dual_OT.png"
+    )
+
+    plt.savefig(
+        filename,
+        dpi=300,
+        bbox_inches="tight"
+    )
+
+    plt.close()
+
+    print(
+        f"[OK] {filename}"
+    )
+
+
+# ============================================================
+# Main
+# ============================================================
 
 def main():
 
@@ -252,27 +657,42 @@ def main():
     results = load_results()
 
     if not results:
-        print("No results found in results/logs/")
-        return
 
-    # Graphique empilé
-    plot_benchmark(results)
-
-    # Un graphique par métrique
-    for metric in METRICS:
-        plot_single_metric(
-            results,
-            metric,
-            f"{metric.lower()}.png",
-            f"BSFOT {metric} Time"
+        print(
+            "[ERREUR] Aucun résultat OT / dual_OT trouvé "
+            f"dans {LOG_DIR}/"
         )
 
-    print("Graphiques générés:")
-    print(f" - {IMAGE_DIR}/benchmark_*.png")
+        return
 
+    # --------------------------------------------------------
+    # Génération
+    # --------------------------------------------------------
+
+    print()
+    print("=== Génération des graphiques ===")
+
+    # Graphique empilé
+    plot_comparison_stacked(
+        results
+    )
+
+    # Graphiques individuels
     for metric in METRICS:
-        print(f" - {IMAGE_DIR}/{metric.lower()}_*.png")
 
+        plot_single_metric_comparison(
+            results,
+            metric
+        )
+
+    print()
+    print("=== Graphiques générés ===")
+    print(f"Répertoire : {IMAGE_DIR}/")
+
+
+# ============================================================
+# Entrée
+# ============================================================
 
 if __name__ == "__main__":
     main()

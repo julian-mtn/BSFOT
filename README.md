@@ -1,20 +1,8 @@
 # BSFOT (Blind Signatures From Oblivious Transfer)
 
-<table>
-  <tr>
-    <th align="center">Classic OT</th>
-    <th align="center">Dual-mode OT</th>
-  </tr>
-
-  <tr>
-    <td align="center">
-      <img src="bsfot/results/images/benchmark_classicot.png" width="400">
-    </td>
-    <td align="center">
-      <img src="bsfot/results/images/benchmark_dual-modeot.png" width="400">
-    </td>
-  </tr>
-</table>
+<p align="center">
+  <img src="bsfot/results/images/benchmark_OT_vs_dual_OT.png" width="800">
+</p>
 
 ## Requirements
 
