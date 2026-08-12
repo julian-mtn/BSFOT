@@ -1,7 +1,7 @@
 # BSFOT (Blind Signatures From Oblivious Transfer)
 
 <p align="center">
-  <img src="bsfot/results/images/benchmark_OT_vs_dual_OT.png" width="800">
+  <img src="bsfot/results/images/benchmark_OT_vs_dual-OT.png" width="800">
 </p>
 
 ## Requirements

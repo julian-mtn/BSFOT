@@ -370,7 +370,7 @@ def plot_comparison_stacked(results):
     # --------------------------------------------------------
 
     ax.set_title(
-    "BSFOT Execution Time : OT vs dual_OT",
+    "BSFOT Execution Time : OT vs dual-OT",
     fontsize=16,
     fontweight="bold",
     pad=28
@@ -449,7 +449,7 @@ def plot_comparison_stacked(results):
 
     filename = os.path.join(
         IMAGE_DIR,
-        "benchmark_OT_vs_dual_OT.png"
+        "benchmark_OT_vs_dual-OT.png"
     )
 
     plt.savefig(
@@ -585,7 +585,7 @@ def plot_single_metric_comparison(
     # --------------------------------------------------------
 
     ax.set_title(
-        f"{metric} : OT vs dual_OT\n",
+        f"{metric} : OT vs dual-OT\n",
         fontsize=15,
         fontweight="bold",
         pad=15
@@ -627,7 +627,7 @@ def plot_single_metric_comparison(
 
     filename = os.path.join(
         IMAGE_DIR,
-        f"{metric.lower()}_OT_vs_dual_OT.png"
+        f"{metric.lower()}_OT_vs_dual-OT.png"
     )
 
     plt.savefig(
