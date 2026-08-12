@@ -38,7 +38,7 @@ typedef struct {
 
 
     /* Message à signer */
-    uint8_t message[MESSAGE_LENGTH];
+    uint8_t * message;
 
 
 
@@ -169,7 +169,7 @@ typedef struct {
  *
  * @return 0 en cas de succès, -1 en cas d'erreur.
  */
-int protocol_run(benchmark_result_t *result, int mode);
+int protocol_run(benchmark_result_t *result, int mode, int MESSAGE_LENGTH);
 
 
 #endif

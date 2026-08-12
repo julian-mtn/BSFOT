@@ -34,7 +34,7 @@ typedef struct {
  *
  * @return 0 en cas de succès, -1 en cas d'erreur.
  */
-int benchmark_run(benchmark_result_t *result, int mode);
+int benchmark_run(benchmark_result_t *result, int mode, int MESSAGE_LENGTH);
 
 
 /**
@@ -45,7 +45,7 @@ int benchmark_run(benchmark_result_t *result, int mode);
  *
  * @param result Résultats du benchmark à afficher.
  */
-void benchmark_print(const benchmark_result_t *result, int mode);
+void benchmark_print(const benchmark_result_t *result, int mode, int MESSAGE_LENGTH);
 
 
 #endif

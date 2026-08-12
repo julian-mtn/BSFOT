@@ -460,9 +460,6 @@ def plot_comparison_stacked(results):
 
     plt.close()
 
-    print(
-        f"[OK] {filename}"
-    )
 
 
 # ============================================================
@@ -638,10 +635,6 @@ def plot_single_metric_comparison(
 
     plt.close()
 
-    print(
-        f"[OK] {filename}"
-    )
-
 
 # ============================================================
 # Main
@@ -668,9 +661,6 @@ def main():
     # --------------------------------------------------------
     # Génération
     # --------------------------------------------------------
-
-    print()
-    print("=== Génération des graphiques ===")
 
     # Graphique empilé
     plot_comparison_stacked(

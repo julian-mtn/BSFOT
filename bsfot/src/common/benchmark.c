@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 
-int benchmark_run(benchmark_result_t *result, int mode) {
+int benchmark_run(benchmark_result_t *result, int mode, int MESSAGE_LENGTH) {
 
     benchmark_result_t tmp;
 
@@ -28,7 +28,7 @@ int benchmark_run(benchmark_result_t *result, int mode) {
 
         timer_start(&timer);
 
-        ret = protocol_run(&tmp, mode);
+        ret = protocol_run(&tmp, mode, MESSAGE_LENGTH);
 
         total_ms += timer_stop_ms(&timer);
 
@@ -67,7 +67,7 @@ int benchmark_run(benchmark_result_t *result, int mode) {
 
 
 
-void benchmark_print(const benchmark_result_t *result, int mode) {
+void benchmark_print(const benchmark_result_t *result, int mode, int MESSAGE_LENGTH) {
 
     printf("\n----- Benchmark -----\n");
     printf("Message     : %d bits\n", MESSAGE_LENGTH);

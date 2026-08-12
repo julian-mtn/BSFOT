@@ -22,7 +22,7 @@ The project can be compiled and executed in two ways:
 | `make`                | Compiles the project with the selected RELIC curve (`bn254` by default)           |
 | `make CURVE=<curve>`  | Compiles the project with another RELIC installation (e.g. `bls381`, `kss18-638`) |
 | `./main <mode>`       | Executes the protocol for the selected mode                                       |
-| `./run_benchmarks.sh <mode>` | Automatically runs benchmarks on all curves defined in `curves.txt` for the selected mode |
+| `./run_benchmarks.sh <mode> <message_length>` | Automatically runs benchmarks on all curves defined in `curves.txt` |
 
 The `curves.txt` file contains the list of RELIC curves used for benchmarks.
 Each curve must be specified using the exact name of the corresponding RELIC preset.
@@ -37,19 +37,21 @@ Available modes:
 | `0`  | Classic OT   |
 | `1`  | Dual-Mode OT |
 
+The `<message_length>` parameter specifies the message size in bytes.
+
 Examples:
 
 ```bash
 make
-./main 0
+./main 0 64
 ```
-Runs the protocol with Classic OT.
+Runs the protocol with Classic OT with a 64-byte message.
 
 ```bash
 make CURVE=bls12-381
-./main 1
+./main 1 256
 ```
-Runs the protocol with Dual-Mode OT on the BLS12-381 curve.
+Runs the protocol with Dual-Mode OT on the BLS12-381 curve with a 256-byte message.
 
 ### Automatic Benchmarks
 
@@ -57,12 +59,19 @@ The `run_benchmarks.sh` script automates performance evaluation on several RELIC
 The tested curves are defined in curves.txt.
 It requests administrator privileges (sudo) when a RELIC installation is required.
 Results are stored in:
-
 ```text
 results/
 ├── logs/        # Execution, compilation and RELIC installation logs
 └── images/      # Automatically generated graphs
 ```
+
+Example : 
+```bash
+./run_benchmarks.sh 0 128
+```
+runs the Classic OT benchmark with a 128-byte message on all curves defined in `curves.txt`.
+
+
 
 #### Cleaning
 

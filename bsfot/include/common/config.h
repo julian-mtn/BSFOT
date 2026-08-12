@@ -15,7 +15,7 @@
 
 
 /* Taille du message signé, en bits*/
-#define MESSAGE_LENGTH 256
+//#define MESSAGE_LENGTH 256
 
 /* Nombre de benchmark à faire par exécution sur 1 mode et 1 courbe*/
 #define NB_BENCHMARKS 10

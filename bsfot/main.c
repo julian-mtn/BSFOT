@@ -7,8 +7,8 @@
 
 int main(int argc, char **argv){
 
-    if (argc < 2) {
-        printf("Usage: %s <mode>\n", argv[0]);
+    if (argc < 3) {
+        printf("Usage: %s <mode> <length>\n", argv[0]);
         printf("Modes disponibles :\n");
         printf("  0 : Classic OT\n");
         printf("  1 : Dual-Mode OT\n");
@@ -16,6 +16,7 @@ int main(int argc, char **argv){
     }
 
     protocol_mode_t mode = atoi(argv[1]);
+    int message_length = atoi(argv[2]);
     benchmark_result_t result = {0};
 
     switch (mode){
@@ -34,13 +35,13 @@ int main(int argc, char **argv){
     }
 
 
-    if (benchmark_run(&result, mode) != 0){
+    if (benchmark_run(&result, mode, message_length) != 0){
         printf("Erreur protocole\n");
         return -1;
     }
 
 
-    benchmark_print(&result,mode);
+    benchmark_print(&result,mode,message_length);
 
     return 0;
 }

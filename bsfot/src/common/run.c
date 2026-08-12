@@ -7,7 +7,7 @@
 #include "dual/user.h"
 
 
-static int protocol_init(protocol_ctx_t *ctx,  benchmark_result_t *result, int mode);
+static int protocol_init(protocol_ctx_t *ctx,  benchmark_result_t *result, int mode, int MESSAGE_LENGTH);
 static int protocol_ot_phase(protocol_ctx_t *ctx, benchmark_result_t *result);
 static int protocol_signer_phase(protocol_ctx_t *ctx, benchmark_result_t *result);
 static int protocol_user_phase(protocol_ctx_t *ctx, benchmark_result_t *result);
@@ -15,14 +15,14 @@ static int protocol_verify_phase(protocol_ctx_t *ctx, benchmark_result_t *result
 static void protocol_cleanup(protocol_ctx_t *ctx);
 
 
-int protocol_run(benchmark_result_t *result, int mode){
+int protocol_run(benchmark_result_t *result, int mode, int MESSAGE_LENGTH){
 
    int ret = -1;
    protocol_ctx_t ctx = {0};
    ctx.mode = mode;
 
 
-   if (protocol_init(&ctx, result, mode) != 0)
+   if (protocol_init(&ctx, result, mode, MESSAGE_LENGTH) != 0)
       goto cleanup;
 
    if (protocol_ot_phase(&ctx, result) != 0)
@@ -47,7 +47,7 @@ int protocol_run(benchmark_result_t *result, int mode){
 }
 
 
-static int protocol_init(protocol_ctx_t *ctx, benchmark_result_t *result, int mode){
+static int protocol_init(protocol_ctx_t *ctx, benchmark_result_t *result, int mode, int MESSAGE_LENGTH){
 
    if (core_init() != RLC_OK) {
       printf("\n[ERR] initialisation RELIC\n");
@@ -66,6 +66,15 @@ static int protocol_init(protocol_ctx_t *ctx, benchmark_result_t *result, int mo
    init_params(&ctx->params, MESSAGE_LENGTH, mode);
    result->params_ms = timer_stop_ms(&ctx->timer);
    printf("[OK] Paramètres publics générés\n");
+
+   /* Allocation du message */
+    ctx->message = malloc(MESSAGE_LENGTH);
+
+    if (ctx->message == NULL) {
+        printf("[ERR] Allocation du message échouée\n");
+        core_clean();
+        return -1;
+    }
 
    generate_random_message(ctx->message, MESSAGE_LENGTH);
    
@@ -369,5 +378,9 @@ static void protocol_cleanup(protocol_ctx_t *ctx){
     }
 
     free_params(&ctx->params);
+
+    free(ctx->message);
+    ctx->message = NULL;
+
     core_clean();
 }
