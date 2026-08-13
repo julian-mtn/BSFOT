@@ -13,6 +13,7 @@
 % -------------------------------------------------
 \usepackage{geometry}
 \geometry{margin=2.5cm}
+\usepackage{svg}
 
 \usepackage{setspace}
 \setstretch{1.2}
@@ -88,15 +89,11 @@
 \end{minipage}%
 \hfill
 \begin{minipage}[c]{0.92\linewidth}
-#1
 \end{minipage}
 \medskip
 }
 
-% -------------------- Title Page --------------------
-\title{Titre du rapport de stage}
-\author{Nom Prénom}
-\date{Date}
+
 
 % -------------------- Document --------------------
 \begin{document}
@@ -105,21 +102,40 @@
 \begin{titlepage}
     \centering
 
-    \vspace*{2cm}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.2\textwidth]{lip6.png}
+        \includegraphics[width=0.2\textwidth]{sorbonne.png}
+    \end{figure}
+    
+    \vspace{1cm}
 
-    {\LARGE \textbf{Signatures Aveugles à partir du Transfert Inconscient : \\Analyse et Implémentation}}\\[1.5cm]
+    {\LARGE \textbf{Blind Signatures From Oblivious Transfer : \\Analyse et Implémentation}}\\[1cm]
+    {\large Julian Mouthon}\\[0.25cm]
+    {Master 1 Cryptologie, Calcul Haute-Performance et Algorithmes}\\[0.25cm]
+    {Stage réalisé au sein de l’équipe Almasty\\ LIP6, Sorbonne Université, CNRS, Paris, France}\\[0.25cm]
+    {\textbf{Encadrant:} Ky Nguyen}\\
+    {22 juin 2026 --- 22 août 2026}\\[1cm]
 
-    {\large Julian Mouthon}\\[0.5cm]
-
-    {\large LIP6 --- Sorbonne Université}\\[0.5cm]
-
-    {\large Supervisé par Ky Nguyen}\\[1cm]
-
-    {\large\today}
-
+    \begin{abstract}
+    Les signatures aveugles (Blind Signatures) introduites par Chaum en 1982, permettent à un utilisateur
+    d'obtenir une signature sur un message déterminé sans que le signataire n'apprenne
+    son contenu. Ces mécanismes peuvent être utilisés en pratique dans le cadre 
+    des votes électroniques, des transactions bancaires ou des protocoles d'identification.
+    Dans ce rapport, nous étudions la construction de BSFOT (Blind Signatures From Oblivious Transfer),
+    basée essentiellement sur les groupes bilinéaires.
+    Nous nous intéressons plus particulièrement à la construction d'un protocole de signature aveugle
+    reposant sur un mécanisme de dual-OT.
+    Nous présentons d'abords les notions et objets mathématiques nécessaires ainsi 
+    que le fonctionnement du protocole. Nous analysons ensuite sa validité et 
+    ses propriétés de sécurité.
+    Enfin, nous implementons le schéma de signature et mesurons ses performances pour différentes 
+    courbes elliptiques et tailles de message.
+    \end{abstract}
 
 
 \end{titlepage}
+
 
 \newpage
 \tableofcontents
@@ -165,13 +181,18 @@ et le transfert inconscient (OT), plus précisément le OT dual-mode, qui permet
     $f(\lambda)=\negl(\lambda)$, si elle décroît plus rapidement que
     l'inverse de tout polynôme en $\lambda$.
     
-    \item $\bot$ désigne l'élément d'échec retourné par un algorithme.
 \end{itemize}
 
 \subsection{Groupes bilinéaires}
 
-La construction étudiée repose principalement les groupes bilinéaires,
-que nous définissons ici.
+Les groupes bilinéaires constituent un élément central des constructions
+étudiées dans ce rapport. Ils interviennent notamment
+dans la construction et la vérification des signatures de Waters ainsi
+que dans les différentes étapes du protocole de transfert inconscient
+présenté par la suite. Nous introduisons donc ici les principales
+propriétés des groupes bilinéaires qui seront utilisées dans les 
+sections suivantes.\\
+
 Soient $\mathbb{G}_1$, $\mathbb{G}_2$ et $\mathbb{G}_T$ trois groupes
 cycliques d'ordre premier $p$. Un couplage bilinéaire est une application :
 $
@@ -205,12 +226,16 @@ satisfaisant les propriétés suivantes :
 Pour rappel, notre protocole vise à permettre à un utilisateur 
 d'obtenir une signature sur un message tout en préservant la 
 confidentialité de celui-ci vis-à-vis du signataire.
-Un schéma de signature aveugle est constitué des algorithmes suivants:
+Un tel algorithme est appelé schéma de signature aveugle, 
+et est définit par les algorithmes suivants:
 
 \begin{itemize}
-    \item $\mathsf{BSGen}(1^\lambda)$ :
+    \item $\mathsf{BSKeygen}(1^\lambda)$ :
     génère une clé publique $\mathsf{bvk}$ et une clé secrète
     $\mathsf{bsk}$ ;
+
+    \item $\mathsf{BSParams}(1^\lambda)$ :
+    génère les paramètres publics ;
 
     \item $\mathsf{BSUser}(\mathsf{bvk},M)$ :
     exécuté par l'utilisateur, produit un premier message
@@ -340,12 +365,11 @@ e(\sigma_1,g_2).
 Notre étude portait originellement sur un schéma de signature aveugle 
 basé sur le mode OT classique, qui, comme le mode dual-OT, 
 permet de réaliser un transfert de messages de manière sécurisée. 
-Ce protocole a servi de base et est utilisé dans notre implémentation (voir section \ref{sec:impl}) 
-comme comparateur pour le protocole dual-OT. Il est présenté ci-dessous comme référence.
-
 Le protocole OT classique n'est pas complet du point de vue des propriétés de sécurité, 
 puisqu'il ne dispose pas d'une preuve d'inforgeabilité, contrairement au protocole dual-OT.
-C'est pourquoi nous avons choisi de nous concentrer sur ce dernier pour la suite de notre étude.
+Il a servi de base et est utilisé dans notre implémentation (voir section \ref{sec:impl}) 
+comme comparateur pour le protocole dual-OT. Il est présenté ci-dessous comme référence.
+C'est pourquoi nous avons choisi de nous concentrer sur le dual-OT pour la suite de notre étude.
 
 \subsection*{Paramètres publics}
 \begin{itemize}
@@ -907,25 +931,12 @@ On a donc, pour la fonction de Waters, avec $M_j=1$,
 \[
 \begin{aligned}
 F(M)
-&=
-u_0\prod_{i=1}^{\ell}u_i^{M_i}\\
-&=
-u_0u_j
-\prod_{\substack{i=1\\i\neq j}}^{\ell}
-u_i^{M_i}\\
-&=
-g_1^{r_0}
-\left(cg_1^{-r_0}\right)
+&= u_0\prod_{i=1}^{\ell}u_i^{M_i}\\
+&= u_0u_j\prod_{\substack{i=1\\i\neq j}}^{\ell}u_i^{M_i}\\
+&= g_1^{r_0}\left(cg_1^{-r_0}\right)
 \prod_{\substack{i=1\\i\neq j}}^{\ell}
 \left(g_1^{r_i}\right)^{M_i}\\
-&=
-g_1^{r_0}c g_1^{-r_0}
-\prod_{\substack{i=1\\i\neq j}}^{\ell}
-g_1^{r_iM_i}\\
-&=
-c
-\prod_{\substack{i=1\\i\neq j}}^{\ell}
-g_1^{r_iM_i}.
+&= c\prod_{\substack{i=1\\i\neq j}}^{\ell}g_1^{r_iM_i}.
 \end{aligned}
 \]
 et pour $F(0)$,
@@ -967,7 +978,7 @@ pour tout adversaire PPT $\mathcal A$,
 \left|
 \Pr\!\left[
 \begin{array}{l}
-(\mathsf{bvk},\mathsf{bsk})\gets\mathsf{BSGen}(1^\lambda),\
+(\mathsf{bvk},\mathsf{bsk})\gets\mathsf{BSKeygen}(1^\lambda),\
 (m_0,m_1)\gets\mathcal A(\mathsf{bvk}),\
 b\sample\{0,1\},\\
 (\rho_{1,i},st_i)\gets\mathsf{BSUser}(\mathsf{bvk},m_i)
@@ -1183,8 +1194,8 @@ Pour tester le protocole, nous avons utilisé plusieurs courbes elliptiques,
 plus précisément des courbes dites ``pairing-friendly'', 
 c'est-à-dire des courbes permettant de calculer efficacement un couplage bilinéaire. 
 Afin d'obtenir des résultats variés et significatifs, 
-nous avons choisi un large panel de courbes présentant des tailles de corps et des degrés d'encastrement différents.
-Deux paramètres sont particulièrement importants pour caractériser ces courbes : la taille du corps fini, notée $p$, et le degré d'encastrement, noté $k$.
+nous avons choisi un large panel de courbes présentant des tailles de corps et des degrés différents.
+Deux paramètres sont particulièrement importants pour caractériser ces courbes : la taille du corps fini, notée $p$, et le degré, noté $k$.
 
 \begin{itemize}
     \item \textbf{Taille du corps fini $p$}
@@ -1196,9 +1207,9 @@ Deux paramètres sont particulièrement importants pour caractériser ces courbe
     définie sur un corps dont les éléments peuvent être représentés sur 381 bits. 
     Cette taille influence notamment le coût des opérations arithmétiques effectuées sur la courbe.
 
-    \item \textbf{Degré d'encastrement $k$}
+    \item \textbf{Degré $k$}
 
-    Le degré d'encastrement $k$ représente quant à lui la relation entre le corps $\mathbb{F}_p$ 
+    Le degré $k$ représente quant à lui la relation entre le corps $\mathbb{F}_p$ 
     et le sous-groupe d'ordre $r$ utilisé pour le couplage.
     Il est défini comme le plus petit entier strictement positif vérifiant
     $
@@ -1207,14 +1218,14 @@ Deux paramètres sont particulièrement importants pour caractériser ces courbe
     Il indique donc le plus petit degré d'extension du corps $\mathbb{F}_p$ 
     dans lequel les valeurs du couplage peuvent être représentées. 
     En effet, le couplage prend ses valeurs dans le corps étendu $\mathbb{F}_{p^k}$.
-    Par exemple, une courbe de degré d'encastrement $k=12$, comme BLS12-381, 
+    Par exemple, une courbe de degré $k=12$, comme BLS12-381, 
     nécessite de travailler dans une extension $\mathbb{F}_{p^{12}}$ 
     pour effectuer le couplage. Une courbe avec $k=24$, comme BLS24-315,
     utilise quant à elle une extension $\mathbb{F}_{p^{24}}$. 
     Plus $k$ est élevé, plus les opérations dans le corps d'extension peuvent être coûteuses.
 \end{itemize}
 
-Les courbes retenues couvrent ainsi plusieurs combinaisons de tailles de corps et de degrés d'encastrement, ce qui permet d'évaluer le comportement du protocole dans des configurations différentes.
+Les courbes retenues couvrent ainsi plusieurs combinaisons de tailles de corps et de degrés, ce qui permet d'évaluer le comportement du protocole dans des configurations différentes.
 
 \begin{table}[H]
 \centering
@@ -1222,7 +1233,7 @@ Les courbes retenues couvrent ainsi plusieurs combinaisons de tailles de corps e
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lcc}
 \toprule
-\textbf{Courbe} & \textbf{Degré d'encastrement $k$} & \textbf{Taille de $p$} \\
+\textbf{Courbe} & \textbf{Degré $k$} & \textbf{Taille de $p$} \\
 \midrule
 BN254       & 12 & 254 bits \\
 BN446       & 12 & 446 bits \\

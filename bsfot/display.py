@@ -15,7 +15,8 @@ LOG_DIR = "results/logs"
 IMAGE_DIR = "results/images"
 
 METRICS = [
-    "BS_Gen",
+    "BS_Keygen",
+    "BS_Params",
     "BS_User",
     "BS_Signer",
     "BS_Derive",
@@ -23,7 +24,8 @@ METRICS = [
 ]
 
 METRIC_COLORS = {
-    "BS_Gen": "#1D3557",
+    "BS_Keygen": "#1D3557",
+    "BS_Params": "#D57ED8",
     "BS_User": "#457B9D",
     "BS_Signer": "#2A9D8F",
     "BS_Derive": "#6D597A",

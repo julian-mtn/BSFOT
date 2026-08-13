@@ -74,7 +74,8 @@ void benchmark_print(const benchmark_result_t *result, int mode, int MESSAGE_LEN
     printf("Iterations  : %d\n", NB_BENCHMARKS);
     printf("Mode        : %s\n", (mode == 0) ? "Classic OT" : "Dual-Mode OT");
     printf("---------------------\n");
-    printf("BS_Gen      : %.3f ms\n", result->params_ms);
+    printf("BS_Keygen      : %.3f ms\n", result->keygen_ms);
+    printf("BS_Params      : %.3f ms\n", result->params_ms);
     printf("BS_User     : %.3f ms\n", result->ot_ms);
     printf("BS_Signer   : %.3f ms\n", result->signer_ms);
     printf("BS_Derive   : %.3f ms\n", result->signature_ms);
