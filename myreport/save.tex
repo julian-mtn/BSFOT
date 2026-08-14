@@ -1,81 +1,6 @@
 
-\section{Protocole basé sur OTs}
 
-\subsection{Paramètres publics}
-
-\begin{itemize}
-    \item un système de groupes bilinéaires $(\mathbb{G}_1,\mathbb{G}_2,\mathbb{G}_T,e,p)$,
-    où $\mathbb{G}_1$ et $\mathbb{G}_2$ sont des groupes cycliques d'ordre premier $p$, munis d'un couplage bilinéaire
-    $e:\mathbb{G}_1\times\mathbb{G}_2\rightarrow\mathbb{G}_T$,
-    avec des générateurs $g_1\in\mathbb{G}_1$ et $g_2\in\mathbb{G}_2$.
-
-    \item les paramètres de la fonction de hachage de Waters, constitués d'un élément aléatoire
-    $u_0\in\mathbb{G}_1$ ainsi que d'un vecteur $\mathbf{u}=(u_1,\ldots,u_\ell)\in\mathbb{G}_1^\ell$.
-
-    \item un vecteur $\mathsf{ek}=(h_i)_{i=1}^{\ell}$ avec $h_i=g_1^{x_i}$ obtenu à partir de scalaires aléatoires $x_i\sample\mathbb{Z}_p$.
-
-    \item la clé publique du schéma de signature $\mathsf{bvk}=g_2^a$, associée à la clé secrète $\mathsf{bsk}=h_s^a$, avec $h_s=\prod_{i=1}^{\ell} h_i$.
-\end{itemize}
-
-
-\subsection{Schéma de signature}
-
-\fbox{%
-\begin{minipage}{0.95\linewidth}
-\centering
-
-\begin{pchstack}[center]
-
-\procedure{$\mathbf{Signer}$}
-{
-\\
-\\
-\\
-\\
-\\
-\forall i\in[\ell]: \mathsf{ek}_{i,0}\cdot \mathsf{ek}_{i,1}=g_1^{x_i} \\
-\forall i\in[\ell]: \text{choose }\alpha_i \text{ s.t. } \prod_i \alpha_i = h_s^a \\
-r,t \sample \mathbb{Z}_p \\
-\forall i\in[\ell]:
-\quad
-\mathsf{ct}_{i,0} \gets \mathsf{ek}_{i,0}^r \cdot \alpha_i,\quad \\
-\qquad \qquad \quad
-\mathsf{ct}_{i,1} \gets \mathsf{ek}_{i,1}^r \cdot \alpha_i (u_i)^t \\
-\mathsf{ct}_0 = g_1^r,\quad \sigma_2 = g_2^t \\
-\sendmessageright*{(\mathsf{ct}_{i,0},\mathsf{ct}_{i,1})_{i\in[\ell]}, ct_0, \sigma_2}
-}
-
-\pchspace
-
-\procedure{$\mathbf{User}$}
-{
-\forall i\in[\ell]: y_i \sample \mathbb{Z}_p \\
-\mathsf{ek}_{i,M_i} = g_1^{y_i} \\
-\mathsf{ek}_{i,1-M_i} = g_1^{x_i-y_i} \\
-\sendmessageleft*{(\mathsf{ek}_{i,0},\mathsf{ek}_{i,1})_{i\in[\ell]}} \\
-\\
-\\
-\\
-\\
-\\
-\\
-\\
-\\
-\\
-\sigma_{1,i} = \frac{\mathsf{ct}_{i,M_i}}{\mathsf{ct}_0^{y_i}} \\
-\sigma_1 = \prod_{i\in[\ell]} \sigma_{1,i} \\
-t' \sample \mathbb{Z}_p \\
-\hat{\sigma}_1 = \sigma_1 \cdot F(M)^{t'} \\
-\hat{\sigma}_2 = \sigma_2 \cdot g_2^{t'} \\
-\textbf{return } \sigma=(F(M),\hat{\sigma}_1,\hat{\sigma}_2)
-}
-
-\end{pchstack}
-
-\end{minipage}
-}
-
-\subsection{Rôle de l'Oblivious Transfer}
+\subsection*{Rôle de l'Oblivious Transfer}
 
 L'utilisation du transfert inconscient permet d'intégrer le message dans la signature sans que le signataire n'apprenne les bits qui le composent.
 Pour chaque bit $M_i$ du message $M$, deux branches sont construites :
@@ -192,7 +117,7 @@ laquelle sera finalement utilisée par l'utilisateur. Cette propriété permet
 d'intégrer directement le message $M$ dans la signature de Waters tout en
 préservant l'aveuglement du protocole.
 
-\subsection{Rôle du chiffrement d'ElGamal}
+\subsection*{Rôle du chiffrement d'ElGamal}
 
 Dans cette construction, le chiffrement d'ElGamal est utilisé comme masquage temporaire permettant au signataire 
 de transmettre les deux valeurs possibles associées à chaque bit du message sans révéler laquelle sera sélectionnée par l'utilisateur.
@@ -237,51 +162,6 @@ uniquement la branche correspondant à son bit $M_i$.
 
 
 %------------------------------------------------------------
-
-\subsection{Correctness}
-
-La signature obtenue par l'utilisateur est une signature de Waters de la forme
-$\sigma=(F(M),\hat{\sigma}_1,\hat{\sigma}_2)$ avec :
-\[
-\hat{\sigma}_1
-=
-\sigma_1\cdot F(M)^{t'}
-=
-h_s^a\cdot F(M)^{t+t'},
-\qquad
-\hat{\sigma}_2
-=
-\sigma_2\cdot g_2^{t'}
-=
-g_2^{t+t'}.
-\]
-On remarque que le signataire ne connaît pas la valeur
-$t+t'$, car le terme $t'$ est choisi aléatoirement par l'utilisateur après
-la phase de signature. La vérification s'effectue ensuite à l'aide de la clé publique du signataire $\mathsf{bvk}=g_2^a$
-en vérifiant l'équation de couplage :
-\[
-e(h_s,\mathsf{bvk})\cdot e(F(M),\hat{\sigma}_2)
-\stackrel{?}{=}
-e(\hat{\sigma}_1,g_2).
-\]
-En remplaçant les valeurs obtenues par l'utilisateur :
-\[
-\begin{aligned}
-e(h_s,\mathsf{bvk})\cdot e(F(M),\hat{\sigma}_2)
-&=
-e(h_s,g_2^a)\cdot e(F(M),g_2^{t+t'})\\
-&=
-e(h_s^a,g_2)\cdot e(F(M)^{t+t'},g_2)
-&&\text{par bilinéarité du couplage}\\
-&=
-e(h_s^a\cdot F(M)^{t+t'},g_2)
-&&\text{par bilinéarité et multiplicativité}\\
-&=
-e(\hat{\sigma}_1,g_2)
-\end{aligned}
-\]
-Ainsi, l'équation de vérification est satisfaite et la signature obtenue est
-une signature de Waters valide. 
 
 \subsection{Aveuglement sous clés malveillantes}
 

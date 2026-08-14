@@ -380,137 +380,22 @@ e(\sigma_1,g_2).
 
 \section{Le protocole dual-OT}
 
-\subsection{Motivation : du mode OT classique au mode dual-OT}
+\subsection{Motivation : de classique à dual-OT}
 
 Notre étude portait originellement sur un schéma de signature aveugle 
-basé sur le mode OT classique, qui, comme le mode dual-OT, 
+basé sur OT classique, qui, comme dual-OT, 
 permet de réaliser un transfert de messages de manière sécurisée. 
-Le protocole OT classique n'est pas complet du point de vue des propriétés de sécurité, 
+Le protocole OT classique n'est pas complet du point de vue des propriétés de sécurité dans notre étude, 
 puisqu'il ne dispose pas d'une preuve d'inforgeabilité, contrairement au protocole dual-OT.
-Il a servi de base et est utilisé dans notre implémentation (voir section \ref{sec:impl}) 
-comme comparateur pour le protocole dual-OT. Il est présenté ci-dessous comme référence.
-C'est pourquoi nous avons choisi de nous concentrer sur le dual-OT pour la suite de notre étude.
+C'est pourquoi nous avons choisi de nous concentrer sur le dual-OT pour la suite.\\
 
-\subsection*{Paramètres publics}
-\begin{itemize}
-    \item un système de groupes bilinéaires $(\mathbb{G}_1,\mathbb{G}_2,\mathbb{G}_T,e,p)$,
-    où $\mathbb{G}_1$ et $\mathbb{G}_2$ sont des groupes cycliques d'ordre premier $p$, munis d'un couplage bilinéaire
-    $e:\mathbb{G}_1\times\mathbb{G}_2\rightarrow\mathbb{G}_T$,
-    avec des générateurs $g_1\in\mathbb{G}_1$ et $g_2\in\mathbb{G}_2$.
-
-    \item les paramètres de la fonction de hachage de Waters, constitués d'un élément aléatoire
-    $u_0\in\mathbb{G}_1$ ainsi que d'un vecteur $\mathbf{u}=(u_1,\ldots,u_\ell)\in\mathbb{G}_1^\ell$.
-
-    \item un vecteur $\mathsf{ek}=(h_i)_{i=1}^{\ell}$ avec $h_i=g_1^{x_i}$ obtenu à partir de scalaires aléatoires $x_i\sample\mathbb{Z}_p$.
-
-    \item la clé publique du schéma de signature $\mathsf{bvk}=g_2^a$, associée à la clé secrète $\mathsf{bsk}=h_s^a$, avec $h_s=\prod_{i=1}^{\ell} h_i$.
-\end{itemize}
-
-\subsection*{Schéma de signature}
-\begin{figure}[H]
-\centering
-\fbox{%
-\begin{minipage}{0.80\linewidth}
-
-\begin{pchstack}[center]
-
-\procedure{$\mathbf{Signer}$}
-{
-\\
-\\
-\\
-\\
-\forall i\in[\ell]: \mathsf{ek}_{i,0}\cdot \mathsf{ek}_{i,1}=g_1^{x_i} \\
-\forall i\in[\ell]: \text{choose }\alpha_i \text{ s.t. } \prod_i \alpha_i = h_s^a \\
-r,t \sample \mathbb{Z}_p \\
-\forall i\in[\ell]:
-\quad
-\mathsf{ct}_{i,0} \gets \mathsf{ek}_{i,0}^r \cdot \alpha_i,\quad \\
-\qquad \qquad \quad
-\mathsf{ct}_{i,1} \gets \mathsf{ek}_{i,1}^r \cdot \alpha_i (u_i)^t \\
-\mathsf{ct}_0 = g_1^r,\quad \sigma_2 = g_2^t \\
-\sendmessageright*{(\mathsf{ct}_{i,0},\mathsf{ct}_{i,1})_{i\in[\ell]}, ct_0, \sigma_2}
-}
-
-\pchspace
-
-\procedure{$\mathbf{User}$}
-{
-\forall i\in[\ell]: y_i \sample \mathbb{Z}_p \\
-\mathsf{ek}_{i,M_i} = g_1^{y_i} \\
-\mathsf{ek}_{i,1-M_i} = g_1^{x_i-y_i} \\
-\sendmessageleft*{(\mathsf{ek}_{i,0},\mathsf{ek}_{i,1})_{i\in[\ell]}} \\
-\\
-\\
-\\
-\\
-\\
-\\
-\\
-\sigma_{1,i} = \frac{\mathsf{ct}_{i,M_i}}{\mathsf{ct}_0^{y_i}} \\
-\sigma_1 = \prod_{i\in[\ell]} \sigma_{1,i} \\
-t' \sample \mathbb{Z}_p \\
-\hat{\sigma}_1 = \sigma_1 \cdot F(M)^{t'} \\
-\hat{\sigma}_2 = \sigma_2 \cdot g_2^{t'} \\
-\textbf{return } \sigma=(F(M),\hat{\sigma}_1,\hat{\sigma}_2)
-}
-
-\end{pchstack}
-
-\end{minipage}
-}
-\caption{Schéma de signature aveugle basé sur le OT classique}
-\end{figure}
-
-\subsection*{Validité de la signature}
-
-La signature obtenue par l'utilisateur est une signature de Waters de la forme
-$\sigma=(F(M),\hat{\sigma}_1,\hat{\sigma}_2)$ avec :
-\[
-\hat{\sigma}_1
-=
-\sigma_1\cdot F(M)^{t'}
-=
-h_s^a\cdot F(M)^{t+t'},
-\qquad
-\hat{\sigma}_2
-=
-\sigma_2\cdot g_2^{t'}
-=
-g_2^{t+t'}.
-\]
-On remarque que le signataire ne connaît pas la valeur
-$t+t'$, car le terme $t'$ est choisi aléatoirement par l'utilisateur après
-la phase de signature. La vérification s'effectue ensuite à l'aide de la clé publique du signataire $\mathsf{bvk}=g_2^a$
-en vérifiant l'équation de couplage :
-\[
-e(h_s,\mathsf{bvk})\cdot e(F(M),\hat{\sigma}_2)
-\stackrel{?}{=}
-e(\hat{\sigma}_1,g_2).
-\]
-En remplaçant les valeurs obtenues par l'utilisateur :
-\[
-\begin{aligned}
-e(h_s,\mathsf{bvk})\cdot e(F(M),\hat{\sigma}_2)
-&=
-e(h_s,g_2^a)\cdot e(F(M),g_2^{t+t'})\\
-&=
-e(h_s^a,g_2)\cdot e(F(M)^{t+t'},g_2)
-&&\text{par bilinéarité du couplage}\\
-&=
-e(h_s^a\cdot F(M)^{t+t'},g_2)
-&&\text{par bilinéarité et multiplicativité}\\
-&=
-e(\hat{\sigma}_1,g_2)
-\end{aligned}
-\]
-Ainsi, l'équation de vérification est satisfaite et la signature obtenue est
-une signature de Waters valide. 
+Le protocole basé sur OT classique a servi de base et est utilisé dans notre implémentation (voir section \ref{sec:impl}) 
+comme comparateur pour le protocole dual-OT, il est donc présenté, à titre de référence, en annexe (voir \ref{app:ot}).
 
 \subsection{Paramètres publics}
 
 Durant l'éxécution du protocole, les deux parties (utilisateur et signataire) disposent de paramètres en commun et publiquement accessibles.
-Ces paramètres sont les suivants : 
+Ces paramètres sont les suivants: 
 
 \begin{itemize}
     \item un système de groupes bilinéaires
@@ -562,7 +447,7 @@ Le protocole de signature se déroule comme ci-dessous, avec l'utilisateur à dr
 et le signataire à gauche qui répond. Les messages échangés entre les deux parties sont représentés par des flèches horizontales.
 A la fin du protocole, l'utilisateur obtient une signature sur $M$, qui sera vérifiée après par le vérifieur (voir section~\ref{sec:verification}).
 
-\begin{figure}[H]
+\begin{figure}[h]
 \centering
 \fbox{%
 \begin{minipage}{0.95\linewidth}
@@ -688,48 +573,6 @@ t'\sample\mathbb Z_p
 \caption{Schéma de signature aveugle basé sur le dual-OT}
 \end{figure}
 
-\subsection{Validité de la signature}\label{sec:verification}
-
-Après voir obtenu la signature, l'utilisateur peut la transmettre à un vérifieur qui testera sa validité de la manière suivante : 
-\[
-\text{Signature acceptée} \iff
-\begin{cases}
-e(\hat{\sigma}_2', g_2) = e(g_1, \hat{\sigma}_2), \\[0.5em]
-e(\hat{\sigma}_1, g_2) = e(h_s, \mathsf{bvk}) \cdot e(F(M), \hat{\sigma}_2).
-\end{cases}
-\]
-Première équation (en utilisant la bilinéarité):
-\[
-\begin{aligned}
-e(\widehat{\sigma}_2',g_2)
-&=
-e(g_1^{t+t'},g_2)\\
-&=
-e(g_1,g_2)^{t+t'}\\
-&=
-e(g_1,g_2^{t+t'})\\
-&=
-e(g_1,\widehat{\sigma}_2).
-\end{aligned}
-\]
-Seconde équation (toujours par bilinéarité):
-\[
-\begin{aligned}
-e(\widehat{\sigma}_1,g_2)
-&=
-e(h_s^aF(M)^{t+t'},g_2)\\
-&=
-e(h_s^a,g_2)\,
-e(F(M)^{t+t'},g_2)\\
-&=
-e(h_s,g_2^a)\,
-e(F(M),g_2^{t+t'})\\
-&=
-e(h_s,\mathsf{bvk})\,
-e(F(M),\widehat{\sigma}_2),
-\end{aligned}
-\]
-
 \subsection{Les branches DH et messy}\label{sec:dh-messy}
 
 Durant l'exécution du protocole, plus précisément lors de l'étape $\mathsf{BSUser}$ (voir section~\ref{sec:algo}),
@@ -790,6 +633,48 @@ La seconde branche ne peut donc jamais être une paire DH. C'est une \emph{branc
 En résumé, pour un utilisateur honnête, chaque position contient exactement une branche DH 
 (la bonne branche, correspondant au bit du message) et une branche messy (la mauvaise branche). 
 Elle ne transporte aucune information utile.
+
+\subsection{Validité de la signature}\label{sec:verification}
+
+Après voir obtenu la signature, l'utilisateur peut la transmettre à un vérifieur qui testera sa validité de la manière suivante : 
+\[
+\text{Signature acceptée} \iff
+\begin{cases}
+e(\hat{\sigma}_2', g_2) = e(g_1, \hat{\sigma}_2), \\[0.5em]
+e(\hat{\sigma}_1, g_2) = e(h_s, \mathsf{bvk}) \cdot e(F(M), \hat{\sigma}_2).
+\end{cases}
+\]
+Première équation (en utilisant la bilinéarité):
+\[
+\begin{aligned}
+e(\widehat{\sigma}_2',g_2)
+&=
+e(g_1^{t+t'},g_2)\\
+&=
+e(g_1,g_2)^{t+t'}\\
+&=
+e(g_1,g_2^{t+t'})\\
+&=
+e(g_1,\widehat{\sigma}_2).
+\end{aligned}
+\]
+Seconde équation (toujours par bilinéarité):
+\[
+\begin{aligned}
+e(\widehat{\sigma}_1,g_2)
+&=
+e(h_s^aF(M)^{t+t'},g_2)\\
+&=
+e(h_s^a,g_2)\,
+e(F(M)^{t+t'},g_2)\\
+&=
+e(h_s,g_2^a)\,
+e(F(M),g_2^{t+t'})\\
+&=
+e(h_s,\mathsf{bvk})\,
+e(F(M),\widehat{\sigma}_2),
+\end{aligned}
+\]
 
 \section{Preuves de sécurité}
 
@@ -1257,9 +1142,13 @@ Pour avoir des résultats plus précis, il est intéressant de mesurer le temps 
 Pour tester le protocole, nous avons utilisé plusieurs courbes elliptiques, 
 plus précisément des courbes dites ``pairing-friendly'', 
 c'est-à-dire des courbes permettant de calculer efficacement un couplage bilinéaire. 
+Les courbes retenues couvrent ainsi plusieurs combinaisons de tailles de corps et de degrés, afin d'évaluer le comportement du protocole dans des configurations différentes.
+\begin{itemize}
+    \item $k$: le degré d'embedding, qui correspond au degré de l'extension du corps de base utilisée pour le calcul du couplage. Le couplage prend ainsi ses valeurs dans le corps $\mathbb{F}_{p^k}$.
 
+    \item $p$: le nombre premier définissant le corps fini de base $\mathbb{F}_p$, qui contient $p$ éléments. La taille de $p$ en bits est approximativement donnée par $\log_2(p)$.
+\end{itemize}
 
-Les courbes retenues couvrent ainsi plusieurs combinaisons de tailles de corps et de degrés, ce qui permet d'évaluer le comportement du protocole dans des configurations différentes.
 
 \begin{table}[H]
 \centering
@@ -1267,7 +1156,7 @@ Les courbes retenues couvrent ainsi plusieurs combinaisons de tailles de corps e
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lcc}
 \toprule
-\textbf{Courbe} & \textbf{Degré $k$} & \textbf{Taille de $p$} \\
+\textbf{Courbe} & \textbf{$k$} & \textbf{Taille de $p$} \\
 \midrule
 BN254       & 12 & 254 bits \\
 BN446       & 12 & 446 bits \\
@@ -1308,22 +1197,259 @@ FM18-768    & 18 & 768 bits \\
 \newpage
 \appendix
 
-\section{Benchmarks détaillés}
+\section{Construction basée sur l'OT classique}\label{app:ot}
+
+
+\subsection{Paramètres publics:}
+\begin{itemize}
+    \item un système de groupes bilinéaires $(\mathbb{G}_1,\mathbb{G}_2,\mathbb{G}_T,e,p)$,
+    où $\mathbb{G}_1$ et $\mathbb{G}_2$ sont des groupes cycliques d'ordre premier $p$, munis d'un couplage bilinéaire
+    $e:\mathbb{G}_1\times\mathbb{G}_2\rightarrow\mathbb{G}_T$,
+    avec des générateurs $g_1\in\mathbb{G}_1$ et $g_2\in\mathbb{G}_2$.
+
+    \item les paramètres de la fonction de hachage de Waters, constitués d'un élément aléatoire
+    $u_0\in\mathbb{G}_1$ ainsi que d'un vecteur $\mathbf{u}=(u_1,\ldots,u_\ell)\in\mathbb{G}_1^\ell$.
+
+    \item un vecteur $\mathsf{ek}=(h_i)_{i=1}^{\ell}$ avec $h_i=g_1^{x_i}$ obtenu à partir de scalaires aléatoires $x_i\sample\mathbb{Z}_p$.
+
+    \item la clé publique du schéma de signature $\mathsf{bvk}=g_2^a$, associée à la clé secrète $\mathsf{bsk}=h_s^a$, avec $h_s=\prod_{i=1}^{\ell} h_i$.
+\end{itemize}
+
+\subsection{Schéma de signature:}
+\begin{figure}[h]
+\centering
+\fbox{%
+\begin{minipage}{0.80\linewidth}
+
+\begin{pchstack}[center]
+
+\procedure{$\mathbf{Signer}$}
+{
+\\
+\\
+\\
+\\
+\forall i\in[\ell]: \mathsf{ek}_{i,0}\cdot \mathsf{ek}_{i,1}=g_1^{x_i} \\
+\forall i\in[\ell]: \text{choose }\alpha_i \text{ s.t. } \prod_i \alpha_i = h_s^a \\
+r,t \sample \mathbb{Z}_p \\
+\forall i\in[\ell]:
+\quad
+\mathsf{ct}_{i,0} \gets \mathsf{ek}_{i,0}^r \cdot \alpha_i,\quad \\
+\qquad \qquad \quad
+\mathsf{ct}_{i,1} \gets \mathsf{ek}_{i,1}^r \cdot \alpha_i (u_i)^t \\
+\mathsf{ct}_0 = g_1^r,\quad \sigma_2 = g_2^t \\
+\sendmessageright*{(\mathsf{ct}_{i,0},\mathsf{ct}_{i,1})_{i\in[\ell]}, ct_0, \sigma_2}
+}
+
+\pchspace
+
+\procedure{$\mathbf{User}$}
+{
+\forall i\in[\ell]: y_i \sample \mathbb{Z}_p \\
+\mathsf{ek}_{i,M_i} = g_1^{y_i} \\
+\mathsf{ek}_{i,1-M_i} = g_1^{x_i-y_i} \\
+\sendmessageleft*{(\mathsf{ek}_{i,0},\mathsf{ek}_{i,1})_{i\in[\ell]}} \\
+\\
+\\
+\\
+\\
+\\
+\\
+\\
+\sigma_{1,i} = \frac{\mathsf{ct}_{i,M_i}}{\mathsf{ct}_0^{y_i}} \\
+\sigma_1 = \prod_{i\in[\ell]} \sigma_{1,i} \\
+t' \sample \mathbb{Z}_p \\
+\hat{\sigma}_1 = \sigma_1 \cdot F(M)^{t'} \\
+\hat{\sigma}_2 = \sigma_2 \cdot g_2^{t'} \\
+\textbf{return } \sigma=(F(M),\hat{\sigma}_1,\hat{\sigma}_2)
+}
+
+\end{pchstack}
+
+\end{minipage}
+}
+\caption{Schéma de signature aveugle basé sur le OT classique}
+\end{figure}
+
+\subsection{Construction de la signature à partir de l'OT:}
+
+Pour chaque bit $M_i$ du message $M$, le signataire construit deux branches
+associées aux deux valeurs possibles du bit :
+\[
+0 \longrightarrow \alpha_i,
+\qquad
+1 \longrightarrow \alpha_i u_i^t,
+\]
+où $\alpha_i$ est un facteur aléatoire et $u_i$ est le $i$-ème paramètre de la
+fonction de hachage de Waters.
+Ces deux branches sont ensuite masquées à l'aide des clés d'évaluation. Si
+$M_i=0$, l'utilisateur construit
+\[
+\mathsf{ek}_{i,0}=g_1^{y_i},
+\qquad
+\mathsf{ek}_{i,1}=g_1^{x_i-y_i},
+\]
+tandis que si $M_i=1$, il inverse les deux valeurs :
+\[
+\mathsf{ek}_{i,1}=g_1^{y_i},
+\qquad
+\mathsf{ek}_{i,0}=g_1^{x_i-y_i},
+\]
+où $y_i$ est choisi uniformément dans $\mathbb Z_p$.
+Le signataire reçoit toujours le même couple
+$(\mathsf{ek}_{i,0},\mathsf{ek}_{i,1})$ et ne peut pas distinguer quelle
+branche correspond au bit choisi par l'utilisateur. Il calcule alors
+\[
+\mathsf{ct}_{i,0}=\mathsf{ek}_{i,0}^{\,r}\,\alpha_i,
+\qquad
+\mathsf{ct}_{i,1}=\mathsf{ek}_{i,1}^{\,r}\,\alpha_i(u_i)^t.
+\]
+L'utilisateur récupère ensuite uniquement la composante correspondant à son
+bit en calculant
+$
+\sigma_{1,i}
+=
+\frac{\mathsf{ct}_{i,M_i}}{\mathsf{ct}_0^{\,y_i}}.
+$
+
+\paragraph{Cas $M_i=0$}
+
+\[
+\mathsf{ct}_{i,0}
+=
+(g_1^{y_i})^r\,\alpha_i
+=
+g_1^{ry_i}\alpha_i.
+\]
+Donc
+\[
+\sigma_{1,i}
+=
+\frac{\mathsf{ct}_{i,0}}{\mathsf{ct}_0^{\,y_i}}
+=
+\frac{g_1^{ry_i}\alpha_i}{(g_1^r)^{y_i}}
+=
+\frac{g_1^{ry_i}\alpha_i}{g_1^{ry_i}}
+=
+\alpha_i.
+\]
+
+\paragraph{Cas $M_i=1$}
+
+\[
+\mathsf{ct}_{i,1}
+=
+(g_1^{y_i})^r\alpha_i(u_i)^t
+=
+g_1^{ry_i}\alpha_i(u_i)^t.
+\]
+Donc
+\[
+\sigma_{1,i}
+=
+\frac{\mathsf{ct}_{i,1}}{\mathsf{ct}_0^{\,y_i}}
+=
+\frac{g_1^{ry_i}\alpha_i(u_i)^t}{(g_1^r)^{y_i}}
+=
+\frac{g_1^{ry_i}\alpha_i(u_i)^t}{g_1^{ry_i}}
+=
+\alpha_i(u_i)^t.
+\]
+Ainsi, pour chaque position $i$, l'utilisateur récupère exactement la valeur
+$
+\sigma_{1,i}=\alpha_i(u_i^{M_i})^t.
+$
+En multipliant toutes ces composantes, il obtient
+\[
+\begin{aligned}
+\sigma_1
+&=
+\prod_{i=1}^{\ell}\sigma_{1,i} \\
+&=
+\prod_{i=1}^{\ell}\alpha_i(u_i^{M_i})^t \\
+&=
+\left(\prod_{i=1}^{\ell}\alpha_i\right)
+\left(\prod_{i=1}^{\ell}u_i^{M_i}\right)^t.
+\end{aligned}
+\]
+Comme $\prod_{i=1}^{\ell}\alpha_i=h_s^a$ et
+$
+F(M)=u_0\prod_{i=1}^{\ell}u_i^{M_i},
+$
+on retrouve exactement la première composante d'une signature de Waters. Le
+transfert inconscient permet ainsi à l'utilisateur de sélectionner, de manière
+privée, la branche correspondant à chacun de ses bits, tout en empêchant le
+signataire d'apprendre le message signé.
+
+\subsection{Validité de la signature:}
+
+La signature obtenue par l'utilisateur est une signature de Waters de la forme
+$\sigma=(F(M),\hat{\sigma}_1,\hat{\sigma}_2)$ avec :
+\[
+\hat{\sigma}_1
+=
+\sigma_1\cdot F(M)^{t'}
+=
+h_s^a\cdot F(M)^{t+t'},
+\qquad
+\hat{\sigma}_2
+=
+\sigma_2\cdot g_2^{t'}
+=
+g_2^{t+t'}.
+\]
+On remarque que le signataire ne connaît pas la valeur
+$t+t'$, car le terme $t'$ est choisi aléatoirement par l'utilisateur après
+la phase de signature. La vérification s'effectue ensuite à l'aide de la clé publique du signataire $\mathsf{bvk}=g_2^a$
+en vérifiant l'équation de couplage :
+\[
+e(h_s,\mathsf{bvk})\cdot e(F(M),\hat{\sigma}_2)
+\stackrel{?}{=}
+e(\hat{\sigma}_1,g_2).
+\]
+En remplaçant les valeurs obtenues par l'utilisateur :
+\[
+\begin{aligned}
+e(h_s,\mathsf{bvk})\cdot e(F(M),\hat{\sigma}_2)
+&=
+e(h_s,g_2^a)\cdot e(F(M),g_2^{t+t'})\\
+&=
+e(h_s^a,g_2)\cdot e(F(M)^{t+t'},g_2)
+&&\text{par bilinéarité du couplage}\\
+&=
+e(h_s^a\cdot F(M)^{t+t'},g_2)
+&&\text{par bilinéarité et multiplicativité}\\
+&=
+e(\hat{\sigma}_1,g_2)
+\end{aligned}
+\]
+Ainsi, l'équation de vérification est satisfaite et la signature obtenue est
+une signature de Waters valide. 
+
+
+\section{Benchmarks détaillés}\label{app:benchmarks}
+
 
 Cette annexe présente les mesures détaillées obtenues pour chacune
 des étapes des protocoles OT et dual-OT individuellement. Ces graphiques sont 
 présentés dans la section \ref{sec:result_analysis}.
 
-\subsection{Génération des clés}
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{../bsfot/results/images/bs_params_OT_vs_dual-OT.png}
+\caption{Temps d'exécution de la générations des paramètres publics pour les protocoles OT et dual-OT.}
+\label{fig:annexe_bs_params}
+\end{figure}
+
+
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_gen_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la génération des clés pour les protocoles OT et dual-OT.}
-\label{fig:annexe_bs_gen}
+\label{fig:annexe_bs_keygen}
 \end{figure}
 
-\subsection{Exécution côté utilisateur}
 
 \begin{figure}[H]
 \centering
@@ -1332,7 +1458,6 @@ présentés dans la section \ref{sec:result_analysis}.
 \label{fig:annexe_bs_user}
 \end{figure}
 
-\subsection{Exécution côté signataire}
 
 \begin{figure}[H]
 \centering
@@ -1341,7 +1466,6 @@ présentés dans la section \ref{sec:result_analysis}.
 \label{fig:annexe_bs_signer}
 \end{figure}
 
-\subsection{Dérivation de la signature}
 
 \begin{figure}[H]
 \centering
@@ -1350,7 +1474,6 @@ présentés dans la section \ref{sec:result_analysis}.
 \label{fig:annexe_bs_derive}
 \end{figure}
 
-\subsection{Vérification}
 
 \begin{figure}[H]
 \centering
@@ -1358,6 +1481,8 @@ présentés dans la section \ref{sec:result_analysis}.
 \caption{Temps d'exécution de la vérification pour les protocoles OT et dual-OT.}
 \label{fig:annexe_bs_verify}
 \end{figure}
+
+
 
 
 \end{document}
