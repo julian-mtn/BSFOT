@@ -79,20 +79,22 @@
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta}
 \newcommand{\transition}[1]{%
-\medskip
-\noindent
-\begin{minipage}[c]{0.05\linewidth}
-\centering
-\begin{tikzpicture}
-\draw[-{Latex[length=3mm,width=2mm]}, line width=1pt] (0,0.5)-- (0,-0.5);
-\end{tikzpicture}
-\end{minipage}%
-\hfill
-\begin{minipage}[c]{0.92\linewidth}
-\end{minipage}
-\medskip
+    \medskip
+    \noindent
+    \begin{minipage}[c]{0.05\linewidth}
+        \centering
+        \begin{tikzpicture}
+            \draw[-{Latex[length=3mm,width=2mm]}, line width=1pt]
+                (0,0.5)--(0,-0.5);
+        \end{tikzpicture}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[c]{0.92\linewidth}
+        \centering
+        \textit{#1}
+    \end{minipage}
+    \medskip
 }
-
 
 
 % -------------------- Document --------------------
@@ -102,10 +104,13 @@
 \begin{titlepage}
     \centering
 
-    \begin{figure}[H]
+   \begin{figure}[H]
         \centering
-        \includegraphics[width=0.2\textwidth]{lip6.png}
-        \includegraphics[width=0.2\textwidth]{sorbonne.png}
+        \includegraphics[height=1.5cm]{lip6.png}
+        \hspace{0.5cm}
+        \includegraphics[height=1.5cm]{sorbonne.png}
+        \hspace{0.5cm}
+        \includegraphics[height=1.5cm]{cnrs.png}
     \end{figure}
     
     \vspace{1cm}
@@ -988,9 +993,9 @@ chiffré.
 On peut donc remplacer, pour chaque position, le chiffré de la branche
 messy par un couple uniformément distribué dans $\mathbb{G}_1^2$ sans
 modifier la vue du signataire. Ainsi,
-\[
+$
 \mathrm{G}_0\approx\mathrm{G}_1.
-\]
+$
 
 \transition{\textit{On remplace les branches DH par des branches
 indépendantes du bit du message.}}
@@ -1029,9 +1034,9 @@ ont la même distribution quel que soit le bit $M_i$. Par conséquent,
 la distribution de l'ensemble du premier message envoyé par
 l'utilisateur ne dépend plus de $M$.
 Ainsi,
-\[
+$
 \mathrm{G}_1\approx\mathrm{G}_2
-\]
+$
 
 \transition{\textit{On applique la réduction DDH de la
 section~\ref{lem:ddh-waters}}}
@@ -1051,9 +1056,9 @@ On applique alors la réduction DDH de la
 section~\ref{lem:ddh-waters}. Celle-ci permet de remplacer, sous
 l'hypothèse DDH, le terme $F(M)$ par $F(0)$ dans la signature.
 Ainsi, la signature simulée ne dépend plus du message $M$ et
-\[
+$
 \mathrm{G}_2\approx\mathrm{G}_3.
-\]
+$
 
 
 \transition{\textit{On applique la randomisation de Waters (voir section~\ref{lem:randomisation-waters})}}
@@ -1081,9 +1086,9 @@ $t+t'$ est également uniformément distribuée dans $\mathbb{Z}_p$.
 Ainsi, la distribution de la signature finale est indépendante du message.
 Elle peut donc être remplacée par une signature simulée utilisant un aléa
 indépendant du message. Ainsi,
-\[
+$
 \mathrm{G}_3\approx\mathrm{G}_4.
-\]
+$
 
 
 \transition{\textit{On remplace $m_0$ par $m_1$.}}
@@ -1093,12 +1098,12 @@ indépendant du message. Ainsi,
 Dans ce jeu, le message $m_0$ est remplacé par $m_1$. D'après la transition
 précédente, la distribution de la signature finale est indépendante du
 message. Ainsi,
-\[
+$
 \mathrm G_4 \approx \mathrm G_5.
-\]
+$
 
-\noindent\textbf{Conclusion.}
 
+\paragraph{Conclusion:}
 On a
 $
 \mathrm G_0
