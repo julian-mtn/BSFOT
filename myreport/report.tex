@@ -180,6 +180,26 @@ et le transfert inconscient (OT), plus précisément le OT dual-mode, qui permet
     \item Une fonction $f(\lambda)$ est dite négligeable, notée
     $f(\lambda)=\negl(\lambda)$, si elle décroît plus rapidement que
     l'inverse de tout polynôme en $\lambda$.
+
+    \item Pour deux distributions de probabilités $\mathcal{D}_0$ et
+    $\mathcal{D}_1$, on note
+    $
+    \mathcal{D}_0 \sim_c \mathcal{D}_1
+    $
+    lorsqu'elles sont calculatoirement indistinguables, c'est-à-dire
+    qu'aucun adversaire probabiliste en temps polynomial ne peut distinguer
+    $\mathcal{D}_0$ de $\mathcal{D}_1$ avec une probabilité significativement
+    supérieure à $1/2$.
+
+    \item Pour deux distributions de probabilités $\mathcal{D}_0$ et
+    $\mathcal{D}_1$, on note
+    $
+    \mathcal{D}_0 \equiv \mathcal{D}_1
+    $
+    lorsqu'elles sont identiques, c'est-à-dire qu'elles ont exactement
+    la même distribution.
+
+
     
 \end{itemize}
 
@@ -836,7 +856,6 @@ tout $m$.
 \end{proof}
 
 \end{lemma}
-
 \begin{lemma}[Randomisation des signatures de Waters]
 \label{lem:randomisation-waters}
 Soit
@@ -846,7 +865,7 @@ $
 \left(h_s^a F(M)^t,g_2^t\right)
 $
 une signature de Waters valide, où $t\sample\mathbb Z_p$.
-Pour tout $t'\sample\mathbb Z_p$, la signature
+Pour tout $t'\sample\mathbb Z_p$ indépendant de $t$, la signature
 $
 \widehat{\sigma}
 =
@@ -874,16 +893,34 @@ et
 = \sigma_2g_2^{t'}
 = g_2^{t+t'}.
 \]
-Comme $t'\sample\mathbb Z_p$, la valeur $t+t'$ est uniformément
-distribuée dans $\mathbb Z_p$. La signature randomisée est donc
-distribuée comme une signature de Waters générée avec un nouvel aléa
-uniforme, indépendamment de l'aléa initial $t$.
+Comme $t'\sample\mathbb Z_p$ indépendamment de $t$, la valeur
+$t+t'$ est uniformément distribuée dans $\mathbb Z_p$, quelle que soit
+la valeur de $t$. Ainsi,
+\[
+\mathcal{D}(t+t')
+\equiv
+\mathcal{D}(t'')
+\qquad\text{où }t''\sample\mathbb Z_p.
+\]
+Par conséquent,
+\[
+\mathcal{D}(\widehat{\sigma})
+\equiv
+\mathcal{D}\left(
+\left(h_s^aF(M)^{t''},g_2^{t''}\right)
+\right).
+\]
+La signature randomisée est donc distribuée exactement comme une
+signature de Waters générée avec un nouvel aléa uniforme $t''$.
+Sa distribution ne dépend donc pas de la valeur de l'aléa
+initial $t$.
 \end{proof}
 \end{lemma}
 
+
 \begin{lemma}[Indistinguabilité sous DDH] \label{lem:ddh-waters}
 Les distributions obtenues dans le protocole dual-OT en utilisant 
-$F(M)$ ou $F(0)$ sont computationnellement indistinguables.
+$F(M)$ ou $F(0)$ sont calculatoirement indistinguables.
 
 \begin{proof}
 
@@ -949,19 +986,46 @@ u_0
 =
 g_1^{r_0},
 \]
-Par conséquent, lorsque $c=g_1^{ab}$, la valeur $F(M)$ contient le
-terme $g_1^{ab}$, tandis que lorsque $c$ est uniformément distribué
-dans $\mathbb{G}_1$, la valeur $F(M)$ est uniformément distribuée
-dans $\mathbb{G}_1$ et sa distribution est indépendante du message $M$.
+Par conséquent, sous l'hypothèse DDH, comme $c$ est calculatoirement
+indistinguable d'un élément uniformément distribué dans $\mathbb{G}_1$
+et que les $r_i$ sont choisis uniformément dans $\mathbb{Z}_p$, on a
+\[
+\mathcal{D}(F(M))
+\sim_c
+\text{uniforme sur } \mathbb{G}_1
+\]
+Alors, si l'adversaire $\mathcal{A}$ était capable de distinguer les
+distributions obtenues avec $F(M)$ et $F(0)$, le distingueur
+$\mathcal{B}$ pourrait utiliser $\mathcal{A}$ pour discerner le cas
+où $c=g_1^{ab}$ du cas où $c$ est uniformément distribué dans
+$\mathbb{G}_1$.
+D'autre part, comme
+$
+F(0)=g_1^{r_0},
+$
+et que $r_0$ est choisi uniformément dans $\mathbb{Z}_p$, la distribution
+de $F(0)$ est identique à la distribution uniforme sur $\mathbb{G}_1$.
+On a alors,
+\[
+\mathcal{D}(F(0))
+\equiv
+\text{uniforme sur }\mathbb{G}_1
+\]
+et donc, 
+\[
+\mathcal{D}(F(M))
+\sim_c
+\mathcal{D}(F(0))
+\]
 
-Ainsi, si l'adversaire $\mathcal{A}$ était capable de distinguer les
-distributions obtenues avec $F(M)$ et $F(0)$, le distingueur $\mathcal{B}$ pourrait utiliser
-$\mathcal{A}$ pour déterminer si $c=g_1^{ab}$ ou si $c$ est uniformément
-distribué dans $\mathbb{G}_1$.
-Cela permettrait à $\mathcal{B}$ de distinguer une instance DDH réelle
-d'une instance aléatoire, ce qui contredit l'hypothèse DDH.
-On en déduit que les distributions obtenues en utilisant $F(M)$ et
-$F(0)$ sont computationnellement indistinguables.
+Ainsi, un tel adversaire permettrait de distinguer une instance DDH
+réelle d'une instance aléatoire, ce qui contredit l'hypothèse DDH.
+On remarque également que la réduction n'utilise jamais les éléments
+$g_1^a$ et $g_1^b$ de l'instance DDH. Elle utilise uniquement
+$g_1^{ab}$ (dans le cas réel) et un élément uniformément distribué
+dans $\mathbb{G}_1$ (dans le cas aléatoire). La réduction est donc
+plus forte que nécessaire.
+
 \end{proof}
 \end{lemma}
 
@@ -1193,37 +1257,7 @@ Pour avoir des résultats plus précis, il est intéressant de mesurer le temps 
 Pour tester le protocole, nous avons utilisé plusieurs courbes elliptiques, 
 plus précisément des courbes dites ``pairing-friendly'', 
 c'est-à-dire des courbes permettant de calculer efficacement un couplage bilinéaire. 
-Afin d'obtenir des résultats variés et significatifs, 
-nous avons choisi un large panel de courbes présentant des tailles de corps et des degrés différents.
-Deux paramètres sont particulièrement importants pour caractériser ces courbes : la taille du corps fini, notée $p$, et le degré, noté $k$.
 
-\begin{itemize}
-    \item \textbf{Taille du corps fini $p$}
-
-    La courbe elliptique est définie sur un corps fini $\mathbb{F}_p$, où $p$ est un grand nombre premier. 
-    Les éléments manipulés sur la courbe sont donc représentés à l'aide d'éléments de ce corps, 
-    dont la taille est d'environ $\log_2(p)$ bits. 
-    Ainsi, une courbe ayant une taille de $p$ de 381 bits est 
-    définie sur un corps dont les éléments peuvent être représentés sur 381 bits. 
-    Cette taille influence notamment le coût des opérations arithmétiques effectuées sur la courbe.
-
-    \item \textbf{Degré $k$}
-
-    Le degré $k$ représente quant à lui la relation entre le corps $\mathbb{F}_p$ 
-    et le sous-groupe d'ordre $r$ utilisé pour le couplage.
-    Il est défini comme le plus petit entier strictement positif vérifiant
-    $
-    p^k \equiv 1 \mod r.
-    $
-    Il indique donc le plus petit degré d'extension du corps $\mathbb{F}_p$ 
-    dans lequel les valeurs du couplage peuvent être représentées. 
-    En effet, le couplage prend ses valeurs dans le corps étendu $\mathbb{F}_{p^k}$.
-    Par exemple, une courbe de degré $k=12$, comme BLS12-381, 
-    nécessite de travailler dans une extension $\mathbb{F}_{p^{12}}$ 
-    pour effectuer le couplage. Une courbe avec $k=24$, comme BLS24-315,
-    utilise quant à elle une extension $\mathbb{F}_{p^{24}}$. 
-    Plus $k$ est élevé, plus les opérations dans le corps d'extension peuvent être coûteuses.
-\end{itemize}
 
 Les courbes retenues couvrent ainsi plusieurs combinaisons de tailles de corps et de degrés, ce qui permet d'évaluer le comportement du protocole dans des configurations différentes.
 
