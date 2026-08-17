@@ -17,7 +17,7 @@
 
 \usepackage{setspace}
 \setstretch{1.2}
-
+\usepackage{caption}
 \usepackage{microtype}
 
 % -------------------------------------------------
@@ -96,6 +96,16 @@
     \medskip
 }
 
+
+\usepackage{lastpage}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{} % Nettoie les en-têtes et pieds de page par défaut
+\fancyfoot[C]{\thepage\ / \pageref{LastPage}} % Centre le texte en bas de page
+
+% Supprime la ligne horizontale du haut (en-tête)
+\renewcommand{\headrulewidth}{0pt} 
 
 % -------------------- Document --------------------
 \begin{document}
@@ -353,8 +363,6 @@ La valeur associée au message est définie par :
 \[
 F(M)=u_0\prod_{i=1}^{\ell}u_i^{M_i}.
 \]
-Ainsi, chaque bit $M_i$ influence la valeur de hachage par
-l'intermédiaire du facteur $u_i^{M_i}$.\\
 
 En partant de cette fonction de hachage,
 il est possible d'arriver à un mécanisme de signature,
@@ -385,17 +393,18 @@ e(\sigma_1,g_2).
 
 \section{Le protocole dual-OT}
 
-\subsection{Motivation : de classique à dual-OT}
+\subsection{Motivation : de OT à dual-OT}
 
 Notre étude portait originellement sur un schéma de signature aveugle 
-basé sur OT classique, qui, comme dual-OT, 
+basé sur OT classique (1 parmi 2), qui, comme dual-OT, 
 permet de réaliser un transfert de messages de manière sécurisée. 
 Le protocole OT classique n'est pas complet du point de vue des propriétés de sécurité dans notre étude, 
 puisqu'il ne dispose pas d'une preuve d'inforgeabilité, contrairement au protocole dual-OT.
 C'est pourquoi nous avons choisi de nous concentrer sur le dual-OT pour la suite.\\
 
-Le protocole basé sur OT classique a servi de base et est utilisé dans notre implémentation (voir section \ref{sec:impl}) 
-comme comparateur pour le protocole dual-OT, il est donc présenté, à titre de référence, en annexe (voir \ref{app:ot}).
+Le protocole basé sur OT classique a servi de base et est utilisé dans notre implémentation 
+comme comparateur pour le protocole dual-OT (voir section \ref{sec:impl}), 
+il est donc présenté, à titre de référence, en annexe (voir \ref{app:ot}).
 
 \subsection{Paramètres publics}
 
@@ -425,14 +434,14 @@ Ces paramètres sont les suivants:
 
     \item un CRS global:
     $
-    \mathsf{OT\text{-}CRS}=(g,h,w,\widetilde{w}),
+    (g,h,w,\widetilde{w}),
     $
-    où les éléments sont choisis uniformément dans le groupe approprié.
-    On définit également :
+    où les éléments sont choisis uniformément.
+    On définit également
     $
     \eta=\log_g(h),
     $
-    lorsque $g\neq 1$.
+    avec $g\neq 1$.
 
     \item la clé publique du schéma de signature :
     $
@@ -681,7 +690,7 @@ e(F(M),\widehat{\sigma}_2),
 \end{aligned}
 \]
 
-\section{Preuves de sécurité}
+\section{Propriétés de sécurité}
 
 \subsection{Lemmes}
 
@@ -746,6 +755,150 @@ tout $m$.
 \end{proof}
 
 \end{lemma}
+
+\begin{lemma}[Decomposition]
+\label{lem:sharing}
+
+Soit $\ell \geq 1$ et $X \in \mathbb{G}_1$. On définit
+\[
+C_X =
+\left\{
+(\beta_1,\ldots,\beta_\ell)\in\mathbb{G}_1^\ell
+\;\middle|\;
+\prod_{i=1}^{\ell}\beta_i=X
+\right\}.
+\]
+Alors :
+\begin{enumerate}
+    \item[\textnormal{(i)}] \textbf{Sampling}
+    Tirer $\beta_1,\ldots,\beta_{\ell-1}$ uniformément dans $\mathbb{G}_1$
+    et poser
+    $
+    \beta_\ell
+    =
+    X\cdot
+    \left(\prod_{i=1}^{\ell-1}\beta_i\right)^{-1}
+    $
+    produit un élément uniformément distribué dans $C_X$.
+
+    \item[\textnormal{(ii)}] \textbf{Uniformité des composantes}
+    Si
+    $(\alpha_1,\ldots,\alpha_\ell)$ est uniformément distribué dans
+    $C_X$, alors, pour tout indice $i_0$,
+    les $\ell-1$ éléments $(\alpha_i)_{i\neq i_0}$
+    sont uniformément distribués dans
+    $\mathbb{G}_1^{\ell-1}$ et sont donc indépendants de $X$.
+
+    \item[\textnormal{(iii)}] \textbf{Translation}
+    Si
+    $(\alpha_1,\ldots,\alpha_\ell)$ est uniformément distribué dans
+    $C_X$ et si
+    $\gamma_1,\ldots,\gamma_\ell\in\mathbb{G}_1$ sont fixés, alors
+    $
+    (\alpha_1\gamma_1,\ldots,\alpha_\ell\gamma_\ell)
+    $
+    est uniformément distribué dans
+    $
+    C_{X\prod_{i=1}^{\ell}\gamma_i}.
+    $
+\end{enumerate}
+
+\end{lemma}
+
+\begin{proof}
+
+\textbf{(i) Sampling}
+
+On choisit uniformément
+$\beta_1,\ldots,\beta_{\ell-1}\in\mathbb{G}_1$.
+et on définit 
+$
+\beta_\ell
+=
+X\cdot
+\left(\prod_{i=1}^{\ell-1}\beta_i\right)^{-1}.
+$
+On a donc
+\[
+\prod_{i=1}^{\ell}\beta_i
+=
+\left(\prod_{i=1}^{\ell-1}\beta_i\right)
+\cdot
+X\cdot
+\left(\prod_{i=1}^{\ell-1}\beta_i\right)^{-1}
+=X.
+\]
+Ainsi, le vecteur obtenu appartient bien à $C_X$.
+De plus, chaque élément de $C_X$ correspond à un unique choix des
+$\ell-1$ premières composantes.
+L'application
+\[
+(\beta_1,\ldots,\beta_{\ell-1})
+\longmapsto
+\left(
+\beta_1,\ldots,\beta_{\ell-1},
+X\left(\prod_{i=1}^{\ell-1}\beta_i\right)^{-1}
+\right)
+\]
+est donc une bijection de
+$\mathbb{G}_1^{\ell-1}$ vers $C_X$.
+Comme les $\ell-1$ premières composantes sont tirées uniformément,
+le vecteur obtenu est uniformément distribué dans $C_X$.
+
+\medskip
+
+\textbf{(ii) Uniformité des composantes}
+
+Soit $(\alpha_1,\ldots,\alpha_\ell)$ uniformément distribué dans
+$C_X$. On suppose que $i_0=\ell$. D'après (i), les valeurs
+$
+(\alpha_1,\ldots,\alpha_{\ell-1})
+$
+sont uniformément distribuées dans
+$\mathbb{G}_1^{\ell-1}$ et leur distribution ne dépend pas de $X$.
+On peut appliquer la même chose à n'importe quel indice $i_0$ en
+permutant les coordonnées. Ainsi,
+$
+(\alpha_i)_{i\neq i_0}
+$
+est uniformément distribué dans $\mathbb{G}_1^{\ell-1}$ et est
+indépendant de $X$.
+
+\medskip
+
+\textbf{(iii) Translation}
+
+On consiède l'application
+$
+(\alpha_1,\ldots,\alpha_\ell)
+\longmapsto
+(\alpha_1\gamma_1,\ldots,\alpha_\ell\gamma_\ell).
+$
+La multiplication par un élément fixé $\gamma_i\in\mathbb{G}_1$
+est une bijection de $\mathbb{G}_1$ vers lui-même. L'application
+ci-dessus est donc une bijection de $\mathbb{G}_1^\ell$.
+Si $(\alpha_1,\ldots,\alpha_\ell)\in C_X$, alors
+\[
+\prod_{i=1}^{\ell}\alpha_i\gamma_i
+=
+\left(\prod_{i=1}^{\ell}\alpha_i\right)
+\left(\prod_{i=1}^{\ell}\gamma_i\right)
+=
+X\prod_{i=1}^{\ell}\gamma_i.
+\]
+Ainsi,
+$
+(\alpha_1\gamma_1,\ldots,\alpha_\ell\gamma_\ell)
+\in
+C_{X\prod_{i=1}^{\ell}\gamma_i}.
+$
+L'application est donc une bijection de $C_X$ vers
+$C_{X\prod_i\gamma_i}$.
+Elle conserve la distribution et est donc uniformément distribué dans
+$C_{X\prod_i\gamma_i}$.
+
+\end{proof}
+
 \begin{lemma}[Randomisation des signatures de Waters]
 \label{lem:randomisation-waters}
 Soit
@@ -858,12 +1011,12 @@ On a donc, pour la fonction de Waters, avec $M_j=1$,
 \[
 \begin{aligned}
 F(M)
-&= u_0\prod_{i=1}^{\ell}u_i^{M_i}\\
-&= u_0u_j\prod_{\substack{i=1\\i\neq j}}^{\ell}u_i^{M_i}\\
-&= g_1^{r_0}\left(cg_1^{-r_0}\right)
+= u_0\prod_{i=1}^{\ell}u_i^{M_i}
+= u_0u_j\prod_{\substack{i=1\\i\neq j}}^{\ell}u_i^{M_i}
+= g_1^{r_0}\left(cg_1^{-r_0}\right)
 \prod_{\substack{i=1\\i\neq j}}^{\ell}
-\left(g_1^{r_i}\right)^{M_i}\\
-&= c\prod_{\substack{i=1\\i\neq j}}^{\ell}g_1^{r_iM_i}.
+\left(g_1^{r_i}\right)^{M_i}
+= c\prod_{\substack{i=1\\i\neq j}}^{\ell}g_1^{r_iM_i}.
 \end{aligned}
 \]
 et pour $F(0)$,
@@ -922,6 +1075,285 @@ plus forte que nécessaire.
 
 \subsection{Inforgeabilité}
 
+\begin{definition}[Inforgeabilité One-More (OMUF)]
+Un schéma de signature aveugle est dit \emph{One-More Unforgeable}
+si, pour tout polynôme $Q=Q(\lambda)$ et tout adversaire PPT
+$\mathcal{A}$ effectuant au plus $Q$ requêtes de signature, son
+avantage dans l'expérience OMUF est négligeable en $\lambda$.
+
+Plus précisément,
+\[
+\operatorname{Adv}_{\mathcal{A}}^{\mathrm{omuf}}(\lambda)
+=
+\Pr\left[
+\begin{array}{l}
+(\mathsf{bvk},\mathsf{bsk})
+\gets \mathsf{BSGen}(1^\lambda),\\
+\{(m_i,\sigma_i)\}_{i=1}^{Q+1}
+\gets
+\mathcal{A}^{\mathsf{BSSigner}(\mathsf{bsk},\cdot)}
+(\mathsf{bvk}),\\
+\forall i\neq j,\ m_i\neq m_j,\\
+\forall i\in[Q+1],\
+\mathsf{BSVerify}(\mathsf{bvk},m_i,\sigma_i)=1
+\end{array}
+\right]
+\]
+doit être négligeable :
+\[
+\operatorname{Adv}_{\mathcal{A}}^{\mathrm{omuf}}(\lambda)
+=\negl(\lambda).
+\]
+\end{definition}\label{definition:def-18}
+
+\begin{theorem}[Inforgeabilité One-More sous l'hypothèse co-CDH]
+Pour tout adversaire PPT $\mathcal{A}$ effectuant au plus $Q$ requêtes
+de signature dans l'expérience OMUF, il existe un algorithme PPT
+$\mathcal{B}$ qui exécute $\mathcal{A}$ une seule fois et effectue un
+nombre polynomial d'opérations dans les groupes considérés, tel que
+\[
+\operatorname{Adv}_{\mathcal{A}}^{\mathrm{omuf}}(\lambda)
+\leq
+4(\ell+1)(Q+1)\,
+\operatorname{Adv}_{\mathcal{B}}^{\mathrm{co\text{-}CDH}}(\lambda)
++
+\frac{2}{p}.
+\]
+\end{theorem}
+
+où :
+\begin{itemize}
+    \item $\operatorname{Adv}_{\mathcal{A}}^{\mathrm{omuf}}(\lambda)$
+    désigne la probabilité que $\mathcal{A}$ réussisse l'expérience
+    d'inforgeabilité One-More, c'est-à-dire qu'il produise $Q+1$
+    signatures valides sur des messages deux à deux distincts après
+    avoir effectué au plus $Q$ requêtes de signatur.
+
+    \item $\operatorname{Adv}_{\mathcal{B}}^{\mathrm{co\text{-}CDH}}(\lambda)$
+    désigne la probabilité que $\mathcal{B}$ résolve le problème
+    co-CDH, c'est-à-dire qu'à partir d'une instance
+    $(g_1,g_2,g_1^a,g_2^a,g_1^b)$, il calcule $g_1^{ab}$.
+
+    \item Le facteur $4(\ell+1)(Q+1)$ représente la perte introduite
+    par la technique de partitionnement utilisée dans la réduction,
+
+    \item Le terme $\frac{2}{p}$ correspond à la probabilité que le
+    CRS de l'OT ne soit pas \emph{messy}
+\end{itemize}
+
+\begin{proof}[Preuve : Inforgeabilité One-More sous l'hypothèse co-CDH]
+
+Pour prouver ce théorème, nous allons procéder par une suite de jeux.
+Soit $\epsilon_i$ la probabilité de succès de $\mathcal{A}$ dans le jeu $i$.
+
+\bigskip
+
+\noindent\textbf{Game \text{0}}
+
+$Game~0$ est l'exécution réelle de l'expérience d'inforgeabilité
+One-More de la définition~\ref{definition:def-18}.
+
+\transition{\textit{Vérification du CRS}}
+
+
+\noindent\textbf{Game \text{1}}
+
+On abandonne lorsque le CRS n'est pas \emph{messy}, c'est-à-dire si
+$g=1$ ou $\widetilde{w}=w^\eta$.
+On sait que
+$
+\Pr[\text{CRS non messy}] \leq \frac{2}{p},
+$
+car
+$
+\Pr[g=1]\leq\frac{1}{p}
+$
+et
+$
+\Pr[\widetilde{w}=w^\eta]=\frac{1}{p}.
+$
+Ainsi,
+$
+\epsilon_0\leq\epsilon_1+\frac{2}{p},
+$
+et
+$
+\text{Game 0} \approx \text{Game 1}.
+$
+
+\transition{\textit{Recherche des branches messy}}
+
+
+\noindent\textbf{Game \text{2}}
+
+Pour chaque requête $\rho_1$, on calcule $(\mu_i)_i$ avec
+$\mathsf{FindMessy}(\eta,\cdot)$.
+Si la session est utilisable, c'est-à-dire si
+$
+\mu_i\neq\bot
+\text{ pour tout }i\in[\ell],
+$
+on définit le message effectif
+$
+M^{\mathrm{eff}}=(\mu_1,\ldots,\mu_\ell).
+$
+Cette étape ne modifie donc pas le déroulement
+du protocole. Ainsi,
+$
+\epsilon_1=\epsilon_2,
+$
+et
+$
+\text{Game 1} \approx \text{Game 2}.
+$
+
+\transition{\textit{On uniformise les branches messy}}
+
+
+\noindent\textbf{Game \text{3}}
+
+Dans chaque session, pour toute position $i$ et toute branche $b$
+dont la paire de clés
+$
+(\mathsf{ek}_{i,b},\widetilde{\mathsf{ek}}_{i,b})
+$
+est non-DH (c'est-à-dire messy), on remplace le chiffré
+$\mathsf{ct}_{i,b}$ par un couple tiré uniformément dans
+$\mathbb{G}_1^2$.
+Chaque chiffré est construit avec des aléas uniformes
+$(s_{i,b},s'_{i,b})$ qui n'interviennent que dans ce chiffré.
+D'après le lemme~\ref{lem:lossy}, le chiffré obtenu est uniformément
+distribué dans $\mathbb{G}_1^2$ et est indépendant.
+On a donc
+$
+\epsilon_3=\epsilon_2,
+$
+et
+$
+\text{Game 2} \approx \text{Game 3}.
+$
+
+\transition{\textit{On uniformise les sessions non utilisables}}
+
+
+\noindent\textbf{Game \text{4}}
+
+Dans Game 2, pour chaque position $i$, on a calculé
+$
+\mu_i\in\{0,1,\bot\}.
+$
+Une session est dite non utilisable s'il existe une position
+$i_0$ telle que
+$
+\mu_{i_0}=\bot.
+$
+Cela signifie que les deux branches de la position $i_0$ sont messy.
+Dans Game 3, toutes les branches messy ont été remplacées
+par des couples uniformément distribués dans $\mathbb{G}_1^2$.
+Ainsi, pour une position non utilisable, les deux chiffrés sont déjà
+des valeurs uniformément distribuées dans $\mathbb{G}_1^2$.
+
+Cependant, pour les autres positions, c'est-à-dire celles qui
+possèdent une branche DH, le clair
+$
+\alpha_i u_i^{t\mu_i}
+$
+dépend encore des valeurs $\alpha_i$.
+On va donc remplacer ces valeurs des branches DH par des éléments
+uniformes de $\mathbb{G}_1$.
+On garde
+$
+\sigma_2=g_2^t
+$
+et
+$
+\sigma'_2=g_1^t,
+$
+car ces valeurs sont indépendantes de $\mathsf{bsk}$.
+D'après le lemme \ref{lem:sharing} (ii), les valeurs
+$(\alpha_i)_{i\neq i_0}$ sont uniformément distribuées et indépendantes
+de $\mathsf{bsk}$ et de $t$. En les multipliant par
+$u_i^{t\mu_i}$, on conserve une distribution similaire
+(voir lemme \ref{lem:sharing} (iii)).
+Nous pouvons donc les remplacer par des éléments
+indépendants et uniformément distribués dans $\mathbb{G}_1$
+La distribution des valeurs des branches DH reste la même,
+et ainsi,
+$
+\epsilon_4=\epsilon_3,
+$
+et
+$
+\text{Game 3} \equiv \text{Game 4}.
+$
+
+\transition{\textit{On reparamètre les sessions utilisables}}
+
+
+\noindent\textbf{Game \text{5}}
+
+Pour chaque session utilisable, de message effectif $M^{(j)}$ et de
+paramètre aléatoire $t_j$, on calcule
+$
+\Sigma_1
+=
+\mathsf{bsk}\cdot F(M^{(j)})^{t_j}.
+$
+On choisit ensuite uniformément un vecteur
+$
+\boldsymbol{\beta}
+=
+(\beta_1,\ldots,\beta_\ell)
+\in C_{\Sigma_1}
+$
+en utilisant le lemme~\ref{lem:sharing}(i).
+On définit alors les chiffrés des branches DH à partir des
+$\beta_i$, avec de nouveaux aléas $(s,s')$:
+\[
+D_{i,\mu_i}
+=
+\widetilde{\mathsf{ek}}_{i,\mu_i}^{s'}
+\mathsf{ek}_{i,\mu_i}^{s}
+\beta_i.
+\]
+
+Dans le jeu précédent, les clairs des branches DH étaient de la
+forme
+$
+\alpha_i u_i^{t_j\mu_i}.
+$
+Or, d'après le lemme~\ref{lem:sharing}(iii), le vecteur
+$
+\left(\alpha_i u_i^{t_j\mu_i}\right)_{i=1}^{\ell}
+$
+est uniformément distribué dans
+$
+C_{\Sigma_1}.
+$
+Il a donc exactement la même distribution que
+$\boldsymbol{\beta}$. Le remplacement ne modifie
+ainsi pas la distribution du protocole.
+Ainsi,
+$
+\epsilon_5=\epsilon_4,
+$
+et
+$
+\text{Game 4} \equiv \text{Game 5}.
+$
+
+\transition{\textit{?}}
+
+
+\noindent\textbf{Game \text{6}}
+
+
+\end{proof}
+
+
+
+
+
 \subsection{Aveuglement}
 
 
@@ -967,7 +1399,7 @@ Nous raisonnons par une suite de jeux.
 
 \bigskip
 
-\noindent\textbf{G$_0$.}
+\noindent\textbf{Game \text{0}}
 
 Il s'agit de l'exécution réelle du protocole avec le message $m_0$.
 Pour chaque position $i$, l'utilisateur construit une branche DH
@@ -978,7 +1410,7 @@ branches et les transmet à l'utilisateur.
 \transition{\textit{On remplace les chiffrés des branches messy par des
 couples uniformes.}}
 
-\noindent\textbf{G$_1$.}
+\noindent\textbf{Game \text{1}}
 
 Dans un CRS honnêtement généré, chaque position possède une branche DH
 et une branche messy. Pour la branche messy, le couple
@@ -994,13 +1426,13 @@ On peut donc remplacer, pour chaque position, le chiffré de la branche
 messy par un couple uniformément distribué dans $\mathbb{G}_1^2$ sans
 modifier la vue du signataire. Ainsi,
 $
-\mathrm{G}_0\approx\mathrm{G}_1.
+\text{Game 0} \approx \text{Game 1}.
 $
 
 \transition{\textit{On remplace les branches DH par des branches
 indépendantes du bit du message.}}
 
-\noindent\textbf{G$_2$.}
+\noindent\textbf{Game \text{2}}
 
 Après le jeu précédent, les chiffrés des branches messy sont
 uniformes et ne dépendent plus du message. Il reste à traiter les
@@ -1035,13 +1467,12 @@ la distribution de l'ensemble du premier message envoyé par
 l'utilisateur ne dépend plus de $M$.
 Ainsi,
 $
-\mathrm{G}_1\approx\mathrm{G}_2
+\text{Game 1} \approx \text{Game 2}.
 $
 
-\transition{\textit{On applique la réduction DDH de la
-section~\ref{lem:ddh-waters}}}
+\transition{\textit{On applique la réduction DDH de la section \ref{lem:ddh-waters}}}
 
-\noindent\textbf{G$_3$.}
+\noindent\textbf{Game \text{3}}
 
 Après le jeu précédent, les branches envoyées par l'utilisateur sont indépendantes du message $M$.
 Après la réponse du signataire, le déchiffrement de la branche DH donne la même forme que dans le protocole classique :
@@ -1053,17 +1484,17 @@ Après la réponse du signataire, le déchiffrement de la branche DH donne la m�
 \sigma'_2=g_1^t.
 \]
 On applique alors la réduction DDH de la
-section~\ref{lem:ddh-waters}. Celle-ci permet de remplacer, sous
+section \ref{lem:ddh-waters}. Celle-ci permet de remplacer, sous
 l'hypothèse DDH, le terme $F(M)$ par $F(0)$ dans la signature.
 Ainsi, la signature simulée ne dépend plus du message $M$ et
 $
-\mathrm{G}_2\approx\mathrm{G}_3.
+\text{Game 2} \approx \text{Game 3}.
 $
 
 
-\transition{\textit{On applique la randomisation de Waters (voir section~\ref{lem:randomisation-waters})}}
+\transition{\textit{On applique la randomisation de Waters (voir section \ref{lem:randomisation-waters})}}
 
-\noindent\textbf{G$_4$.}
+\noindent\textbf{Game \text{4}}
 
 Après avoir reçu la réponse du signer, l'utilisateur effectue la phase de
 déchiffrement. Puis, il effectue la randomisation de Waters en choisissant un aléa
@@ -1087,36 +1518,35 @@ Ainsi, la distribution de la signature finale est indépendante du message.
 Elle peut donc être remplacée par une signature simulée utilisant un aléa
 indépendant du message. Ainsi,
 $
-\mathrm{G}_3\approx\mathrm{G}_4.
+\text{Game 3} \approx \text{Game 4}.
 $
 
 
 \transition{\textit{On remplace $m_0$ par $m_1$.}}
 
-\noindent\textbf{G$_5$.}
+\noindent\textbf{Game \text{5}}
 
 Dans ce jeu, le message $m_0$ est remplacé par $m_1$. D'après la transition
 précédente, la distribution de la signature finale est indépendante du
 message. Ainsi,
 $
-\mathrm G_4 \approx \mathrm G_5.
+\text{Game 4} \approx \text{Game 5}.
 $
-
 
 \paragraph{Conclusion:}
 On a
 $
-\mathrm G_0
+\text{Game 0}
 \approx
-\mathrm G_1
+\text{Game 1}
 \approx
-\mathrm G_2
+\text{Game 2}
 \approx
-\mathrm G_3
+\text{Game 3}
 \approx
-\mathrm G_4
+\text{Game 4}
 \approx
-\mathrm G_5
+\text{Game 5}
 $,
 par conséquent,
 $
@@ -1128,7 +1558,7 @@ et le protocole satisfait donc la propriété d'aveuglement pour un signataire h
 
 \end{proof}
 
-\section{Implémentation et évaluation expérimentale}
+\section{Implémentation et benchmarks}
 
 \subsection{Objectifs}
 
@@ -1139,9 +1569,165 @@ Pour avoir des résultats plus précis, il est intéressant de mesurer le temps 
 
 \subsection{Environnement}
 
+L'implémentation et les benchmarks ont été réalisé sur une machine personnelle fonctionnant sous Ubuntu 24.04.4 LTS.
+Le code source est principalement écrit en C, avec la bibliothèque cryptographique RELIC, et en python pour le traitement des résultats
+et la génération de graphiques.
+
+\begin{table}[H]
+    \centering
+
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \begin{tabular}{ll}
+            \toprule
+            \textbf{Élément} & \textbf{Configuration} \\
+            \midrule
+            Processeur & Intel Core i7-1165G7 \\
+            Cœurs logiques & 8 \\
+            Mémoire vive & 7,5 GiB \\
+            \bottomrule
+        \end{tabular}
+        \captionof{table}{Environnement matériel}
+        \label{tab:hardware}
+    \end{minipage}
+    \hfill
+    \begin{minipage}[t]{0.48\textwidth}
+        \centering
+        \small
+        \begin{tabular}{ll}
+            \toprule
+            \textbf{Logiciel / Bibliothèque} & \textbf{Version} \\
+            \midrule
+            Système d'exploitation & Ubuntu 24.04.4 LTS \\
+            Noyau Linux & 6.8.0-136-generic \\
+            GCC & 13.3.0 \\
+            Python & 3.12.3 \\
+            Git & 2.43.0 \\
+            GNU Make & 4.3 \\
+            RELIC & 0.7.0-253-gc2085f44 \\
+            NumPy & 1.26.4 \\
+            Matplotlib & 3.6.3 \\
+            \bottomrule
+        \end{tabular}
+        \captionof{table}{Environnement logiciel}
+        \label{tab:software}
+    \end{minipage}
+
+\end{table}
+
 \subsection{Implémentation du protocole}\label{sec:impl}
 
 \subsubsection{Architecture}
+
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[
+        node distance=1.2cm,
+        box/.style={
+            draw,
+            rounded corners,
+            align=left,
+            text width=7cm,
+            inner sep=6pt
+        },
+        arrow/.style={
+            -{Latex[length=3mm,width=1.8mm]},
+            line width=0.7pt,
+            draw=black!70
+        },
+        io/.style={
+            font=\small\ttfamily,
+            text=orange!40!black,
+            align=left
+        }
+    ]
+
+    % ------------------------------------------------
+    % Utilisateur : initialisation
+    % ------------------------------------------------
+    \node[box] (init) {
+        \textbf{User}\\[2pt]
+        \texttt{user\_init()}\\
+        \texttt{write\_ot\_keys\_to\_file()}
+    };
+
+    % ------------------------------------------------
+    % Signataire
+    % ------------------------------------------------
+    \node[box, below=1.5cm of init] (signer) {
+        \textbf{Signer}\\[2pt]
+        \texttt{read\_request\_from\_file()}\\
+        \texttt{compute\_response()}\\
+        \texttt{write\_response\_to\_file()}
+    };
+
+    % ------------------------------------------------
+    % Utilisateur : signature
+    % ------------------------------------------------
+    \node[box, below=1.5cm of signer] (signature) {
+        \textbf{User}\\[2pt]
+        \texttt{read\_signer\_response\_from\_file()}\\
+        \texttt{compute\_signature()}\\
+        \texttt{write\_signature\_to\_file()}
+    };
+
+    % ------------------------------------------------
+    % Vérificateur
+    % ------------------------------------------------
+    \node[box, below=1.5cm of signature] (verifier) {
+        \textbf{Verifier}\\[2pt]
+        \texttt{read\_signature\_from\_file()}\\
+        \texttt{check\_signature()}
+    };
+
+    % ------------------------------------------------
+    % Résultat
+    % ------------------------------------------------
+    \node[io, below=0.8cm of verifier] (output) {
+        \texttt{true / false}
+    };
+
+    % ------------------------------------------------
+    % Flèche : clés OT
+    % ------------------------------------------------
+    \draw[arrow]
+        (init.south) --
+        node[pos=0.5, right=0.35cm, io] {\texttt{ot\_keys.bin}}
+        (signer.north);
+
+    % ------------------------------------------------
+    % Flèche : réponse du signataire
+    % ------------------------------------------------
+    \draw[arrow]
+        (signer.south) --
+        node[pos=0.5, right=0.35cm, io] {
+            \texttt{signer\_response.bin}
+        }
+        (signature.north);
+
+    % ------------------------------------------------
+    % Flèche : signature
+    % ------------------------------------------------
+    \draw[arrow]
+        (signature.south) --
+        node[pos=0.5, right=0.35cm, io] {
+            \texttt{signature.bin}
+        }
+        (verifier.north);
+
+    % ------------------------------------------------
+    % Flèche : résultat
+    % ------------------------------------------------
+    \draw[arrow]
+        (verifier.south) --
+        (output.north);
+
+    \end{tikzpicture}
+
+    \caption{Pipeline d'exécution et échanges de fichiers de l'implémentation}
+    \label{fig:pipeline}
+\end{figure}
+
 
 \subsubsection{Courbes elliptiques utilisées}
 Pour tester le protocole, nous avons utilisé plusieurs courbes elliptiques, 
@@ -1196,14 +1782,10 @@ FM18-768    & 18 & 768 bits \\
   \label{fig:global_benchmark}
 \end{figure}
 
-
-\subsection{Analyse des résultats}
-
 \newpage
 \appendix
 
-\section{Construction basée sur l'OT classique}\label{app:ot}
-
+\section{Construction basée sur OT classique}\label{app:ot}
 
 \subsection{Paramètres publics:}
 \begin{itemize}
