@@ -608,7 +608,7 @@ $
 =
 \mathsf{ek}_{i,M_i}^{\,\eta}.
 $
-Cette branche vérifie donc la relation de Diffie--Hellman et est appelée \emph{branche DH}.
+Cette branche vérifie donc la relation de Diffie--Hellman et est appelée branche DH.
 C'est la branche sur laquelle le protocole fonctionne normalement.
 La seconde branche est construite à partir de la première :
 \[
@@ -642,7 +642,7 @@ Cependant, le CRS est choisi de manière à vérifier
 $
 \widetilde w \neq w^\eta.
 $
-La seconde branche ne peut donc jamais être une paire DH. C'est une \emph{branche messy}.
+La seconde branche ne peut donc jamais être une paire DH. C'est une branche messy.
 
 En résumé, pour un utilisateur honnête, chaque position contient exactement une branche DH 
 (la bonne branche, correspondant au bit du message) et une branche messy (la mauvaise branche). 
@@ -697,7 +697,7 @@ e(F(M),\widehat{\sigma}_2),
 \begin{lemma}[Uniformité des branches messy (non-DH)]\label{lem:lossy}
     
 Supposons que $g\neq 1$ et que $\eta=\log_g h$. Soit
-$(u,v)\in\mathbb{G}_1^2$ une paire \emph{non-DH}, c'est-à-dire telle que
+$(u,v)\in\mathbb{G}_1^2$ une paire non-DH, c'est-à-dire telle que
 $v\neq u^{\eta}$. Alors la variable aléatoire
 \[
 \bigl(C,\mathsf{mask}\bigr)
@@ -717,41 +717,79 @@ est uniformément distribué sur $\mathbb{G}_1^2$, avec une distribution
 qui ne dépend pas de $m$.
 
 \begin{proof}
-Puisque $g$ est un générateur de $\mathbb{G}_1$, on peut écrire
-$u=g^c$ et $v=g^e$ pour des $c,e\in\mathbb{Z}_p$ uniques.
-L'hypothèse $v\neq u^\eta$ implique
-$e\neq c\eta\pmod p$.
-Considérons l'application $\mathbb{Z}_p$-linéaire
+
+Comme $g$ est un générateur de $\mathbb{G}_1$, il existe
+$c,e\in\mathbb{Z}_p$ tels que
+$
+u=g^c
+$
+et
+$
+v=g^e.
+$
+De plus, $h=g^\eta$. Donc,
+$
+C=g^{s+\eta s'}
+$
+et
+$
+\mathsf{mask}=g^{cs+es'}.
+$
+On pose
 \[
-\varphi:\mathbb{Z}_p^2\to\mathbb{Z}_p^2,
+x=s+\eta s'
 \qquad
-\varphi(s,s')
-=
-\bigl(s+\eta s',cs+es'\bigr),
+y=cs+es'
 \]
-dont la matrice est
+On obtient alors le système
+\[
+\begin{cases}
+x=s+\eta s',\\
+y=cs+es'.
+\end{cases}
+\]
+de matrice
 \[
 \begin{pmatrix}
 1 & \eta\\
 c & e
 \end{pmatrix},
-\qquad
-\det=e-c\eta.
 \]
-Comme $e-c\eta\neq 0$ dans le corps $\mathbb{Z}_p$,
-$\varphi$ est une bijection de $\mathbb{Z}_p^2$.
-Puisque $(s,s')$ est uniformément distribué sur $\mathbb{Z}_p^2$,
-$\varphi(s,s')$ l'est également.
-Enfin, l'application $x\mapsto g^x$ est une bijection de
-$\mathbb{Z}_p$ vers $\mathbb{G}_1$ puisque $g$ est un générateur d'un
-groupe d'ordre premier. Appliquée à chaque coordonnée, elle transforme
-donc $\varphi(s,s')$ en $(C,\mathsf{mask})$, qui est ainsi uniformément
-distribué sur $\mathbb{G}_1^2$.
-Pour la seconde affirmation, $D=\mathsf{mask}\cdot m$.
-Pour tout $m$ fixé, la multiplication par $m$ est une bijection de
-$\mathbb{G}_1$. Ainsi, $(C,D)$ est uniformément distribué sur
-$\mathbb{G}_1^2$ ; en particulier, sa distribution est la même pour
-tout $m$.
+et de déterminant
+$
+e-c\eta.
+$
+Comme $(u,v)$ est une paire non-DH,
+$
+v\neq u^\eta,
+$
+et donc $e\neq c\eta$ (car $u=g^c$, $v=g^e$ et donc $u^\eta=g^{c\eta}$).
+Le déterminant est donc non nul dans
+$\mathbb{Z}_p$, ce qui implique que le système possède une solution
+unique.
+Ainsi, l'application
+$
+(s,s')\mapsto(x,y)
+$
+est une bijection de $\mathbb{Z}_p^2$ vers $\mathbb{Z}_p^2$.
+Comme $(s,s')$ est uniformément distribué, $(x,y)$ l'est également.
+Enfin,
+$
+(C,\mathsf{mask})=(g^x,g^y),
+$
+et comme $x\mapsto g^x$ est une bijection de $\mathbb{Z}_p$ vers
+$\mathbb{G}_1$, le couple $(C,\mathsf{mask})$ est uniformément
+distribué dans $\mathbb{G}_1^2$.
+
+Pour le chiffré $(C,D)$, on a
+$
+D=\mathsf{mask}\cdot m.
+$
+Pour tout $m\in\mathbb{G}_1$ fixé, la multiplication par $m$ est une
+bijection de $\mathbb{G}_1$. Ainsi, $(C,D)$ est également uniformément
+distribué dans $\mathbb{G}_1^2$, et sa distribution ne dépend pas de
+$m$.
+
 \end{proof}
 
 \end{lemma}
@@ -1076,11 +1114,11 @@ plus forte que nécessaire.
 \subsection{Inforgeabilité}
 
 \begin{definition}[Inforgeabilité One-More (OMUF)]
-Un schéma de signature aveugle est dit \emph{One-More Unforgeable}
+\label{definition:def-18}
+Un schéma de signature aveugle est dit One-More Unforgeable
 si, pour tout polynôme $Q=Q(\lambda)$ et tout adversaire PPT
 $\mathcal{A}$ effectuant au plus $Q$ requêtes de signature, son
 avantage dans l'expérience OMUF est négligeable en $\lambda$.
-
 Plus précisément,
 \[
 \operatorname{Adv}_{\mathcal{A}}^{\mathrm{omuf}}(\lambda)
@@ -1098,13 +1136,9 @@ Plus précisément,
 \mathsf{BSVerify}(\mathsf{bvk},m_i,\sigma_i)=1
 \end{array}
 \right]
-\]
-doit être négligeable :
-\[
-\operatorname{Adv}_{\mathcal{A}}^{\mathrm{omuf}}(\lambda)
 =\negl(\lambda).
 \]
-\end{definition}\label{definition:def-18}
+\end{definition}
 
 \begin{theorem}[Inforgeabilité One-More sous l'hypothèse co-CDH]
 Pour tout adversaire PPT $\mathcal{A}$ effectuant au plus $Q$ requêtes
@@ -1134,11 +1168,11 @@ où :
     co-CDH, c'est-à-dire qu'à partir d'une instance
     $(g_1,g_2,g_1^a,g_2^a,g_1^b)$, il calcule $g_1^{ab}$.
 
-    \item Le facteur $4(\ell+1)(Q+1)$ représente la perte introduite
-    par la technique de partitionnement utilisée dans la réduction,
+    \item Le facteur $4(\ell+1)(Q+1)$ représente la perte dû
+    au partitionnement utilisée dans la réduction.
 
     \item Le terme $\frac{2}{p}$ correspond à la probabilité que le
-    CRS de l'OT ne soit pas \emph{messy}
+    CRS de l'OT ne soit pas messy
 \end{itemize}
 
 \begin{proof}[Preuve : Inforgeabilité One-More sous l'hypothèse co-CDH]
@@ -1150,15 +1184,14 @@ Soit $\epsilon_i$ la probabilité de succès de $\mathcal{A}$ dans le jeu $i$.
 
 \noindent\textbf{Game \text{0}}
 
-$Game~0$ est l'exécution réelle de l'expérience d'inforgeabilité
-One-More de la définition~\ref{definition:def-18}.
+$Game~0$ est l'exécution réelle de la définition~\ref{definition:def-18}.
 
 \transition{\textit{Vérification du CRS}}
 
 
 \noindent\textbf{Game \text{1}}
 
-On abandonne lorsque le CRS n'est pas \emph{messy}, c'est-à-dire si
+On abandonne lorsque le CRS n'est pas messy, c'est-à-dire si
 $g=1$ ou $\widetilde{w}=w^\eta$.
 On sait que
 $
@@ -1258,7 +1291,7 @@ possèdent une branche DH, le clair
 $
 \alpha_i u_i^{t\mu_i}
 $
-dépend encore des valeurs $\alpha_i$.
+dépend encore des $\alpha_i$.
 On va donc remplacer ces valeurs des branches DH par des éléments
 uniformes de $\mathbb{G}_1$.
 On garde
@@ -1269,7 +1302,7 @@ et
 $
 \sigma'_2=g_1^t,
 $
-car ces valeurs sont indépendantes de $\mathsf{bsk}$.
+qui sont indépendantes de $\mathsf{bsk}$.
 D'après le lemme \ref{lem:sharing} (ii), les valeurs
 $(\alpha_i)_{i\neq i_0}$ sont uniformément distribuées et indépendantes
 de $\mathsf{bsk}$ et de $t$. En les multipliant par
@@ -1284,7 +1317,7 @@ $
 $
 et
 $
-\text{Game 3} \equiv \text{Game 4}.
+\text{Game 3} \approx \text{Game 4}.
 $
 
 \transition{\textit{On reparamètre les sessions utilisables}}
@@ -1339,7 +1372,7 @@ $
 $
 et
 $
-\text{Game 4} \equiv \text{Game 5}.
+\text{Game 4} \approx \text{Game 5}.
 $
 
 \transition{\textit{?}}
@@ -1577,6 +1610,7 @@ et la génération de graphiques.
     \centering
 
     \begin{minipage}[t]{0.48\textwidth}
+        \label{tab:hardware}
         \centering
         \begin{tabular}{ll}
             \toprule
@@ -1588,10 +1622,11 @@ et la génération de graphiques.
             \bottomrule
         \end{tabular}
         \captionof{table}{Environnement matériel}
-        \label{tab:hardware}
+        
     \end{minipage}
     \hfill
     \begin{minipage}[t]{0.48\textwidth}
+        \label{tab:software}
         \centering
         \small
         \begin{tabular}{ll}
@@ -1610,7 +1645,7 @@ et la génération de graphiques.
             \bottomrule
         \end{tabular}
         \captionof{table}{Environnement logiciel}
-        \label{tab:software}
+        
     \end{minipage}
 
 \end{table}
@@ -1620,6 +1655,7 @@ et la génération de graphiques.
 \subsubsection{Architecture}
 
 \begin{figure}[H]
+    \label{fig:pipeline}
     \centering
     \begin{tikzpicture}[
         node distance=1.2cm,
@@ -1725,7 +1761,7 @@ et la génération de graphiques.
     \end{tikzpicture}
 
     \caption{Pipeline d'exécution et échanges de fichiers de l'implémentation}
-    \label{fig:pipeline}
+    
 \end{figure}
 
 
@@ -1776,16 +1812,17 @@ FM18-768    & 18 & 768 bits \\
 \subsection{Résultats expérimentaux}\label{sec:result_analysis}
 
 \begin{figure}[H]
+\label{fig:global_benchmark}
   \centering
   \includegraphics[width=1\textwidth]{../bsfot/results/images/benchmark_OT_vs_dual-OT.png}
   \caption{Benchmark global de comparaison entre le protocole OT et le protocole dual-OT pour différentes courbes elliptiques.}
-  \label{fig:global_benchmark}
+  
 \end{figure}
 
 \newpage
 \appendix
 
-\section{Construction basée sur OT classique}\label{app:ot}
+\section{Construction basée sur OT}\label{app:ot}
 
 \subsection{Paramètres publics:}
 \begin{itemize}
@@ -1862,11 +1899,12 @@ t' \sample \mathbb{Z}_p \\
 
 Pour chaque bit $M_i$ du message $M$, le signataire construit deux branches
 associées aux deux valeurs possibles du bit :
-\[
+$
 0 \longrightarrow \alpha_i,
-\qquad
+$
+$
 1 \longrightarrow \alpha_i u_i^t,
-\]
+$
 où $\alpha_i$ est un facteur aléatoire et $u_i$ est le $i$-ème paramètre de la
 fonction de hachage de Waters.
 Ces deux branches sont ensuite masquées à l'aide des clés d'évaluation. Si
@@ -1876,7 +1914,7 @@ $M_i=0$, l'utilisateur construit
 \qquad
 \mathsf{ek}_{i,1}=g_1^{x_i-y_i},
 \]
-tandis que si $M_i=1$, il inverse les deux valeurs :
+et si $M_i=1$, il inverse les deux valeurs:
 \[
 \mathsf{ek}_{i,1}=g_1^{y_i},
 \qquad
@@ -1891,7 +1929,7 @@ branche correspond au bit choisi par l'utilisateur. Il calcule alors
 \qquad
 \mathsf{ct}_{i,1}=\mathsf{ek}_{i,1}^{\,r}\,\alpha_i(u_i)^t.
 \]
-L'utilisateur récupère ensuite uniquement la composante correspondant à son
+L'utilisateur récupère ensuite uniquement la partie correspondant à son
 bit en calculant
 $
 \sigma_{1,i}
@@ -1950,11 +1988,11 @@ En multipliant toutes ces composantes, il obtient
 \[
 \begin{aligned}
 \sigma_1
-&=
-\prod_{i=1}^{\ell}\sigma_{1,i} \\
-&=
-\prod_{i=1}^{\ell}\alpha_i(u_i^{M_i})^t \\
-&=
+=
+\prod_{i=1}^{\ell}\sigma_{1,i} 
+=
+\prod_{i=1}^{\ell}\alpha_i(u_i^{M_i})^t 
+=
 \left(\prod_{i=1}^{\ell}\alpha_i\right)
 \left(\prod_{i=1}^{\ell}u_i^{M_i}\right)^t.
 \end{aligned}
@@ -2022,51 +2060,51 @@ des étapes des protocoles OT et dual-OT individuellement. Ces graphiques sont
 présentés dans la section \ref{sec:result_analysis}.
 
 \begin{figure}[H]
+\label{fig:annexe_bs_params}
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_params_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la générations des paramètres publics pour les protocoles OT et dual-OT.}
-\label{fig:annexe_bs_params}
 \end{figure}
 
 
 
 \begin{figure}[H]
+\label{fig:annexe_bs_keygen}
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_gen_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la génération des clés pour les protocoles OT et dual-OT.}
-\label{fig:annexe_bs_keygen}
 \end{figure}
 
 
 \begin{figure}[H]
+\label{fig:annexe_bs_user}
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_user_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de l'étape utilisateur pour les protocoles OT et dual-OT.}
-\label{fig:annexe_bs_user}
 \end{figure}
 
 
 \begin{figure}[H]
+\label{fig:annexe_bs_signer}
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_signer_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de l'étape du signataire pour les protocoles OT et dual-OT.}
-\label{fig:annexe_bs_signer}
 \end{figure}
 
 
 \begin{figure}[H]
+\label{fig:annexe_bs_derive}
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_derive_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la dérivation de la signature pour les protocoles OT et dual-OT.}
-\label{fig:annexe_bs_derive}
 \end{figure}
 
 
 \begin{figure}[H]
+\label{fig:annexe_bs_verify}
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_verify_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la vérification pour les protocoles OT et dual-OT.}
-\label{fig:annexe_bs_verify}
 \end{figure}
 
 
