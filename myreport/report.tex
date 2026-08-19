@@ -133,7 +133,7 @@
     {22 juin 2026 --- 22 août 2026}\\[1cm]
 
     \begin{abstract}
-    Les signatures aveugles (Blind Signatures) introduites par Chaum en 1982, permettent à un utilisateur
+    Les signatures aveugles (Blind Signatures) introduites par Chaum en 1982 \cite{chaum1983}, permettent à un utilisateur
     d'obtenir une signature sur un message déterminé sans que le signataire n'apprenne
     son contenu. Ces mécanismes peuvent être utilisés en pratique dans le cadre 
     des votes électroniques, des transactions bancaires ou des protocoles d'identification.
@@ -164,7 +164,7 @@ TODO
 \section{Préliminaires}
 
 Dans cette partie, nous introduisons les notations et concepts de base nécessaires à la compréhension du protocole présenté dans ce rapport.
-Le protocole repose principalement sur les signatures de Waters, un schéma de signature basé sur les groupes bilinéaires,
+Le protocole repose principalement sur les signatures de Waters \cite{waters2005}, un schéma de signature basé sur les groupes bilinéaires,
 et le transfert inconscient (OT), plus précisément le OT dual-mode, qui permet de réaliser un transfert de messages de manière sécurisée.
 
 \subsection{Notations}
@@ -343,7 +343,7 @@ exploiter qu'une seule branche par position.
 
 \subsection{Signature de Waters}
 
-La construction utilise la fonction de hachage de Waters permettant
+La construction utilise la fonction de hachage de Waters \cite{waters2005}, permettant
 d'encoder un message binaire dans un élément du groupe $\mathbb{G}_1$.
 Soit un message
 $
@@ -1962,7 +1962,7 @@ Pour avoir des résultats plus précis, il est intéressant de mesurer le temps 
 \subsection{Environnement}
 
 L'implémentation et les benchmarks ont été réalisé sur une machine personnelle fonctionnant sous Ubuntu 24.04.4 LTS.
-Le code source est principalement écrit en C, avec la bibliothèque cryptographique RELIC, et en python pour le traitement des résultats
+Le code source est principalement écrit en C, avec la bibliothèque cryptographique RELIC \cite{relic}, et en python pour le traitement des résultats
 et la génération de graphiques.
 
 \begin{table}[H]
@@ -2127,7 +2127,7 @@ et la génération de graphiques.
 
 \subsubsection{Courbes elliptiques utilisées}
 Pour tester le protocole, nous avons utilisé plusieurs courbes elliptiques, 
-plus précisément des courbes dites ``pairing-friendly'', 
+plus précisément des courbes dites ``pairing-friendly'' \cite{afg2024,guillevic2025}, 
 c'est-à-dire des courbes permettant de calculer efficacement un couplage bilinéaire. 
 Les courbes retenues couvrent ainsi plusieurs combinaisons de tailles de corps et de degrés, afin d'évaluer le comportement du protocole dans des configurations différentes.
 \begin{itemize}
@@ -2180,9 +2180,10 @@ FM18-768    & 18 & 768 bits \\
     \label{fig:global_benchmark}
 \end{figure}
 
-\noindent
-La figure~\ref{fig:global_benchmark} relève trois particularités importantes:\\
+\noindent \textbf{Analyse des graphiques:\\} 
 
+
+La figure~\ref{fig:global_benchmark} relève trois particularités importantes.
 Premièrement, \textbf{le temps total dépend surtout de la taille de $p$}, plutôt que du degré $k$.
 Les courbes sont globalement ordonnées par temps croissant suivant la taille
 de leur corps de base (Tableau \ref{tab:curves}). Bn254 (254 bits) est la plus rapide, suivie des
@@ -2202,12 +2203,12 @@ courbe.\\
 
 \noindent
 Les graphiques de l'annexe \ref{app:benchmarks} montrent en détail chaque étapes
-des protocoles:\\
+des protocoles:
 
 \begin{itemize}
     \item \textbf{BSParams (Figure~\ref{fig:annexe_bs_params})} :
     c'est la seule étape où OT est plus lent que dual-OT. Cela s'explique par les clés
-    d'évaluation $\mathsf{ek}_i = g_1^{x_i}$ utilisées par OT, plus coûteuses à générer
+    d'évaluation utilisées par OT, plus coûteuses à générer
     sur les grandes courbes que le CRS de dual-OT.
 
     \item \textbf{BSKeygen (Figure~\ref{fig:annexe_bs_keygen})} :
@@ -2228,15 +2229,50 @@ des protocoles:\\
     et~\ref{fig:annexe_bs_verify})} :
     ces deux étapes restent peu coûteuses et proches entre OT et dual-OT. On observe
     cependant que $\mathsf{BSVerify}$ augmente fortement sur bls48-575 (63,8~ms), ce qui
-    s'explique par son degré élevé ($k=48$), qui rend le calcul du couplage plus conséquent.
+    s'explique par son degré élevé ($k=48$), qui rend le calcul du couplage plus conséquent.\\
 \end{itemize}
 
-\paragraph{Choix de la courbe elliptique.}
 
+\noindent \textbf{Choix de la courbe elliptique:\\} 
+
+Le choix de la courbe elliptique ne dépend pas uniquement des performances, 
+mais doit aussi prendre en compte le niveau de sécurité recherché.
+En termes de temps d'exécution, \texttt{bn254} est la courbe la plus rapide dans nos expériences 
+aussi bien pour OT que pour dual-OT. 
+Cela s'explique notamment par la petite taille de son corps de base de seulement 254 bits.
+Cependant, les études récentes des attaques sur ce type de courbes (TNFS) 
+ont fait baisser le niveau de sécurité de cette courbe \cite{afg2024}. 
+Cela la place ainsi en dessous du niveau visé pour une sécurité de 128 bits \cite{guillevic2025}.
+Elle semble donc peu adaptée à une utilisation à long terme.
+
+C'est pourquoi \textbf{bls12-381} constitue un compromis intéressant entre performance et sécurité.
+Elle fait partie des courbes les plus rapides dans nos mesures, juste derrière \texttt{bn254},
+avec des temps qui restent raisonnables sur les différentes étapes du protocole.
+L'étape $\mathsf{BSSigner}$ reste notamment la plus coûteuse, mais le temps supplémentaire par rapport à \texttt{bn254} reste acceptable. 
+Avec un corps de base de 381 bits et un degré $k=12$, \texttt{bls12-381} offre également 
+un niveau de sécurité compatible pour viser environ 128 bits de sécurité.
+Enfin, son utilisation dans des systèmes réels comme dans Zcash et Ethereum,
+en fait une courbe relativement bien connue et sérieuse. 
+Elle apparaît donc comme le choix le plus équilibré pour notre instanciation du protocole dual-OT.
+
+Les courbes plus grandes, comme \texttt{bn446}, \texttt{bls48-575}, \texttt{kss18-638}, \texttt{fm16-765} et \texttt{fm18-768},
+engendre quant à elles une augmentation importante des temps de calcul. 
+Cette hausse est particulièrement visible lors de la vérification pour les courbes ayant un degré élevé,
+comme \texttt{bls48-575}. 
 
 
 
 \section{Conclusion et perspectives}
+
+Pour conclure, ce stage a permis d'apporter plusieurs résultats sur le protocole de signature aveugle basé sur dual-OT.
+Nous avons tout d'abord démontré que ce schéma satisfait les propriétés d'aveuglement et d'inforgeabilité, ce qui en fait un protocole de signature aveugle sécurisé.
+Nous avons pu déterminer ensuite une courbe offrant un bon compromis pour un niveau de sécurité de 128 bits, à partir de benchmarks réalisés sur les différentes courbes elliptiques.
+
+Ce travail ouvre plusieurs perspectives. 
+Il serait d'abord intéressant de mesurer la taille mémoire utilisée par le protocole pour chacune des courbes testées, en complément des temps d'exécution déjà étudiés.
+La propriété d'aveuglement dans le cas d'un signataire malhonnête reste ouverte et mériterait d'être approfondie.
+Enfin, il pourrait être utile de tester le protocole sur des courbes offrant un niveau de sécurité plus élevé, afin d'évaluer l'impact sur les performances.
+
 
 \begin{thebibliography}{99}
 
