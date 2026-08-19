@@ -158,13 +158,7 @@
 
 
 \section{Introduction}
-Les signatures aveugles (Blind Signatures) introduites par Chaum en 1982, permettent à un utilisateur
-d'obtenir une signature sur un message déterminé sans que le signataire n'apprenne
-son contenu. Ces mécanismes peuvent être utilisés en pratique dans le cadre 
-des votes électroniques, des transactions bancaires ou des protocoles d'identification.
-
-Ce rapport présente un nouveau schéma de signatures aveugles utilisant le transfert inconscient
-(Oblivious Transfer, OT) et les signatures de Waters.
+TODO
 %============================================================
 
 \section{Préliminaires}
@@ -343,7 +337,7 @@ associées à ce choix sont constituées de telle sorte que :
 \end{definition}
 
 Cette structure à deux branches, détaillée plus tard à la section \ref{sec:dh-messy}, est
-ce qui distingue le dual-OT du OT classique, un utilisateur malhonnête ne peut
+ce qui distingue dual-OT de OT, un utilisateur malhonnête ne peut
 exploiter qu'une seule branche par position.
 
 
@@ -396,13 +390,13 @@ e(\sigma_1,g_2).
 \subsection{Motivation : de OT à dual-OT}
 
 Notre étude portait originellement sur un schéma de signature aveugle 
-basé sur OT classique (1 parmi 2), qui, comme dual-OT, 
+basé sur OT (1 parmi 2), qui, comme dual-OT, 
 permet de réaliser un transfert de messages de manière sécurisée. 
-Le protocole OT classique n'est pas complet du point de vue des propriétés de sécurité dans notre étude, 
+Le protocole OT n'est pas complet du point de vue des propriétés de sécurité dans notre étude, 
 puisqu'il ne dispose pas d'une preuve d'inforgeabilité, contrairement au protocole dual-OT.
 C'est pourquoi nous avons choisi de nous concentrer sur le dual-OT pour la suite.\\
 
-Le protocole basé sur OT classique a servi de base et est utilisé dans notre implémentation 
+Le protocole basé sur OT a servi de base et est utilisé dans notre implémentation 
 comme comparateur pour le protocole dual-OT (voir section \ref{sec:impl}), 
 il est donc présenté, à titre de référence, en annexe (voir \ref{app:ot}).
 
@@ -692,7 +686,25 @@ e(F(M),\widehat{\sigma}_2),
 
 \section{Propriétés de sécurité}
 
+Dans cette section, nous étudions les principales propriétés de sécurité du
+schéma dual-OT, en particulier son inforgeabilité et son aveuglement. Les preuves
+reposent sur plusieurs lemmes, présentés dans la sous-section
+suivante.
+
 \subsection{Lemmes}
+
+Les lemmes présentés dans cette sous-section sont utilisés dans les preuves de sécurité. 
+Afin de mieux comprendre leur rôle et leur motivation, 
+il peut être plus naturel de commencer par les
+preuves des propriétés de sécurité, puis de revenir à cette sous-section
+pour consulter les lemmes au fur et à mesure de leur utilisation.
+
+\subsubsection{Uniformité des branches messy (non-DH)}
+
+Dans Game 3 (voir preuve inforgeabilité \ref{sec:inforgeability}), les branches messy sont remplacées par des chiffrés
+uniformément distribués. Le but de ce lemme est de montrer que cette
+modification ne change pas la distribution des chiffrés lorsque les
+clés forment une paire non-DH.
 
 \begin{lemma}[Uniformité des branches messy (non-DH)]\label{lem:lossy}
     
@@ -794,9 +806,18 @@ $m$.
 
 \end{lemma}
 
-\begin{lemma}[Decomposition]
-\label{lem:sharing}
 
+\subsubsection{Décomposition uniforme}
+
+Dans Game 4 et Game 5 (voir preuve inforgeabilité \ref{sec:inforgeability}), nous devons remplacer certaines valeurs par des
+éléments uniformément distribués tout en conservant leur produit.
+Le but de ce lemme est de montrer qu'un élément $X\in\mathbb{G}_1$
+peut être réparti uniformément entre $\ell$ parties.
+Ce résultat sera notamment utilisé pour remplacer les valeurs des branches DH
+sans modifier leur distribution.
+
+\begin{lemma}[Décomposition uniforme]
+\label{lem:sharing}
 Soit $\ell \geq 1$ et $X \in \mathbb{G}_1$. On définit
 \[
 C_X =
@@ -937,6 +958,133 @@ $C_{X\prod_i\gamma_i}$.
 
 \end{proof}
 
+
+\subsubsection{Partitionnement de Waters}
+
+Le but principal du partitionnement est de choisir les paramètres de Waters de
+manière à pouvoir contrôler la valeur de $K(M)$ pour les différents
+messages. Pour cela il faut choisir les paramètres de façon à ce qu'un message
+particulier $M^*$ vérifie $K(M^*)=0$, et que les messages utilisés
+dans les requêtes vérifient $K(M)\neq0$. Ceci permettra ensuite de
+simuler les signatures des requêtes sans connaître la clé secrète et
+d'extraire $g_1^{ab}$ à partir de la signature forgée.\\
+
+TODO
+
+\begin{lemma}[Partitionnement de Waters]
+\label{lem:partitioning}
+
+Pour tout choix de $(\kappa,k_0,\ldots,k_\ell)$, les paramètres
+$(u_0,\ldots,u_\ell)$ sont uniformément distribués et indépendants
+dans $\mathbb{G}_1$.
+
+Soit $M^*$ un message et soient
+$M^{(1)},\ldots,M^{(Q')}$ des messages différents de $M^*$,
+avec $Q'\leq Q$. Alors
+\[
+\Pr\left[
+K(M^*)=0
+\ \land\
+\forall j\in[Q'],\ K(M^{(j)})\neq0
+\right]
+\geq
+\frac{1}{4(\ell+1)(Q+1)}.
+\]
+
+\begin{proof}
+
+TODO
+
+\end{proof}
+\end{lemma}
+
+\subsubsection{Équivalence des distributions des signatures simulées}
+
+Ce lemme est utilisé dans la réduction au problème co-CDH (voir preuve \ref{sec:inforgeability}), 
+lors de la réponse aux requêtes. Il permet de montrer que les signatures simulées par $\mathcal{B}$
+sans connaître $\mathsf{bsk}$ ont exactement la même distribution que les signatures de Game 6.
+
+\begin{lemma}[Équivalence des distributions des signatures simulées]
+\label{lem:coupling}
+
+Soit $M$ un message tel que $K(M)\neq0$. Soit $\widetilde{t}\sample\mathbb{Z}_p$ et
+\[
+\Sigma_1
+=
+(g_1^a)^{-J(M)/K(M)}F(M)^{\widetilde{t}},
+\qquad
+\sigma_2
+=
+g_2^{\widetilde{t}}(g_2^a)^{-1/K(M)},
+\qquad
+\sigma'_2
+=
+g_1^{\widetilde{t}}(g_1^a)^{-1/K(M)}.
+\]
+Alors $(\Sigma_1,\sigma_2,\sigma'_2)$ est distribué comme une signature
+de Game 6, c'est-à-dire comme
+$
+\left(
+\mathsf{bsk}F(M)^t,g_2^t,g_1^t
+\right)
+$
+pour un $t\sample\mathbb{Z}_p$.
+
+\begin{proof}
+
+Comme
+$
+F(M)=g_1^{J(M)}(g_1^b)^{K(M)},
+$
+on a
+$
+(g_1^a)^{-J(M)/K(M)}
+=
+g_1^{-aJ(M)/K(M)}.
+$
+En posant
+$
+t=\widetilde{t}-a/K(M),
+$
+on obtient
+$
+\sigma_2=g_2^t
+$
+et
+$
+\sigma'_2=g_1^t.
+$
+De plus,
+$
+\Sigma_1
+=
+g_1^{-aJ(M)/K(M)}F(M)^{\widetilde{t}}
+=
+g_1^{ab}F(M)^t
+=
+\mathsf{bsk}F(M)^t.
+$
+Ainsi, les trois valeurs simulées sont exactement de la forme d'une
+signature de Game 6.
+
+Enfin, comme $\widetilde{t}$ est uniforme dans $\mathbb{Z}_p$ et que
+$K(M)\neq0$, la valeur
+$
+t=\widetilde{t}-a/K(M)
+$
+est également uniforme dans $\mathbb{Z}_p$.
+La distribution de la signature simulée est donc identique à celle
+d'une signature générée avec un aléa uniforme $t$.
+
+\end{proof}
+\end{lemma}
+
+
+\subsubsection{Randomisation des signatures de Waters}
+Ce lemme est utilisé dans la transition de Game 3 vers Game 4 (voir preuve aveuglement \ref{sec:blindness}). 
+Il permet de montrer que l'utilisateur peut rééchantillonner l'aléa $t$ de la signature après l'avoir reçue, 
+pour que la signature finale ait une distribution indépendante de l'aléa initial utilisé par le signataire.
+
 \begin{lemma}[Randomisation des signatures de Waters]
 \label{lem:randomisation-waters}
 Soit
@@ -998,6 +1146,11 @@ initial $t$.
 \end{proof}
 \end{lemma}
 
+\subsubsection{Indistinguabilité sous DDH}
+
+Ce lemme est utilisé dans la transition de Game 2 vers Game 3 (voir preuve aveuglement \ref{sec:blindness}).
+Il permet de remplacer, sous l'hypothèse DDH, le terme $F(M)$ apparaissant dans la signature par $F(0)$, 
+pour obtenir une distribution qui ne dépend plus du message $M$. 
 
 \begin{lemma}[Indistinguabilité sous DDH] \label{lem:ddh-waters}
 Les distributions obtenues dans le protocole dual-OT en utilisant 
@@ -1110,8 +1263,7 @@ plus forte que nécessaire.
 \end{proof}
 \end{lemma}
 
-
-\subsection{Inforgeabilité}
+\subsection{Inforgeabilité}\label{sec:inforgeability}
 
 \begin{definition}[Inforgeabilité One-More (OMUF)]
 \label{definition:def-18}
@@ -1172,7 +1324,7 @@ où :
     au partitionnement utilisée dans la réduction.
 
     \item Le terme $\frac{2}{p}$ correspond à la probabilité que le
-    CRS de l'OT ne soit pas messy
+    CRS ne soit pas messy
 \end{itemize}
 
 \begin{proof}[Preuve : Inforgeabilité One-More sous l'hypothèse co-CDH]
@@ -1375,19 +1527,223 @@ $
 \text{Game 4} \approx \text{Game 5}.
 $
 
-\transition{\textit{?}}
+\transition{\textit{On partitionne les messages}}
 
 
 \noindent\textbf{Game \text{6}}
 
+Soit $\mathcal{S}$ l'ensemble des messages effectifs des sessions
+utilisables. On a
+$
+|\mathcal{S}|\leq Q.
+$
+Lorsque $\mathcal{A}$ réussit, il produit $Q+1$ signatures valides
+sur des messages deux à deux distincts. Il existe donc au moins un
+message qui n'appartient pas à $\mathcal{S}$.
+On note $M^*$ le premier message de la liste des sorties de
+$\mathcal{A}$ qui n'appartient pas à $\mathcal{S}$.
+On tire ensuite aléatoirement les paramètres du partitionnement
+$
+\kappa\sample\{0,\ldots,\ell\},
+$
+et
+$
+k_0,\ldots,k_\ell
+\sample\{0,\ldots,m_w-1\},
+$
+avec
+$
+m_w=2(Q+1).
+$
+Pour tout message $M=(M_1,\ldots,M_\ell)$, on définit
+\[
+K(M)
+=
+k_0-\kappa m_w
++
+\sum_{i=1}^{\ell}M_i k_i.
+\text{ (voir \ref{})}
+\]
+On considère alors l'événement
+\[
+\mathsf{Good}
+:=
+\left\{
+\begin{array}{l}
+K(M^{(j)})\neq 0
+\quad\text{pour toute session utilisable }j\\
+K(M^*)=0.
+\end{array}
+\right.
+\]
+Game 6 est gagné si $\mathcal{A}$ réussit et si
+$\mathsf{Good}$ est vérifié.
+D'après le lemme~\ref{lem:partitioning}(ii), comme $M^*$ est différent
+de tous les messages effectifs des sessions utilisables et qu'il y a
+au plus $Q$ sessions utilisables, on a
+\[
+\Pr[\mathsf{Good}]
+\geq
+\frac{1}{4(\ell+1)(Q+1)}.
+\]
+Les paramètres $(\kappa,k_0,\ldots,k_\ell)$ sont tirés indépendamment
+de l'exécution de $\mathcal{A}$. Ainsi,
+\[
+\epsilon_6
+\geq
+\frac{1}{4(\ell+1)(Q+1)}\epsilon_5.
+\]
+et
+$
+\text{Game 5}
+\approx
+\text{Game 6}.
+$
+
+\paragraph{Conclusion:}
+On a
+$
+\text{Game 0}
+\approx
+\text{Game 1}
+\approx
+\text{Game 2}
+\approx
+\text{Game 3}
+\approx
+\text{Game 4}
+\approx
+\text{Game 5}
+\approx
+\text{Game 6}
+$,
+avec 
+$
+\epsilon_0
+\leq
+\epsilon_5+\frac{2}{p},
+$
+et, d'après Game 6,
+$
+\epsilon_6
+\geq
+\frac{1}{4(\ell+1)(Q+1)}\epsilon_5.
+$
+Il faut maintenant montrer qu'une réussite dans Game 6 permet
+de construire une solution au problème co-CDH. Pour cela, nous
+construisons un adversaire $\mathcal{B}$ qui utilise $\mathcal{A}$.
+
+\paragraph{Réduction au problème co-CDH:}
+Nous construisons maintenant un adversaire $\mathcal{B}$ capable de
+résoudre une instance co-CDH à partir d'un adversaire
+$\mathcal{A}$ qui réussit dans Game 6.
+L'adversaire $\mathcal{B}$ reçoit une instance
+$
+(g_1,g_2,g_1^a,g_2^a,g_1^b)
+$
+et doit calculer $g_1^{ab}$.
+
+\begin{enumerate}
+
+\item \textbf{Initialisation.}
+
+$\mathcal{B}$ pose
+$
+h_s=g_1^b
+$
+et
+$
+\mathsf{bvk}=g_2^a.
+$
+La clé secrète correspondante est alors
+$
+\mathsf{bsk}=g_1^{ab},
+$
+mais $\mathcal{B}$ ne la connaît pas.
+Les paramètres de Waters sont programmés comme dans le
+partitionnement de Game 6. D'après le lemme~\ref{lem:partitioning}(i),
+ils ont la même distribution que dans le jeu.
+
+\item \textbf{Réponse aux requêtes.}
+
+Pour chaque requête, $\mathcal{B}$ détermine si la session est
+utilisable.
+Si elle ne l'est pas, il répond comme dans Game 4, avec des valeurs
+uniformes.
+Si elle est utilisable, de message effectif $M^{(j)}$, $\mathcal{B}$
+calcule $K(M^{(j)})$.
+Si
+$
+K(M^{(j)})=0,
+$
+$\mathcal{B}$ abandonne.
+Sinon, il choisit $\widetilde{t}_j\sample\mathbb{Z}_p$ et calcule
+\[
+\Sigma_1
+=
+(g_1^a)^{-J(M^{(j)})/K(M^{(j)})}
+F(M^{(j)})^{\widetilde{t}_j},
+\]
+et
+\[
+\sigma_2
+=
+g_2^{\widetilde{t}_j}(g_2^a)^{-1/K(M^{(j)})},
+\qquad
+\sigma'_2
+=
+g_1^{\widetilde{t}_j}(g_1^a)^{-1/K(M^{(j)})}.
+\]
+Ces valeurs permettent à $\mathcal{B}$ de simuler la réponse du
+signataire sans connaître $\mathsf{bsk}$.
+D'après le lemme~\ref{lem:coupling}, cette simulation a la
+même distribution que dans Game 6.
+
+\item \textbf{Extraction.}
+
+Si $\mathcal{A}$ réussit dans Game 6, on considère le message $M^*$ tel que $K(M^*)=0$.
+Soit 
+$\sigma^*=(\widehat{\sigma}_1^*,\widehat{\sigma}_2^*,\widehat{\sigma}_2^{\prime *})$ 
+la signature correspondante.
+Comme $\sigma^*$ est valide, il existe un $t^*\in\mathbb{Z}_p$ tel que 
+$\widehat{\sigma}_2^{\prime *}=g_1^{t^*}$ 
+et 
+$\widehat{\sigma}_1^*=g_1^{ab}F(M^*)^{t^*}$.
+Or, comme $K(M^*)=0$, la définition de $F$ donne $F(M^*)=g_1^{J(M^*)}$.
+On obtient donc 
+$\widehat{\sigma}_1^*=g_1^{ab}\left(g_1^{t^*}\right)^{J(M^*)}$.
+Comme 
+$\widehat{\sigma}_2^{\prime *}=g_1^{t^*}$, 
+on peut écrire 
+$\widehat{\sigma}_1^*=g_1^{ab}\left(\widehat{\sigma}_2^{\prime *}\right)^{J(M^*)}$.
+$\mathcal{B}$ peut alors isoler le terme $g_1^{ab}$ et calculer
+$
+g_1^{ab}=\widehat{\sigma}_1^*\left(\widehat{\sigma}_2^{\prime *}\right)^{-J(M^*)}
+$
+.
+Ainsi, $\mathcal{B}$ résout l'instance co-CDH.
+
+\end{enumerate}
+
+Donc
+$
+\operatorname{Adv}_{\mathcal{B}}^{\mathrm{co\text{-}CDH}}(\lambda)
+\geq \epsilon_6
+$
+et
+$
+\epsilon_0
+\leq
+4(\ell+1)(Q+1)
+\operatorname{Adv}_{\mathcal{B}}^{\mathrm{co\text{-}CDH}}(\lambda)
++
+\frac{2}{p}.
+$
 
 \end{proof}
 
 
-
-
-
-\subsection{Aveuglement}
+\subsection{Aveuglement}\label{sec:blindness}
 
 
 \begin{definition}[Propriété d'aveuglement, signataire honnête]
@@ -1508,7 +1864,7 @@ $
 \noindent\textbf{Game \text{3}}
 
 Après le jeu précédent, les branches envoyées par l'utilisateur sont indépendantes du message $M$.
-Après la réponse du signataire, le déchiffrement de la branche DH donne la même forme que dans le protocole classique :
+Suite à la réponse du signataire, le déchiffrement de la branche DH donne:
 \[
 \sigma_1=h_s^aF(M)^t,
 \qquad
@@ -1523,7 +1879,6 @@ Ainsi, la signature simulée ne dépend plus du message $M$ et
 $
 \text{Game 2} \approx \text{Game 3}.
 $
-
 
 \transition{\textit{On applique la randomisation de Waters (voir section \ref{lem:randomisation-waters})}}
 
@@ -1593,6 +1948,10 @@ et le protocole satisfait donc la propriété d'aveuglement pour un signataire h
 
 \section{Implémentation et benchmarks}
 
+L'implémentation du protocole présenté dans ce rapport est disponible dans un
+dépôt GitHub associé au projet (\url{https://github.com/julian-mtn/BSFOT}). Il contient notamment le code source des
+protocoles, les scripts utilisés pour réaliser les benchmarks et les résultats.
+
 \subsection{Objectifs}
 
 Le but d'avoir une implémentation de ces deux protocoles (OT et dual-OT), 
@@ -1655,6 +2014,7 @@ et la génération de graphiques.
 \subsubsection{Architecture}
 
 \begin{figure}[H]
+    \small
     \label{fig:pipeline}
     \centering
     \begin{tikzpicture}[
@@ -1778,8 +2138,8 @@ Les courbes retenues couvrent ainsi plusieurs combinaisons de tailles de corps e
 
 
 \begin{table}[H]
+\small
 \centering
-\label{tab:curves}
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{lcc}
 \toprule
@@ -1807,24 +2167,133 @@ FM18-768    & 18 & 768 bits \\
 \bottomrule
 \end{tabular}
 \caption{Courbes elliptiques utilisées pour les expérimentations.}
+\label{tab:curves}
 \end{table}
 
-\subsection{Résultats expérimentaux}\label{sec:result_analysis}
+\subsection{Résultats expérimentaux}
+\label{sec:result_analysis}
 
 \begin{figure}[H]
-\label{fig:global_benchmark}
-  \centering
-  \includegraphics[width=1\textwidth]{../bsfot/results/images/benchmark_OT_vs_dual-OT.png}
-  \caption{Benchmark global de comparaison entre le protocole OT et le protocole dual-OT pour différentes courbes elliptiques.}
-  
+    \centering
+    \includegraphics[width=\textwidth]{../bsfot/results/images/benchmark_OT_vs_dual-OT.png}
+    \caption{Benchmark global comparant le protocole OT et le protocole dual-OT pour différentes courbes elliptiques.}
+    \label{fig:global_benchmark}
 \end{figure}
+
+\noindent
+La figure~\ref{fig:global_benchmark} relève trois particularités importantes:\\
+
+Premièrement, \textbf{le temps total dépend surtout de la taille de $p$}, plutôt que du degré $k$.
+Les courbes sont globalement ordonnées par temps croissant suivant la taille
+de leur corps de base (Tableau \ref{tab:curves}). Bn254 (254 bits) est la plus rapide, suivie des
+courbes autour de 315--381 bits, puis de celles autour de 330--455 bits, et enfin des courbes
+les plus lourdes (bn446, bls48-575, kss18-638, fm16-765, fm18-768), dont $p$ dépasse
+440 bits.
+
+Ensuite, \textbf{le protocole dual-OT est plus lent que OT}, avec un facteur
+autour de $\times 1{,}5$ à $\times 1{,}6$ quelle que soit la courbe 
+(par exemple $\times 1{,}62$ pour bn254 et $\times 1{,}57$ pour fm16-765).
+Ce surcoût correspond surtout à la structure à deux branches (DH et messy)
+absente du protocole OT.
+
+Enfin, on remarque que \textbf{l'étape $\mathsf{BSSigner}$ domine très largement le temps d'exécution total},
+en particulier en dual-OT, où elle représente environ 70\,\% du temps total quelle que soit la
+courbe.\\
+
+\noindent
+Les graphiques de l'annexe \ref{app:benchmarks} montrent en détail chaque étapes
+des protocoles:\\
+
+\begin{itemize}
+    \item \textbf{BSParams (Figure~\ref{fig:annexe_bs_params})} :
+    c'est la seule étape où OT est plus lent que dual-OT. Cela s'explique par les clés
+    d'évaluation $\mathsf{ek}_i = g_1^{x_i}$ utilisées par OT, plus coûteuses à générer
+    sur les grandes courbes que le CRS de dual-OT.
+
+    \item \textbf{BSKeygen (Figure~\ref{fig:annexe_bs_keygen})} :
+    cette étape reste peu coûteuse (moins de 7,5~ms sur toutes les courbes testées), mais
+    on y retrouve déjà un facteur proche de $\times 2$ entre OT et dual-OT.
+
+    \item \textbf{BSUser (Figure~\ref{fig:annexe_bs_user})} :
+    les temps de OT et dual-OT sont quasiment identiques. Ce résultat est attendu car
+    l'utilisateur effectue le même nombre d'opérations dans les deux protocoles, dual-OT
+    n'ajoutent qu'une multiplication supplémentaire par position.
+
+    \item \textbf{BSSigner(Figure~\ref{fig:annexe_bs_signer})} :
+    c'est ici que l'écart entre OT et dual-OT est le plus important. Le signataire calcule
+    deux chiffrés par position en dual-OT contre un seul en OT, d'où un facteur proche de
+    $\times 2{,}5$ sur les grandes courbes (par exemple $\times 2{,}56$ pour fm16-765).
+
+    \item \textbf{BSDerive et BSVerify (Figures~\ref{fig:annexe_bs_derive}
+    et~\ref{fig:annexe_bs_verify})} :
+    ces deux étapes restent peu coûteuses et proches entre OT et dual-OT. On observe
+    cependant que $\mathsf{BSVerify}$ augmente fortement sur bls48-575 (63,8~ms), ce qui
+    s'explique par son degré élevé ($k=48$), qui rend le calcul du couplage plus conséquent.
+\end{itemize}
+
+\paragraph{Choix de la courbe elliptique.}
+
+
+
+
+\section{Conclusion et perspectives}
+
+\begin{thebibliography}{99}
+
+\bibitem{waters2005}
+Brent Waters.
+\textit{Efficient Identity-Based Encryption Without Random Oracles}.
+Advances in Cryptology -- EUROCRYPT 2005, 2005.
+
+\bibitem{elgamal1985}
+Taher ElGamal.
+\textit{A Public Key Cryptosystem and a Signature Scheme Based on Discrete Logarithms}.
+IEEE Transactions on Information Theory, 31(4):469--472, 1985.
+
+\bibitem{relic}
+Diego F. Aranha, Conrado P. L. Gouvêa, Tobias Markmann, Riad S. Wahby, and
+Kevin Liao.
+\textit{RELIC is an Efficient LIbrary for Cryptography}.
+RELIC Toolkit, 2025.
+\url{https://github.com/relic-toolkit/relic}.
+
+\bibitem{chaum1983}
+David Chaum.
+\textit{Blind Signatures for Untraceable Payments}.
+In \textit{Advances in Cryptology -- CRYPTO 1982}.
+Springer, 1983.
+
+\bibitem{knr2023}
+Julia Kastner, Ky Nguyen, and Michael Reichle.
+\textit{Pairing-Free Blind Signatures from Standard Assumptions in the ROM}.
+Cryptology ePrint Archive, Paper 2023/1810, 2023.
+\url{https://eprint.iacr.org/2023/1810}.
+
+\bibitem{afg2024}
+Diego F. Aranha, Georgios Fotiadis, and Aurore Guillevic.
+\textit{A Short-List of Pairing-Friendly Curves Resistant to the Special TNFS Algorithm at the 192-Bit Security Level}.
+Cryptology ePrint Archive, Paper 2024/1223, 2024.
+Published in CIC 2024.
+\url{https://eprint.iacr.org/2024/1223}.
+
+\bibitem{guillevic2025}
+Aurore Guillevic.
+\textit{Pairing-Friendly Curves}.
+Page web, première publication le 10 septembre 2020,
+dernière mise à jour le 2 décembre 2025.
+\url{https://people.irisa.fr/Aurore.Guillevic/Pairing_friendly_curves.html}.
+
+
+\end{thebibliography}
+
+
 
 \newpage
 \appendix
 
 \section{Construction basée sur OT}\label{app:ot}
 
-\subsection{Paramètres publics:}
+\subsection{Paramètres publics}
 \begin{itemize}
     \item un système de groupes bilinéaires $(\mathbb{G}_1,\mathbb{G}_2,\mathbb{G}_T,e,p)$,
     où $\mathbb{G}_1$ et $\mathbb{G}_2$ sont des groupes cycliques d'ordre premier $p$, munis d'un couplage bilinéaire
@@ -1839,7 +2308,7 @@ FM18-768    & 18 & 768 bits \\
     \item la clé publique du schéma de signature $\mathsf{bvk}=g_2^a$, associée à la clé secrète $\mathsf{bsk}=h_s^a$, avec $h_s=\prod_{i=1}^{\ell} h_i$.
 \end{itemize}
 
-\subsection{Schéma de signature:}
+\subsection{Schéma de signature}
 \begin{figure}[h]
 \centering
 \fbox{%
@@ -1892,10 +2361,10 @@ t' \sample \mathbb{Z}_p \\
 
 \end{minipage}
 }
-\caption{Schéma de signature aveugle basé sur le OT classique}
+\caption{Schéma de signature aveugle basé OT}
 \end{figure}
 
-\subsection{Construction de la signature à partir de l'OT:}
+\subsection{Construction de la signature à partir de OT}
 
 Pour chaque bit $M_i$ du message $M$, le signataire construit deux branches
 associées aux deux valeurs possibles du bit :
@@ -2006,7 +2475,7 @@ transfert inconscient permet ainsi à l'utilisateur de sélectionner, de manièr
 privée, la branche correspondant à chacun de ses bits, tout en empêchant le
 signataire d'apprendre le message signé.
 
-\subsection{Validité de la signature:}
+\subsection{Validité de la signature}
 
 La signature obtenue par l'utilisateur est une signature de Waters de la forme
 $\sigma=(F(M),\hat{\sigma}_1,\hat{\sigma}_2)$ avec :
@@ -2060,51 +2529,51 @@ des étapes des protocoles OT et dual-OT individuellement. Ces graphiques sont
 présentés dans la section \ref{sec:result_analysis}.
 
 \begin{figure}[H]
-\label{fig:annexe_bs_params}
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_params_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la générations des paramètres publics pour les protocoles OT et dual-OT.}
+\label{fig:annexe_bs_params}
 \end{figure}
 
 
 
 \begin{figure}[H]
-\label{fig:annexe_bs_keygen}
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_gen_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la génération des clés pour les protocoles OT et dual-OT.}
+\label{fig:annexe_bs_keygen}
 \end{figure}
 
 
 \begin{figure}[H]
-\label{fig:annexe_bs_user}
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_user_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de l'étape utilisateur pour les protocoles OT et dual-OT.}
+\label{fig:annexe_bs_user}
 \end{figure}
 
 
 \begin{figure}[H]
-\label{fig:annexe_bs_signer}
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_signer_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de l'étape du signataire pour les protocoles OT et dual-OT.}
+\label{fig:annexe_bs_signer}
 \end{figure}
 
 
 \begin{figure}[H]
-\label{fig:annexe_bs_derive}
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_derive_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la dérivation de la signature pour les protocoles OT et dual-OT.}
+\label{fig:annexe_bs_derive}
 \end{figure}
 
 
 \begin{figure}[H]
-\label{fig:annexe_bs_verify}
 \centering
 \includegraphics[width=1\textwidth]{../bsfot/results/images/bs_verify_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la vérification pour les protocoles OT et dual-OT.}
+\label{fig:annexe_bs_verify}
 \end{figure}
 
 
