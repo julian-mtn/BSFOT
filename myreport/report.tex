@@ -19,6 +19,7 @@
 \setstretch{1.2}
 \usepackage{caption}
 \usepackage{microtype}
+\usepackage{forest}
 
 % -------------------------------------------------
 % Mathématiques
@@ -474,7 +475,7 @@ basé sur OT, qui, comme dual-OT,
 permet de réaliser un transfert de messages de manière sécurisée. 
 Le protocole OT n'est pas complet du point de vue des propriétés de sécurité dans notre étude, 
 puisqu'il ne dispose pas d'une preuve d'inforgeabilité, contrairement au protocole dual-OT.
-C'est pourquoi nous avons choisi de nous concentrer sur le dual-OT pour la suite.\\
+C'est pourquoi nous avons choisi de nous concentrer sur le dual-OT pour la suite.
 
 Le protocole basé sur OT a servi de base et est utilisé dans notre implémentation 
 comme comparateur pour le protocole dual-OT (voir section \ref{sec:impl}), 
@@ -879,7 +880,7 @@ $
 \noindent\textbf{Game \text{2}}
 
 Pour chaque requête $\rho_1$, on calcule $(\mu_i)_i$ avec
-$\mathsf{FindMessy}(\eta,\cdot)$ (voir \ref{lem:find-messy}).
+$\mathsf{FindMessy}(\eta,\cdot)$ (voir lemme \ref{lem:find-messy}).
 Si la session est utilisable, c'est-à-dire si
 $
 \mu_i\neq\bot
@@ -1242,7 +1243,7 @@ $
 g_1^{ab}=\widehat{\sigma}_1^*\left(\widehat{\sigma}_2^{\prime *}\right)^{-J(M^*)}
 $
 .
-Ainsi, $\mathcal{B}$ résout l'instance co-CDH.
+Ainsi, $\mathcal{B}$ résout le problème co-CDH.
 
 \end{enumerate}
 
@@ -1477,6 +1478,11 @@ pour consulter les lemmes au fur et à mesure de leur utilisation.
 
 \subsubsection{Unicité des branches DH et message effectif}
 
+Ce lemme permet d'identifier, à partir du trapdoor $\eta$, quelle branche
+d'une session correspond au message effectivement choisi par l'utilisateur.
+Il garantit notamment qu'une seule branche peut être de type DH et permet
+ainsi de définir sans ambiguïté le message effectif associé à une session.
+Il est notamment utilisé dans Game 2 (voir preuve inforgeabilité \ref{sec:inforgeability}).
 \begin{lemma}[Unicité des branches DH et message effectif]
 \label{lem:find-messy}
 
@@ -1896,9 +1902,46 @@ messages. Pour cela il faut choisir les paramètres de façon à ce qu'un messag
 particulier $M^*$ vérifie $K(M^*)=0$, et que les messages utilisés
 dans les requêtes vérifient $K(M)\neq0$. Ceci permettra ensuite de
 simuler les signatures des requêtes sans connaître la clé secrète et
-d'extraire $g_1^{ab}$ à partir de la signature forgée.\\
+d'extraire $g_1^{ab}$ à partir de la signature forgée.
 
-TODO
+\paragraph{Le Partitionnement:}
+
+On fixe la borne $Q$ sur le nombre de requêtes et on pose
+$
+m_w=2(Q+1).
+$
+On choisit ensuite
+\[
+\kappa\sample\{0,\ldots,\ell\},
+\qquad
+k_0,\ldots,k_\ell\sample\{0,\ldots,m_w-1\},
+\qquad
+j_0,\ldots,j_\ell\sample\mathbb{Z}_p.
+\]
+Les paramètres de Waters sont alors définis par
+\[
+u_0=g_1^{j_0}(g_1^b)^{k_0-\kappa m_w},
+\qquad
+u_i=g_1^{j_i}(g_1^b)^{k_i}
+\quad\text{pour }i\in[\ell].
+\]
+Pour un message $M=(M_1,\ldots,M_\ell)$, on obtient ainsi
+\[
+F(M)=g_1^{J(M)}(g_1^b)^{K(M)},
+\]
+où
+\[
+K(M)=k_0-\kappa m_w+\sum_{i=1}^{\ell}M_i k_i
+\]
+et
+\[
+J(M)=j_0+\sum_{i=1}^{\ell}M_i j_i
+\pmod p.
+\]
+Le choix aléatoire de $\kappa$ et des $k_i$ permet alors de rendre
+$K(M^*)=0$ pour un message cible $M^*$, tout en évitant cette valeur
+pour les messages des requêtes avec une probabilité suffisamment grande.
+Les propriétés de ce partitionnement sont détaillées dans le lemme ci-dessous.
 
 \begin{lemma}[Partitionnement de Waters]
 \label{lem:partitioning}
@@ -1906,7 +1949,6 @@ TODO
 Pour tout choix de $(\kappa,k_0,\ldots,k_\ell)$, les paramètres
 $(u_0,\ldots,u_\ell)$ sont uniformément distribués et indépendants
 dans $\mathbb{G}_1$.
-
 Soit $M^*$ un message et soient
 $M^{(1)},\ldots,M^{(Q')}$ des messages différents de $M^*$,
 avec $Q'\leq Q$. Alors
@@ -1922,8 +1964,150 @@ K(M^*)=0
 
 \begin{proof}
 
-TODO
+\textbf{(i) Distribution.}
 
+Fixons $(\kappa,k_0,\ldots,k_\ell)$. Pour chaque $i$, on peut écrire
+$
+u_i=g_1^{j_i}c_i
+$
+où $c_i\in\mathbb{G}_1$ est fixé et où
+$j_i\sample\mathbb{Z}_p$ est uniforme.
+La multiplication par un élément fixé étant une bijection de
+$\mathbb{G}_1$, chaque $u_i$ est donc uniformément distribué dans
+$\mathbb{G}_1$. De plus, les valeurs $j_i$ sont indépendantes, donc les
+$u_i$ sont indépendants.
+
+\medskip
+
+\textbf{(ii) Programmabilité.}
+
+Posons
+$
+S(M)=k_0+\sum_{i=1}^{\ell}M_i k_i.
+$
+On a alors
+$
+K(M)=S(M)-\kappa m_w.
+$
+Soit
+$
+E^*=\{K(M^*)=0\}.
+$
+Fixons les valeurs de $k_1,\ldots,k_\ell$ et posons
+$
+A=\sum_{i=1}^{\ell}M_i^*k_i.
+$
+
+La condition $K(M^*)=0$ impose alors
+$
+k_0=\kappa m_w-A.
+$
+Comme $k_0\in\{0,\ldots,m_w-1\}$, il existe exactement une valeur de
+$\kappa\in\{0,\ldots,\ell\}$ qui permet de satisfaire cette condition.
+Ainsi, parmi les $(\ell+1)m_w$ choix possibles de $(\kappa,k_0)$, un seul
+réalise $E^*$. On obtient donc
+\[
+\Pr[E^*]
+=
+\frac{1}{(\ell+1)m_w}.
+\]
+De plus, cette probabilité ne dépend pas de
+$(k_1,\ldots,k_\ell)$, donc ces variables restent uniformes et
+indépendantes conditionnellement à $E^*$.
+Considérons maintenant un message
+$M^{(j)}\neq M^*$.
+Il existe donc un indice $i_0$ tel que
+$
+M_{i_0}^{(j)}\neq M_{i_0}^*.
+$
+Sous la condition $E^*$, on a $K(M^*)=0$. On peut donc écrire
+\[
+K(M^{(j)})
+=
+\sum_{i=1}^{\ell}
+\left(M_i^{(j)}-M_i^*\right)k_i.
+\]
+Le coefficient de $k_{i_0}$ est non nul. Si l'on fixe toutes les
+valeurs $k_i$ pour $i\neq i_0$, l'équation
+$
+K(M^{(j)})=0
+$
+détermine donc au plus une valeur possible pour $k_{i_0}$.
+Ainsi, $k_{i_0}$ prend chacune
+de ses $m_w$ valeurs avec la même probabilité, et
+\[
+\Pr\left[
+K(M^{(j)})=0\mid E^*
+\right]
+\leq
+\frac{1}{m_w}.
+\]
+
+On applique maintenant une union bound aux $Q'$ messages. La probabilité
+qu'au moins un des messages $M^{(j)}$ vérifie $K(M^{(j)})=0$ est donc
+au plus
+\[
+\Pr\left[
+\exists j\in[Q']:\ K(M^{(j)})=0
+\mid E^*
+\right]
+\leq
+\frac{Q'}{m_w}
+\leq
+\frac{Q}{m_w}.
+\]
+Par conséquent, sachant que $K(M^*)=0$, la probabilité que tous les
+messages $M^{(j)}$ vérifient $K(M^{(j)})\neq0$ est au moins
+$
+1-Q/m_w.
+$
+Comme
+$
+\Pr[E^*]
+=
+\frac{1}{(\ell+1)m_w}
+$
+on a
+\[
+\begin{aligned}
+\Pr\left[
+K(M^*)=0
+\ \land\
+\forall j\in[Q'],\ K(M^{(j)})\neq0
+\right]
+&\geq
+\frac{1}{(\ell+1)m_w}
+\left(1-\frac{Q}{m_w}\right).
+\end{aligned}
+\]
+et avec
+$
+m_w=2(Q+1),
+$
+\[
+1-\frac{Q}{m_w}
+=
+1-\frac{Q}{2(Q+1)}
+=
+\frac{Q+2}{2(Q+1)}
+\geq
+\frac{1}{2}.
+\]
+\[
+\frac{1}{(\ell+1)m_w}
+=
+\frac{1}{2(\ell+1)(Q+1)}.
+\]
+Ainsi,
+\[
+\Pr\left[
+K(M^*)=0
+\ \land\
+\forall j\in[Q'],\ K(M^{(j)})\neq0
+\right]
+\geq
+\frac{1}{4(\ell+1)(Q+1)}.
+\]
 \end{proof}
 \end{lemma}
 
@@ -2200,8 +2384,6 @@ L'implémentation du protocole présenté dans ce rapport est disponible dans un
 dépôt GitHub associé au projet (\url{https://github.com/julian-mtn/BSFOT}). Il contient notamment le code source des
 protocoles, les scripts utilisés pour réaliser les benchmarks et les résultats.
 
-\subsection{Objectifs}
-
 Le but d'avoir une implémentation de ces deux protocoles (OT et dual-OT), 
 est de pouvoir évaluer leur performance sur différentes tailles de messages et courbes elliptiques,
 et de les comparer.
@@ -2212,12 +2394,10 @@ Pour avoir des résultats plus précis, il est intéressant de mesurer le temps 
 L'implémentation et les benchmarks ont été réalisé sur une machine personnelle fonctionnant sous Ubuntu 24.04.4 LTS.
 Le code source est principalement écrit en C, avec la bibliothèque cryptographique RELIC \cite{relic}, et en python pour le traitement des résultats
 et la génération de graphiques.
-
 \begin{table}[H]
     \centering
 
-    \begin{minipage}[t]{0.48\textwidth}
-        \label{tab:hardware}
+    \begin{minipage}[t]{0.43\textwidth}
         \centering
         \begin{tabular}{ll}
             \toprule
@@ -2229,13 +2409,11 @@ et la génération de graphiques.
             \bottomrule
         \end{tabular}
         \captionof{table}{Environnement matériel}
-        
+        \label{tab:hardware}
     \end{minipage}
     \hfill
-    \begin{minipage}[t]{0.48\textwidth}
-        \label{tab:software}
+    \begin{minipage}[t]{0.53\textwidth}
         \centering
-        \small
         \begin{tabular}{ll}
             \toprule
             \textbf{Logiciel / Bibliothèque} & \textbf{Version} \\
@@ -2252,7 +2430,7 @@ et la génération de graphiques.
             \bottomrule
         \end{tabular}
         \captionof{table}{Environnement logiciel}
-        
+        \label{tab:software}
     \end{minipage}
 
 \end{table}
@@ -2261,8 +2439,62 @@ et la génération de graphiques.
 
 \subsubsection{Architecture}
 
+L'implémentation a été organisée afin de séparer les fonctionnalités communes au protocole des spécificités liées au mode OT utilisé.
+Les fonctions communes, telles que la génération des clés, le calcul de la fonction de Waters, la vérification des signatures et la gestion des paramètres, 
+sont regroupées dans un module ``common''. 
+Les deux variantes du protocole sont ensuite implémentées séparément dans les modules ``classic'' et ``dual''.
+Cette architecure permet de limiter la duplication de code et potentiellement ajouter un autre mode par la suite.
 \begin{figure}[H]
-    \small
+
+    \centering
+
+    \begin{forest}
+        for tree={
+            font=\small\ttfamily,
+            grow'=0,
+            parent anchor=east,
+            child anchor=west,
+            anchor=west,
+            edge={draw},
+            l sep=10pt,
+            s sep=4pt,
+            inner xsep=3pt,
+            inner ysep=2pt,
+        }
+        [bsfot/
+            [common/
+                [benchmark]
+                [config]
+                [io]
+                [keys]
+                [message]
+                [params]
+                [run]
+                [timer]
+                [verifier]
+                [waters]
+            ]
+            [classic/
+                [signer]
+                [user]
+            ]
+            [dual/
+                [signer]
+                [user]
+            ]
+        ]
+    \end{forest}
+
+    \caption{Organisation de l'implémentation de BSFOT.}
+    \label{fig:architecture-code}
+
+\end{figure}
+
+Le graphique ci-dessous montre les différentes étapes pour générer une signature sur un message.
+Tout l'implémentation des différents parties (signataire,utilisateur,vérifieur) est séparée,
+et les différentes fonctions communiquent via l'écriture et la lecture de fichiers binaires.
+
+\begin{figure}[H]
     \label{fig:pipeline}
     \centering
     \begin{tikzpicture}[
@@ -2377,48 +2609,78 @@ et la génération de graphiques.
 Pour tester le protocole, nous avons utilisé plusieurs courbes elliptiques, 
 plus précisément des courbes dites ``pairing-friendly'' \cite{afg2024,guillevic2025,aeg2022}, 
 c'est-à-dire des courbes permettant de calculer efficacement un couplage bilinéaire. 
-Les courbes retenues couvrent ainsi plusieurs combinaisons de tailles de corps et de degrés, afin d'évaluer le comportement du protocole dans des configurations différentes.
+Les courbes choisies couvrent ainsi plusieurs combinaisons de tailles de corps et de degrés,
+afin d'évaluer le comportement du protocole dans des configurations différentes.
+Ces courbes sont principalement définies par deux paramètres:
 \begin{itemize}
-    \item $k$: le degré d'embedding, qui correspond au degré de l'extension du corps de base utilisée pour le calcul du couplage. Le couplage prend ainsi ses valeurs dans le corps $\mathbb{F}_{p^k}$.
 
     \item $p$: le nombre premier définissant le corps fini de base $\mathbb{F}_p$, qui contient $p$ éléments. La taille de $p$ en bits est approximativement donnée par $\log_2(p)$.
+
+    \item $k$: le degré d'embedding, qui correspond au degré de l'extension du corps de base utilisée pour le calcul du couplage. Le couplage prend ainsi ses valeurs dans le corps $\mathbb{F}_{p^k}$.
+
 \end{itemize}
 
 
 \begin{table}[H]
-\small
 \centering
-\renewcommand{\arraystretch}{1.2}
+\setlength{\tabcolsep}{10pt}
+\renewcommand{\arraystretch}{0.9}
 \begin{tabular}{lcc}
+
 \toprule
+
 \textbf{Courbe} & \textbf{$k$} & \textbf{Taille de $p$} \\
+
 \midrule
+
 BN254       & 12 & 254 bits \\
 BN446       & 12 & 446 bits \\
+
 \midrule
+
 BLS12-377   & 12 & 377 bits \\
 BLS12-381   & 12 & 381 bits \\
 BLS12-446   & 12 & 446 bits \\
 BLS12-455   & 12 & 455 bits \\
+
 \midrule
+
 KSS16-330   & 16 & 330 bits \\
+
 \midrule
+
 KSS18-354   & 18 & 354 bits \\
 KSS18-638   & 18 & 638 bits \\
+
 \midrule
+
 BLS24-315   & 24 & 315 bits \\
+
 \midrule
+
 BLS48-575   & 48 & 575 bits \\
+
 \midrule
+
 FM16-765    & 16 & 765 bits \\
 FM18-768    & 18 & 768 bits \\
+
 \bottomrule
+
 \end{tabular}
+
 \caption{Courbes elliptiques utilisées pour les expérimentations.}
 \label{tab:curves}
 \end{table}
 
 \subsection{Résultats expérimentaux}
+
+L'analyse des résultats se font à partir du résultat d'exécutions successives sur des messages de 256 bits aléatoires.
+Pour chaque courbes, les protocole OT et dual-OT ont fait dix signatures, les résultats sont 
+donc une moyenne de ces répétitions. Le schéma ci-dessous montre un benchmark global
+mêlant toutes les phases des protocoles, avec en transparent le protocole OT et en 
+contrasté le dual-OT.
+
 \label{sec:result_analysis}
 
 \begin{figure}[H]
@@ -2489,7 +2751,7 @@ En termes de temps d'exécution, \texttt{bn254} est la courbe la plus rapide dan
 aussi bien pour OT que pour dual-OT. 
 Cela s'explique notamment par la petite taille de son corps de base de seulement 254 bits.
 Cependant, les études récentes des attaques sur ce type de courbes (TNFS) 
-ont fait baisser le niveau de sécurité de cette courbe \cite{afg2024,gs2021}. 
+ont fait baisser le niveau de sécurité de cette courbe \cite{afg2024}. 
 Cela la place ainsi en dessous du niveau visé pour une sécurité de 128 bits \cite{guillevic2025}.
 Elle semble donc peu adaptée à une utilisation à long terme.
 
@@ -2509,20 +2771,22 @@ Cette hausse est particulièrement visible lors de la vérification pour les cou
 comme \texttt{bls48-575}. 
 
 
-
+\newpage
 \section{Conclusion et perspectives}
 
 Pour conclure, ce stage a permis d'apporter plusieurs résultats sur le protocole de signature aveugle basé sur dual-OT.
 Nous avons tout d'abord démontré que ce schéma satisfait les propriétés d'aveuglement et d'inforgeabilité, ce qui en fait un protocole de signature aveugle sécurisé.
-Nous avons pu déterminer ensuite une courbe offrant un bon compromis pour un niveau de sécurité de 128 bits, à partir de benchmarks réalisés sur les différentes courbes elliptiques.
+Nous avons pu déterminer ensuite une courbe offrant un bon compromis pour un niveau de sécurité de 128 bits, à partir de benchmarks réalisés sur différentes courbes elliptiques.
 
 Ce travail ouvre plusieurs perspectives. 
-Il serait d'abord intéressant de mesurer la taille mémoire utilisée par le protocole pour chacune des courbes testées, en complément des temps d'exécution déjà étudiés.
-La propriété d'aveuglement dans le cas d'un signataire malhonnête reste ouverte et mériterait d'être approfondie.
+Il serait d'abord intéressant de mesurer la taille mémoire utilisée par le protocole en fonction de la taille des messages pour chacune des courbes testées, 
+en complément des temps d'exécution déjà étudiés.
+La propriété d'aveuglement dans le cas d'un signataire malhonnête mériterait d'être approfondie.
 Enfin, il pourrait être utile de tester le protocole sur des courbes offrant un niveau de sécurité plus élevé, afin d'évaluer l'impact sur les performances.
 
 
 \begin{thebibliography}{99}
+\small
 
 \bibitem{chaum1982}
 David Chaum.
@@ -2612,12 +2876,6 @@ dernière mise à jour le 2 décembre 2025.
 Diego F. Aranha, Youssef El Housni, and Aurore Guillevic.
 \textit{A Survey of Elliptic Curves for Proof Systems}.
 Designs, Codes and Cryptography, 91:3333--3378, 2022.
-
-\bibitem{gs2021}
-Aurore Guillevic and Shashank Singh.
-\textit{On the Alpha Value of Polynomials in the Tower Number Field Sieve Algorithm}.
-2019--2021.
-\url{https://gitlab.inria.fr/tnfs-alpha/alpha}.
 
 \bibitem{elgamal1985}
 Taher ElGamal.
@@ -2879,7 +3137,7 @@ présentés dans la section \ref{sec:result_analysis}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\textwidth]{../bsfot/results/images/bs_gen_OT_vs_dual-OT.png}
+\includegraphics[width=0.9\textwidth]{../bsfot/results/images/bs_gen_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la génération des clés pour les protocoles OT et dual-OT.}
 \label{fig:annexe_bs_keygen}
 \end{figure}
@@ -2887,7 +3145,7 @@ présentés dans la section \ref{sec:result_analysis}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\textwidth]{../bsfot/results/images/bs_user_OT_vs_dual-OT.png}
+\includegraphics[width=0.9\textwidth]{../bsfot/results/images/bs_user_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de l'étape utilisateur pour les protocoles OT et dual-OT.}
 \label{fig:annexe_bs_user}
 \end{figure}
@@ -2895,7 +3153,7 @@ présentés dans la section \ref{sec:result_analysis}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\textwidth]{../bsfot/results/images/bs_signer_OT_vs_dual-OT.png}
+\includegraphics[width=0.9\textwidth]{../bsfot/results/images/bs_signer_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de l'étape du signataire pour les protocoles OT et dual-OT.}
 \label{fig:annexe_bs_signer}
 \end{figure}
@@ -2903,7 +3161,7 @@ présentés dans la section \ref{sec:result_analysis}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\textwidth]{../bsfot/results/images/bs_derive_OT_vs_dual-OT.png}
+\includegraphics[width=0.9\textwidth]{../bsfot/results/images/bs_derive_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la dérivation de la signature pour les protocoles OT et dual-OT.}
 \label{fig:annexe_bs_derive}
 \end{figure}
@@ -2911,7 +3169,7 @@ présentés dans la section \ref{sec:result_analysis}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\textwidth]{../bsfot/results/images/bs_verify_OT_vs_dual-OT.png}
+\includegraphics[width=0.9\textwidth]{../bsfot/results/images/bs_verify_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la vérification pour les protocoles OT et dual-OT.}
 \label{fig:annexe_bs_verify}
 \end{figure}
