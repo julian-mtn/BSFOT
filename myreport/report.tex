@@ -470,7 +470,7 @@ e(\sigma_1,g_2).
 \subsection{Motivation : de OT à dual-OT}
 
 Notre étude portait originellement sur un schéma de signature aveugle 
-basé sur OT (1 parmi 2), qui, comme dual-OT, 
+basé sur OT, qui, comme dual-OT, 
 permet de réaliser un transfert de messages de manière sécurisée. 
 Le protocole OT n'est pas complet du point de vue des propriétés de sécurité dans notre étude, 
 puisqu'il ne dispose pas d'une preuve d'inforgeabilité, contrairement au protocole dual-OT.
@@ -852,17 +852,17 @@ $Game~0$ est l'exécution réelle de la définition~\ref{definition:def-18}.
 
 On abandonne lorsque le CRS n'est pas messy, c'est-à-dire si
 $g=1$ ou $\widetilde{w}=w^\eta$.
-On sait que
-$
-\Pr[\text{CRS non messy}] \leq \frac{2}{p},
-$
-car
+On a 
 $
 \Pr[g=1]\leq\frac{1}{p}
 $
-et
+et 
 $
-\Pr[\widetilde{w}=w^\eta]=\frac{1}{p}.
+\Pr[\widetilde{w}=w^\eta]\leq\frac{1}{p}.
+$
+Donc
+$
+\Pr[\text{CRS non messy}] \leq \frac{2}{p},
 $
 Ainsi,
 $
@@ -879,7 +879,7 @@ $
 \noindent\textbf{Game \text{2}}
 
 Pour chaque requête $\rho_1$, on calcule $(\mu_i)_i$ avec
-$\mathsf{FindMessy}(\eta,\cdot)$.
+$\mathsf{FindMessy}(\eta,\cdot)$ (voir \ref{lem:find-messy}).
 Si la session est utilisable, c'est-à-dire si
 $
 \mu_i\neq\bot
@@ -1224,13 +1224,15 @@ Si $\mathcal{A}$ réussit dans Game 6, on considère le message $M^*$ tel que $K
 Soit 
 $\sigma^*=(\widehat{\sigma}_1^*,\widehat{\sigma}_2^*,\widehat{\sigma}_2^{\prime *})$ 
 la signature correspondante.
+
 Comme $\sigma^*$ est valide, il existe un $t^*\in\mathbb{Z}_p$ tel que 
 $\widehat{\sigma}_2^{\prime *}=g_1^{t^*}$ 
 et 
 $\widehat{\sigma}_1^*=g_1^{ab}F(M^*)^{t^*}$.
-Or, comme $K(M^*)=0$, la définition de $F$ donne $F(M^*)=g_1^{J(M^*)}$.
+Or, comme $K(M^*)=0$, $F(M^*)=g_1^{J(M^*)}$.
 On obtient donc 
 $\widehat{\sigma}_1^*=g_1^{ab}\left(g_1^{t^*}\right)^{J(M^*)}$.
+
 Comme 
 $\widehat{\sigma}_2^{\prime *}=g_1^{t^*}$, 
 on peut écrire 
@@ -1472,6 +1474,159 @@ Afin de mieux comprendre leur rôle et leur motivation,
 il peut être plus naturel de commencer par les
 preuves des propriétés de sécurité ci-dessus, puis de revenir à cette sous-section
 pour consulter les lemmes au fur et à mesure de leur utilisation.
+
+\subsubsection{Unicité des branches DH et message effectif}
+
+\begin{lemma}[Unicité des branches DH et message effectif]
+\label{lem:find-messy}
+
+Supposons que le CRS soit messy, c'est-à-dire que
+$
+g\neq 1
+\quad\text{et}\quad
+\widetilde{w}\neq w^\eta.
+$
+Pour une paire
+$(\mathsf{ek}_0,\widetilde{\mathsf{ek}}_0)$, on définit la seconde
+branche par
+$
+(\mathsf{ek}_1,\widetilde{\mathsf{ek}}_1)=(w\mathsf{ek}_0,\widetilde{w}\widetilde{\mathsf{ek}}_0)
+$
+Alors :
+
+\begin{enumerate}
+    \item[\textnormal{(i)}] Les deux branches ne peuvent pas être
+    simultanément des paires DH.
+
+    \item[\textnormal{(ii)}] Étant donné $\eta$, on peut définir
+    l'algorithme $\mathsf{FindMessy}$ qui teste, pour chaque
+    $b\in\{0,1\}$, si
+    $
+    \widetilde{\mathsf{ek}}_b
+    =
+    \mathsf{ek}_b^\eta.
+    $
+    Il renvoie $b$ si la branche $b$ est DH, et $\bot$ si aucune des
+    deux branches n'est DH.
+
+    \item[\textnormal{(iii)}] Si les clés sont générées honnêtement
+    pour un bit $M_i$, alors la branche $M_i$ est DH. Ainsi, si une
+    unique branche est DH, $\mathsf{FindMessy}$ retrouve exactement
+    $M_i$.
+\end{enumerate}
+Pour une session
+$
+\rho_1=
+\bigl(
+(\mathsf{ek}_{i,0},\widetilde{\mathsf{ek}}_{i,0})
+\bigr)_{i\in[\ell]},
+$
+on définit
+\[
+\mu_i
+=
+\mathsf{FindMessy}
+\left(
+\eta,
+(\mathsf{ek}_{i,0},\widetilde{\mathsf{ek}}_{i,0})
+\right).
+\]
+La session est dite utilisable si
+$\mu_i\neq\bot$ pour tout $i\in[\ell]$. Dans ce cas, son message
+effectif est
+\[
+M^{\mathrm{eff}}
+=
+(\mu_1,\ldots,\mu_\ell).
+\]
+
+\begin{proof}
+\begin{enumerate}
+    \item[\textnormal{(i)}] \textbf{Unicité.}
+
+    Supposons, par contradiction, que les deux branches soient DH. Alors
+    $
+    \widetilde{\mathsf{ek}}_0
+    =
+    \mathsf{ek}_0^\eta
+    \quad\text{et}\quad
+    \widetilde{\mathsf{ek}}_1
+    =
+    \mathsf{ek}_1^\eta.
+    $
+    Par définition de la branche $1$,
+    $
+    \widetilde{w}\widetilde{\mathsf{ek}}_0
+    =
+    (w\mathsf{ek}_0)^\eta.
+    $
+    En utilisant
+    $\widetilde{\mathsf{ek}}_0=\mathsf{ek}_0^\eta$, on obtient
+    $
+    \widetilde{w}\mathsf{ek}_0^\eta
+    =
+    w^\eta\mathsf{ek}_0^\eta.
+    $
+    Comme $\mathsf{ek}_0\neq 1$, on peut simplifier par
+    $\mathsf{ek}_0^\eta$ et obtenir
+    $
+    \widetilde{w}=w^\eta,
+    $
+    ce qui contredit l'hypothèse selon laquelle le CRS est messy.
+    Les deux branches ne peuvent donc pas être DH simultanément.
+
+    \medskip
+
+    \item[\textnormal{(ii)}] \textbf{Définition de $\mathsf{FindMessy}$.}
+
+    Le trapdoor $\eta$ permet de tester directement si une branche est DH,
+    en vérifiant la condition
+    $
+    \widetilde{\mathsf{ek}}_b
+    =
+    \mathsf{ek}_b^\eta.
+    $
+    D'après (i), au plus une branche peut être DH. L'algorithme
+    $\mathsf{FindMessy}$ est donc bien défini.
+
+    \medskip
+
+    \item[\textnormal{(iii)}] \textbf{Cohérence avec le bit du message.}
+
+    Lorsque les clés sont générées honnêtement pour le bit $M_i$, la branche
+    $M_i$ est de la forme
+    $
+    (\mathsf{ek}_{i,M_i},\widetilde{\mathsf{ek}}_{i,M_i})
+    =
+    (g^{y_i},h^{y_i}),
+    $
+    où $y_i\sample\mathbb{Z}_p$. Comme $h=g^\eta$, on a
+    $
+    \widetilde{\mathsf{ek}}_{i,M_i}
+    =
+    h^{y_i}
+    =
+    (g^{y_i})^\eta
+    =
+    \mathsf{ek}_{i,M_i}^\eta.
+    $
+    La branche $M_i$ est donc DH. D'après (i), l'autre branche est
+    nécessairement non-DH. Ainsi,
+    \[
+    \mathsf{FindMessy}
+    \left(
+    \eta,
+    (\mathsf{ek}_{i,0},\widetilde{\mathsf{ek}}_{i,0})
+    \right)
+    =
+    M_i.
+    \]
+
+\end{enumerate}
+
+\end{proof}
+
+\end{lemma}
 
 \subsubsection{Uniformité des branches messy (non-DH)}
 
