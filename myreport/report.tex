@@ -133,19 +133,26 @@
     {22 juin 2026 --- 22 août 2026}\\[1cm]
 
     \begin{abstract}
-    Les signatures aveugles (Blind Signatures) introduites par Chaum en 1982 \cite{chaum1983}, permettent à un utilisateur
-    d'obtenir une signature sur un message déterminé sans que le signataire n'apprenne
-    son contenu. Ces mécanismes peuvent être utilisés en pratique dans le cadre 
-    des votes électroniques, des transactions bancaires ou des protocoles d'identification.
-    Dans ce rapport, nous étudions la construction de BSFOT (Blind Signatures From Oblivious Transfer),
-    basée essentiellement sur les groupes bilinéaires.
-    Nous nous intéressons plus particulièrement à la construction d'un protocole de signature aveugle
-    reposant sur un mécanisme de dual-OT.
-    Nous présentons d'abords les notions et objets mathématiques nécessaires ainsi 
-    que le fonctionnement du protocole. Nous analysons ensuite sa validité et 
-    ses propriétés de sécurité.
-    Enfin, nous implementons le schéma de signature et mesurons ses performances pour différentes 
-    courbes elliptiques et tailles de message.
+        Les signatures aveugles (Blind Signatures), introduites par Chaum
+        \cite{chaum1982,chaum1983}, permettent à un utilisateur d'obtenir une
+        signature valide sur un message sans que le signataire n'en connaisse
+        le contenu, ni ne puisse relier la signature obtenue à la
+        session durant laquelle elle a été créée. Elles trouvent notamment des
+        applications dans le vote électronique, les transactions numériques
+        et les protocoles d'authentification anonyme.
+        Dans ce rapport, nous étudions la construction BSFOT (Blind Signatures
+        From Oblivious Transfer), qui combine le transfert inconscient
+        (Oblivious Transfer, OT) \cite{rabin1981} et la signature de Waters
+        \cite{waters2005}, basée sur les couplages bilinéaires. Nous nous
+        intéressons plus particulièrement à une variante du protocole
+        reposant sur le dual-OT \cite{pvw2007}.
+        Nous présentons dans un premier temps les notions et outils
+        mathématiques nécessaires à la compréhension de la construction, puis
+        nous détaillons son fonctionnement et analysons sa validité ainsi que
+        ses propriétés de sécurité, précisément l'aveuglement et
+        l'inforgeabilité.
+        Enfin, nous implémentons le protocole et évaluons ses performances sur
+        différentes courbes elliptiques.
     \end{abstract}
 
 
@@ -156,24 +163,94 @@
 \tableofcontents
 \newpage
 
+\section*{Remerciements}
+
+Je tiens à remercier mon encadrant, Ky Nguyen, de m'avoir donné l'opportunité
+d'effectuer ce stage, ainsi que pour son suivi, sa disponibilité et ses
+conseils tout au long de ce travail.
+Je remercie également le LIP6, et en particulier l'équipe Almasty,
+pour leur accueil chaleureux durant ces deux mois.
 
 \section{Introduction}
-TODO
-%============================================================
 
+Les signatures aveugles (Blind Signatures) ont été introduites par
+Chaum \cite{chaum1982,chaum1983} au début des années 1980. Leur principe
+est de permettre à un utilisateur de faire signer un message par un
+signataire sans que celui-ci puisse voir le message. De plus, le
+signataire ne doit pas pouvoir relier par la suite la signature obtenue
+à la session durant laquelle elle a été générée.
+Cette propriété est particulièrement intéressante dans les situations
+où l'identité de l'utilisateur doit rester dissociée du contenu signé.
+Les signatures aveugles trouvent ainsi des applications dans le vote
+électronique, la monnaie numérique, ou encore dans des systèmes
+d'authentification (par exemple Privacy Pass).
+Les premiers schémas de signatures aveugles reposaient principalement
+sur le modèle de l'oracle aléatoire et nécessitaient plusieurs tours
+d'interaction entre l'utilisateur et le signataire. Le nombre de tours
+est notamment problématique dans un contexte de sécurité concurrente,
+un signataire malhonnête peut entrelacer plusieurs sessions et tenter
+d'exploiter les interactions entre celles-ci pour obtenir des
+informations sur les messages.
+
+Des travaux plus récents se sont donc intéressés à la construction de
+schémas round-optimal, c'est-à-dire nécessitant un seul aller-retour
+entre l'utilisateur et le signataire. C'est notamment le cas de
+\cite{krs2023}, qui propose une construction dans le modèle de
+l'oracle aléatoire, et de \cite{knr2024}, qui présente une construction
+sans couplages bilinéaires.
+Ce stage s'inscrit dans cette direction, mais avec une approche
+différente. Plutôt que de construire une signature aveugle directement,
+nous partons d'une primitive de transfert inconscient (Oblivious
+Transfer, OT) \cite{rabin1981}, que nous combinons avec la signature de
+Waters \cite{waters2005}, une signature basée sur les couplages
+bilinéaires.
+L'idée principale est d'utiliser Oblivious Transfer pour permettre à l'utilisateur
+de récupérer, bit par bit, les composantes de la signature de Waters
+correspondant à son message, sans révéler ces bits au signataire
+pendant l'exécution du protocole. L'utilisateur peut ainsi obtenir une
+signature sur son message tout en conservant celui-ci secret vis-à-vis
+du signataire.
+
+Le travail réalisé au cours de ce stage de deux mois au sein de
+l'équipe Almasty du LIP6 (Sorbonne Université), sous la direction de
+Ky Nguyen, comporte deux grandes parties. La premières consiste à étudier les
+propriétés de sécurité de la construction, en particulier son
+aveuglement et son inforgeabilité. La seconde à implémenter le
+protocole et à évaluer expérimentalement ses performances sur
+différentes courbes elliptiques.
+Nous avons d'abord étudié une version du protocole reposant sur un OT
+classique, avant de nous intéresser à une variante utilisant un OT
+dual-mode \cite{pvw2007}. Cette seconde construction offre des
+possibilités supplémentaires pour l'analyse de sécurité, mais entraîne
+également un surcoût en termes de performances. Nous comparons ces deux
+versions dans la suite du rapport.
+
+Le rapport est organisé comme suit.
+La section 2 présente les notions nécessaires à la
+compréhension du protocole, notamment les groupes bilinéaires, les
+signatures aveugles, le transfert inconscient et la signature de
+Waters.
+La section 3 présente ensuite la construction du protocole dual-OT.
+La section 4 est consacrée à l'analyse de ses propriétés de sécurité,
+en particulier l'aveuglement et l'inforgeabilité. La section 5 décrit
+l'implémentation réalisée et présente les résultats des benchmarks
+effectués sur différentes courbes elliptiques. Enfin, la section 6
+résume ce que ce stage a apporté, et les possibles perspectives.
+%============================================================
+\newpage
 \section{Préliminaires}
 
 Dans cette partie, nous introduisons les notations et concepts de base nécessaires à la compréhension du protocole présenté dans ce rapport.
 Le protocole repose principalement sur les signatures de Waters \cite{waters2005}, un schéma de signature basé sur les groupes bilinéaires,
-et le transfert inconscient (OT), plus précisément le OT dual-mode, qui permet de réaliser un transfert de messages de manière sécurisée.
+et le transfert inconscient (OT), plus précisément le OT dual-mode \cite{pvw2007}, qui permet de réaliser un transfert de messages de manière sécurisée.
 
 \subsection{Notations}
 
 \begin{itemize}
-    \item $\lambda$ désigne le paramètre de sécurité.
+    \item $\lambda$ désigne le paramètre de sécurité
     
     \item Un algorithme probabiliste en temps polynomial (PPT) est un algorithme
-    dont le temps d'exécution est polynomial en $\lambda$.
+    dont le temps d'exécution est polynomial en $\lambda$
     
     \item Pour un ensemble fini $S$, la notation
     $
@@ -183,12 +260,12 @@ et le transfert inconscient (OT), plus précisément le OT dual-mode, qui permet
     
     \item Pour $\ell\in\mathbb{N}$, on note
     $
-    [\ell]=\{1,\ldots,\ell\}.
+    [\ell]=\{1,\ldots,\ell\}
     $
     
     \item Une fonction $f(\lambda)$ est dite négligeable, notée
     $f(\lambda)=\negl(\lambda)$, si elle décroît plus rapidement que
-    l'inverse de tout polynôme en $\lambda$.
+    l'inverse de tout polynôme en $\lambda$
 
     \item Pour deux distributions de probabilités $\mathcal{D}_0$ et
     $\mathcal{D}_1$, on note
@@ -198,7 +275,7 @@ et le transfert inconscient (OT), plus précisément le OT dual-mode, qui permet
     lorsqu'elles sont calculatoirement indistinguables, c'est-à-dire
     qu'aucun adversaire probabiliste en temps polynomial ne peut distinguer
     $\mathcal{D}_0$ de $\mathcal{D}_1$ avec une probabilité significativement
-    supérieure à $1/2$.
+    supérieure à $1/2$
 
     \item Pour deux distributions de probabilités $\mathcal{D}_0$ et
     $\mathcal{D}_1$, on note
@@ -206,7 +283,10 @@ et le transfert inconscient (OT), plus précisément le OT dual-mode, qui permet
     \mathcal{D}_0 \equiv \mathcal{D}_1
     $
     lorsqu'elles sont identiques, c'est-à-dire qu'elles ont exactement
-    la même distribution.
+    la même distribution
+
+    \item Pour une variable aléatoire $X$, on note $\mathcal{D}(X)$
+    sa distribution de probabilité
 
 
     
@@ -288,7 +368,7 @@ $
 \subsection{Transfert Inconscient (OT)}
 
 Une des notions fondamentales de notre construction
-est le transfert inconscient, que l'on nommera OT (Oblivious Transfer).
+est le transfert inconscient, que l'on nommera OT (Oblivious Transfer) \cite{rabin1981}.
 C'est un protocole permettant à un destinataire d'obtenir une information 
 parmi plusieurs informations proposées par un émetteur,
 sans que ce dernier ne puisse déterminer le choix effectué, 
@@ -319,7 +399,7 @@ signataire, et sans obtenir d'information sur les valeurs associées aux bits.
 \subsection{Transfert inconscient dual (dual-OT)}
 
 Notre protocole utilise plus précisément une variante du transfert inconscient,
-le dual-OT (dual Oblivious Tranfer), dans lequel
+le dual-OT (dual Oblivious Tranfer) \cite{pvw2007}, dans lequel
 chaque exécution repose sur deux branches, l'une associée au bit $0$ et
 l'autre au bit $1$, construites de sorte qu'une seule d'entre elles soit exploitable.
 
@@ -329,21 +409,21 @@ pour chaque choix $b\in\{0,1\}$ du récepteur, les deux branches
 associées à ce choix sont constituées de telle sorte que :
 \begin{itemize}
     \item la branche correspondant au choix $b$ est une paire
-    Diffie-Hellman (DH) ;
+    Diffie-Hellman (DH) \cite{diffiehellman1976}
     \item la branche correspondant au choix $1-b$ est une paire
     messy, c'est-à-dire une paire qui ne satisfait pas la
-    relation Diffie-Hellman.
+    relation Diffie-Hellman
 \end{itemize}
 \end{definition}
 
 Cette structure à deux branches, détaillée plus tard à la section \ref{sec:dh-messy}, est
-ce qui distingue dual-OT de OT, un utilisateur malhonnête ne peut
+ce qui distingue dual-OT de OT \cite{pvw2007}, un utilisateur malhonnête ne peut
 exploiter qu'une seule branche par position.
 
 
 \subsection{Signature de Waters}
 
-La construction utilise la fonction de hachage de Waters \cite{waters2005}, permettant
+La construction utilise la fonction de hachage de Waters, permettant
 d'encoder un message binaire dans un élément du groupe $\mathbb{G}_1$.
 Soit un message
 $
@@ -361,7 +441,7 @@ F(M)=u_0\prod_{i=1}^{\ell}u_i^{M_i}.
 En partant de cette fonction de hachage,
 il est possible d'arriver à un mécanisme de signature,
 c'est celui-ci que nous utilisons.
-Le schéma de signature de Waters utilise les paramètres publics
+Le schéma de signature de Waters \cite{waters2005} utilise les paramètres publics
 précédents ainsi qu'une clé secrète $a\in\mathbb{Z}_p$.
 La clé publique est 
 $
@@ -688,15 +768,709 @@ e(F(M),\widehat{\sigma}_2),
 
 Dans cette section, nous étudions les principales propriétés de sécurité du
 schéma dual-OT, en particulier son inforgeabilité et son aveuglement. Les preuves
-reposent sur plusieurs lemmes, présentés dans la sous-section
-suivante.
+reposent sur plusieurs lemmes, présentés dans la sous-section plus tard.
+
+\subsection{Inforgeabilité}\label{sec:inforgeability}
+
+\begin{definition}[Inforgeabilité One-More (OMUF)] 
+\label{definition:def-18}
+Un schéma de signature aveugle est dit One-More Unforgeable \cite{jlo1997}
+si, pour tout polynôme $Q=Q(\lambda)$ et tout adversaire PPT
+$\mathcal{A}$ effectuant au plus $Q$ requêtes de signature, son
+avantage dans l'expérience OMUF est négligeable en $\lambda$.
+Plus précisément,
+\[
+\operatorname{Adv}_{\mathcal{A}}^{\mathrm{omuf}}(\lambda)
+=
+\Pr\left[
+\begin{array}{l}
+(\mathsf{bvk},\mathsf{bsk})
+\gets \mathsf{BSGen}(1^\lambda),\\
+\{(m_i,\sigma_i)\}_{i=1}^{Q+1}
+\gets
+\mathcal{A}^{\mathsf{BSSigner}(\mathsf{bsk},\cdot)}
+(\mathsf{bvk}),\\
+\forall i\neq j,\ m_i\neq m_j,\\
+\forall i\in[Q+1],\
+\mathsf{BSVerify}(\mathsf{bvk},m_i,\sigma_i)=1
+\end{array}
+\right]
+=\negl(\lambda).
+\]
+\end{definition}
+
+\begin{theorem}[Inforgeabilité One-More sous l'hypothèse co-CDH \cite{boneyboyen2004}]
+Pour tout adversaire PPT $\mathcal{A}$ effectuant au plus $Q$ requêtes
+de signature dans l'expérience OMUF, il existe un algorithme PPT
+$\mathcal{B}$ qui exécute $\mathcal{A}$ une seule fois et effectue un
+nombre polynomial d'opérations dans les groupes considérés, tel que
+\[
+\operatorname{Adv}_{\mathcal{A}}^{\mathrm{omuf}}(\lambda)
+\leq
+4(\ell+1)(Q+1)\,
+\operatorname{Adv}_{\mathcal{B}}^{\mathrm{co\text{-}CDH}}(\lambda)
++
+\frac{2}{p}.
+\]
+\end{theorem}
+
+où :
+\begin{itemize}
+    \item $\operatorname{Adv}_{\mathcal{A}}^{\mathrm{omuf}}(\lambda)$
+    désigne la probabilité que $\mathcal{A}$ réussisse l'expérience
+    d'inforgeabilité One-More, c'est-à-dire qu'il produise $Q+1$
+    signatures valides sur des messages deux à deux distincts après
+    avoir effectué au plus $Q$ requêtes de signatur.
+
+    \item $\operatorname{Adv}_{\mathcal{B}}^{\mathrm{co\text{-}CDH}}(\lambda)$
+    désigne la probabilité que $\mathcal{B}$ résolve le problème
+    co-CDH, c'est-à-dire qu'à partir d'une instance
+    $(g_1,g_2,g_1^a,g_2^a,g_1^b)$, il calcule $g_1^{ab}$.
+
+    \item Le facteur $4(\ell+1)(Q+1)$ représente la perte dû
+    au partitionnement utilisée dans la réduction.
+
+    \item Le terme $\frac{2}{p}$ correspond à la probabilité que le
+    CRS ne soit pas messy
+\end{itemize}
+
+\begin{proof}[Preuve : Inforgeabilité One-More sous l'hypothèse co-CDH]
+
+Pour prouver ce théorème, nous allons procéder par une suite de jeux.
+Soit $\epsilon_i$ la probabilité de succès de $\mathcal{A}$ dans le jeu $i$.
+
+\bigskip
+
+\noindent\textbf{Game \text{0}}
+
+$Game~0$ est l'exécution réelle de la définition~\ref{definition:def-18}.
+
+\transition{\textit{Vérification du CRS}}
+
+
+\noindent\textbf{Game \text{1}}
+
+On abandonne lorsque le CRS n'est pas messy, c'est-à-dire si
+$g=1$ ou $\widetilde{w}=w^\eta$.
+On sait que
+$
+\Pr[\text{CRS non messy}] \leq \frac{2}{p},
+$
+car
+$
+\Pr[g=1]\leq\frac{1}{p}
+$
+et
+$
+\Pr[\widetilde{w}=w^\eta]=\frac{1}{p}.
+$
+Ainsi,
+$
+\epsilon_0\leq\epsilon_1+\frac{2}{p},
+$
+et
+$
+\text{Game 0} \equiv \text{Game 1}.
+$
+
+\transition{\textit{Recherche des branches messy}}
+
+
+\noindent\textbf{Game \text{2}}
+
+Pour chaque requête $\rho_1$, on calcule $(\mu_i)_i$ avec
+$\mathsf{FindMessy}(\eta,\cdot)$.
+Si la session est utilisable, c'est-à-dire si
+$
+\mu_i\neq\bot
+\text{ pour tout }i\in[\ell],
+$
+on définit le message effectif
+$
+M^{\mathrm{eff}}=(\mu_1,\ldots,\mu_\ell).
+$
+Cette étape ne modifie donc pas le déroulement
+du protocole. Ainsi,
+$
+\epsilon_1=\epsilon_2,
+$
+et
+$
+\text{Game 1} \equiv \text{Game 2}.
+$
+
+\transition{\textit{On uniformise les branches messy}}
+
+
+\noindent\textbf{Game \text{3}}
+
+Dans chaque session, pour toute position $i$ et toute branche $b$
+dont la paire de clés
+$
+(\mathsf{ek}_{i,b},\widetilde{\mathsf{ek}}_{i,b})
+$
+est non-DH (c'est-à-dire messy), on remplace le chiffré
+$\mathsf{ct}_{i,b}$ par un couple tiré uniformément dans
+$\mathbb{G}_1^2$.
+Chaque chiffré est construit avec des aléas uniformes
+$(s_{i,b},s'_{i,b})$ qui n'interviennent que dans ce chiffré.
+D'après le lemme~\ref{lem:lossy}, le chiffré obtenu est uniformément
+distribué dans $\mathbb{G}_1^2$ et est indépendant.
+On a donc
+$
+\epsilon_3=\epsilon_2,
+$
+et
+$
+\text{Game 2} \equiv \text{Game 3}.
+$
+
+\transition{\textit{On uniformise les sessions non utilisables}}
+
+
+\noindent\textbf{Game \text{4}}
+
+Dans Game 2, pour chaque position $i$, on a calculé
+$
+\mu_i\in\{0,1,\bot\}.
+$
+Une session est dite non utilisable s'il existe une position
+$i_0$ telle que
+$
+\mu_{i_0}=\bot.
+$
+Cela signifie que les deux branches de la position $i_0$ sont messy.
+Dans Game 3, toutes les branches messy ont été remplacées
+par des couples uniformément distribués dans $\mathbb{G}_1^2$.
+Ainsi, pour une position non utilisable, les deux chiffrés sont déjà
+des valeurs uniformément distribuées dans $\mathbb{G}_1^2$.
+
+Cependant, pour les autres positions, c'est-à-dire celles qui
+possèdent une branche DH, le clair
+$
+\alpha_i u_i^{t\mu_i}
+$
+dépend encore des $\alpha_i$.
+On va donc remplacer ces valeurs des branches DH par des éléments
+uniformes de $\mathbb{G}_1$.
+On garde
+$
+\sigma_2=g_2^t
+$
+et
+$
+\sigma'_2=g_1^t,
+$
+qui sont indépendantes de $\mathsf{bsk}$.
+D'après le lemme \ref{lem:sharing} (ii), les valeurs
+$(\alpha_i)_{i\neq i_0}$ sont uniformément distribuées et indépendantes
+de $\mathsf{bsk}$ et de $t$. En les multipliant par
+$u_i^{t\mu_i}$, on conserve une distribution similaire
+(voir lemme \ref{lem:sharing} (iii)).
+Nous pouvons donc les remplacer par des éléments
+indépendants et uniformément distribués dans $\mathbb{G}_1$
+La distribution des valeurs des branches DH reste la même,
+et ainsi,
+$
+\epsilon_4=\epsilon_3,
+$
+et
+$
+\text{Game 3} \equiv \text{Game 4}.
+$
+
+\transition{\textit{On reparamètre les sessions utilisables}}
+
+
+\noindent\textbf{Game \text{5}}
+
+Pour chaque session utilisable, de message effectif $M^{(j)}$ et de
+paramètre aléatoire $t_j$, on calcule
+$
+\Sigma_1
+=
+\mathsf{bsk}\cdot F(M^{(j)})^{t_j}.
+$
+On choisit ensuite uniformément un vecteur
+$
+\boldsymbol{\beta}
+=
+(\beta_1,\ldots,\beta_\ell)
+\in C_{\Sigma_1}
+$
+en utilisant le lemme~\ref{lem:sharing}(i).
+On définit alors les chiffrés des branches DH à partir des
+$\beta_i$, avec de nouveaux aléas $(s,s')$:
+\[
+D_{i,\mu_i}
+=
+\widetilde{\mathsf{ek}}_{i,\mu_i}^{s'}
+\mathsf{ek}_{i,\mu_i}^{s}
+\beta_i.
+\]
+
+Dans le jeu précédent, les clairs des branches DH étaient de la
+forme
+$
+\alpha_i u_i^{t_j\mu_i}.
+$
+Or, d'après le lemme~\ref{lem:sharing}(iii), le vecteur
+$
+\left(\alpha_i u_i^{t_j\mu_i}\right)_{i=1}^{\ell}
+$
+est uniformément distribué dans
+$
+C_{\Sigma_1}.
+$
+Donc,
+$
+\mathcal{D}\left(\left(\alpha_i u_i^{t_j\mu_i}\right)_{i=1}^{\ell}\right)
+\equiv
+\mathcal{D}(\boldsymbol{\beta})
+$
+et le remplacement ne modifie ainsi pas la distribution du protocole.
+Ainsi,
+$
+\epsilon_5=\epsilon_4,
+$
+et
+$
+\text{Game 4} \equiv \text{Game 5}.
+$
+
+\transition{\textit{On partitionne les messages}}
+
+
+\noindent\textbf{Game \text{6}}
+
+Soit $\mathcal{S}$ l'ensemble des messages effectifs des sessions
+utilisables. On a
+$
+|\mathcal{S}|\leq Q.
+$
+Lorsque $\mathcal{A}$ réussit, il produit $Q+1$ signatures valides
+sur des messages deux à deux distincts. Il existe donc au moins un
+message qui n'appartient pas à $\mathcal{S}$.
+On note $M^*$ le premier message de la liste des sorties de
+$\mathcal{A}$ qui n'appartient pas à $\mathcal{S}$.
+On tire ensuite aléatoirement les paramètres du partitionnement
+$
+\kappa\sample\{0,\ldots,\ell\},
+$
+et
+$
+k_0,\ldots,k_\ell
+\sample\{0,\ldots,m_w-1\},
+$
+avec
+$
+m_w=2(Q+1).
+$
+Pour tout message $M=(M_1,\ldots,M_\ell)$, on définit
+\[
+K(M)
+=
+k_0-\kappa m_w
++
+\sum_{i=1}^{\ell}M_i k_i.
+\text{ (voir \ref{})}
+\]
+On considère alors l'événement
+\[
+\mathsf{Good}
+:=
+\left\{
+\begin{array}{l}
+K(M^{(j)})\neq 0
+\quad\text{pour toute session utilisable }j\\
+K(M^*)=0.
+\end{array}
+\right.
+\]
+Game 6 est gagné si $\mathcal{A}$ réussit et si
+$\mathsf{Good}$ est vérifié.
+D'après le lemme~\ref{lem:partitioning}(ii), comme $M^*$ est différent
+de tous les messages effectifs des sessions utilisables et qu'il y a
+au plus $Q$ sessions utilisables, on a
+\[
+\Pr[\mathsf{Good}]
+\geq
+\frac{1}{4(\ell+1)(Q+1)}.
+\]
+Les paramètres $(\kappa,k_0,\ldots,k_\ell)$ sont tirés indépendamment
+de l'exécution de $\mathcal{A}$. Ainsi,
+\[
+\epsilon_6
+\geq
+\frac{1}{4(\ell+1)(Q+1)}\epsilon_5.
+\]
+et
+$
+\text{Game 5}
+\equiv
+\text{Game 6}.
+$
+
+\paragraph{Conclusion:}
+On a
+$
+\text{Game 0}
+\equiv
+\text{Game 1}
+\equiv
+\text{Game 2}
+\equiv
+\text{Game 3}
+\equiv
+\text{Game 4}
+\equiv
+\text{Game 5}
+\equiv
+\text{Game 6}
+$,
+avec 
+$
+\epsilon_0
+\leq
+\epsilon_5+\frac{2}{p},
+$
+et, d'après Game 6,
+$
+\epsilon_6
+\geq
+\frac{1}{4(\ell+1)(Q+1)}\epsilon_5.
+$
+Il faut maintenant montrer qu'une réussite dans Game 6 permet
+de construire une solution au problème co-CDH. Pour cela, nous
+construisons un adversaire $\mathcal{B}$ qui utilise $\mathcal{A}$.
+
+\paragraph{Réduction au problème co-CDH:}
+Nous construisons maintenant un adversaire $\mathcal{B}$ capable de
+résoudre une instance co-CDH à partir d'un adversaire
+$\mathcal{A}$ qui réussit dans Game 6.
+L'adversaire $\mathcal{B}$ reçoit une instance
+$
+(g_1,g_2,g_1^a,g_2^a,g_1^b)
+$
+et doit calculer $g_1^{ab}$.
+
+\begin{enumerate}
+
+\item \textbf{Initialisation.}
+
+$\mathcal{B}$ pose
+$
+h_s=g_1^b
+$
+et
+$
+\mathsf{bvk}=g_2^a.
+$
+La clé secrète correspondante est alors
+$
+\mathsf{bsk}=g_1^{ab},
+$
+mais $\mathcal{B}$ ne la connaît pas.
+Les paramètres de Waters sont programmés comme dans le
+partitionnement de Game 6. D'après le lemme~\ref{lem:partitioning}(i),
+$
+(u_0,\ldots,u_\ell)_{\mathcal B}
+\equiv
+(u_0,\ldots,u_\ell)_{\text{Game 6}}.
+$
+
+\item \textbf{Réponse aux requêtes.}
+
+Pour chaque requête, $\mathcal{B}$ détermine si la session est
+utilisable.
+Si elle ne l'est pas, il répond comme dans Game 4, avec des valeurs
+uniformes.
+Si elle est utilisable, de message effectif $M^{(j)}$, $\mathcal{B}$
+calcule $K(M^{(j)})$.
+Si
+$
+K(M^{(j)})=0,
+$
+$\mathcal{B}$ abandonne.
+Sinon, il choisit $\widetilde{t}_j\sample\mathbb{Z}_p$ et calcule
+\[
+\Sigma_1
+=
+(g_1^a)^{-J(M^{(j)})/K(M^{(j)})}
+F(M^{(j)})^{\widetilde{t}_j},
+\]
+et
+\[
+\sigma_2
+=
+g_2^{\widetilde{t}_j}(g_2^a)^{-1/K(M^{(j)})},
+\qquad
+\sigma'_2
+=
+g_1^{\widetilde{t}_j}(g_1^a)^{-1/K(M^{(j)})}.
+\]
+Ces valeurs permettent à $\mathcal{B}$ de simuler la réponse du
+signataire sans connaître $\mathsf{bsk}$.
+D'après le lemme~\ref{lem:coupling},
+$
+\mathcal{D}(\Sigma_1,\sigma_2,\sigma'_2)
+\equiv
+\mathcal{D}\left(\mathsf{bsk}\,F(M)^t,\ g_2^t,\ g_1^t\right).
+$
+
+\item \textbf{Extraction.}
+
+Si $\mathcal{A}$ réussit dans Game 6, on considère le message $M^*$ tel que $K(M^*)=0$.
+Soit 
+$\sigma^*=(\widehat{\sigma}_1^*,\widehat{\sigma}_2^*,\widehat{\sigma}_2^{\prime *})$ 
+la signature correspondante.
+Comme $\sigma^*$ est valide, il existe un $t^*\in\mathbb{Z}_p$ tel que 
+$\widehat{\sigma}_2^{\prime *}=g_1^{t^*}$ 
+et 
+$\widehat{\sigma}_1^*=g_1^{ab}F(M^*)^{t^*}$.
+Or, comme $K(M^*)=0$, la définition de $F$ donne $F(M^*)=g_1^{J(M^*)}$.
+On obtient donc 
+$\widehat{\sigma}_1^*=g_1^{ab}\left(g_1^{t^*}\right)^{J(M^*)}$.
+Comme 
+$\widehat{\sigma}_2^{\prime *}=g_1^{t^*}$, 
+on peut écrire 
+$\widehat{\sigma}_1^*=g_1^{ab}\left(\widehat{\sigma}_2^{\prime *}\right)^{J(M^*)}$.
+$\mathcal{B}$ peut alors isoler le terme $g_1^{ab}$ et calculer
+$
+g_1^{ab}=\widehat{\sigma}_1^*\left(\widehat{\sigma}_2^{\prime *}\right)^{-J(M^*)}
+$
+.
+Ainsi, $\mathcal{B}$ résout l'instance co-CDH.
+
+\end{enumerate}
+
+Donc
+\[
+\operatorname{Adv}_{\mathcal{B}}^{\mathrm{co\text{-}CDH}}(\lambda)
+\geq \epsilon_6 
+\quad
+\text{et}
+\quad
+\epsilon_0
+\leq
+4(\ell+1)(Q+1)
+\operatorname{Adv}_{\mathcal{B}}^{\mathrm{co\text{-}CDH}}(\lambda)
++
+\frac{2}{p}.
+\]
+
+\end{proof}
+
+
+\subsection{Aveuglement}\label{sec:blindness}
+
+
+\begin{definition}[Propriété d'aveuglement, signataire honnête] \cite{jlo1997}
+Un schéma de signature aveugle est aveugle pour un signataire honnête si
+pour tout adversaire PPT $\mathcal A$,
+\[
+\left|
+\Pr\!\left[
+\begin{array}{l}
+(\mathsf{bvk},\mathsf{bsk})\gets\mathsf{BSKeygen}(1^\lambda),\
+(m_0,m_1)\gets\mathcal A(\mathsf{bvk}),\
+b\sample\{0,1\},\\
+(\rho_{1,i},st_i)\gets\mathsf{BSUser}(\mathsf{bvk},m_i)
+\quad(i\in\{0,1\}),\\
+(\rho_{2,b},\rho_{2,1-b})\gets
+\mathcal A(\rho_{1,b},\rho_{1,1-b}),\\
+\sigma_i\gets\mathsf{BSDerive}(st_i,\rho_{2,i})
+\quad(i\in\{0,1\}),\\
+\text{si }\exists i,\
+\mathsf{BSVerify}(\mathsf{bvk},m_i,\sigma_i)=0:
+\ \sigma_0=\sigma_1=\bot,\\
+b=\mathcal A(\sigma_0,\sigma_1)
+\end{array}
+\right]
+-\frac12
+\right|
+=\negl(\lambda).
+\]
+\end{definition}
+
+\begin{proof}[Preuve : aveuglement pour un signataire honnête]
+
+On veut montrer que, pour deux messages
+$m_0,m_1\in\{0,1\}^{\ell}$, la vue du signataire est indistinguable :
+$
+\operatorname{View}_{\mathcal A}(m_0)
+\equiv
+\operatorname{View}_{\mathcal A}(m_1),
+$
+où $\mathcal A$ désigne le signataire honnête.
+Nous raisonnons par une suite de jeux.
+
+\bigskip
+
+\noindent\textbf{Game \text{0}}
+
+Il s'agit de l'exécution réelle du protocole avec le message $m_0$.
+Pour chaque position $i$, l'utilisateur construit une branche DH
+correspondant au bit $m_{0,i}$ et une branche messy correspondant à
+l'autre valeur. Le signataire calcule ensuite les chiffrés des deux
+branches et les transmet à l'utilisateur.
+
+\transition{\textit{On remplace les chiffrés des branches messy par des
+couples uniformes.}}
+
+\noindent\textbf{Game \text{1}}
+
+Dans un CRS honnêtement généré, chaque position possède une branche DH
+et une branche messy. Pour la branche messy, le couple
+$
+(\mathsf{ek}_{i,1-M_i},
+\widetilde{\mathsf{ek}}_{i,1-M_i})
+$
+est une paire non-DH. D'après le lemme~\ref{lem:lossy}, le chiffrement
+réalisé sur cette branche est uniformément distribué sur
+$\mathbb{G}_1^2$, avec une distribution indépendante du message
+chiffré.
+On peut donc remplacer, pour chaque position, le chiffré de la branche
+messy par un couple uniformément distribué dans $\mathbb{G}_1^2$ sans
+modifier la vue du signataire. Ainsi,
+$
+\text{Game 0} \equiv \text{Game 1}.
+$
+
+\transition{\textit{On remplace les branches DH par des branches
+indépendantes du bit du message.}}
+
+\noindent\textbf{Game \text{2}}
+
+Après le jeu précédent, les chiffrés des branches messy sont
+uniformes et ne dépendent plus du message. Il reste à traiter les
+branches DH (non messy).
+Pour une branche DH correspondant au bit $M_i$, on a
+\[
+(\mathsf{ek}_{i,M_i},\widetilde{\mathsf{ek}}_{i,M_i})
+=
+(g^{y_i},h^{y_i}),
+\qquad
+y_i\sample\mathbb{Z}_p.
+\]
+
+Le signataire observe les deux branches sans savoir laquelle
+correspond au bit $M_i$. Sous l'hypothèse DDH, il ne peut pas distinguer
+la paire
+$
+(g^{y_i},h^{y_i})
+$
+d'une paire de la forme
+$
+(g^{y_i},z_i),
+$
+$
+y_i,z_i\sample\mathbb{Z}_p.
+$
+On peut donc remplacer la branche DH par une paire
+indépendante de la branche correspondant au bit du message.
+Après cela, les deux branches associées à chaque position
+ont la même distribution quel que soit le bit $M_i$. Par conséquent,
+la distribution de l'ensemble du premier message envoyé par
+l'utilisateur ne dépend plus de $M$.
+Ainsi,
+$
+\text{Game 1} \equiv \text{Game 2}.
+$
+
+\transition{\textit{On applique la réduction DDH de la section \ref{lem:ddh-waters}}}
+
+\noindent\textbf{Game \text{3}}
+
+Après le jeu précédent, les branches envoyées par l'utilisateur sont indépendantes du message $M$.
+Suite à la réponse du signataire, le déchiffrement de la branche DH donne:
+\[
+\sigma_1=h_s^aF(M)^t,
+\qquad
+\sigma_2=g_2^t,
+\qquad
+\sigma'_2=g_1^t.
+\]
+On applique alors la réduction DDH de la
+section \ref{lem:ddh-waters}. Celle-ci permet de remplacer, sous
+l'hypothèse DDH, le terme $F(M)$ par $F(0)$ dans la signature.
+Ainsi, la signature simulée ne dépend plus du message $M$ et
+$
+\text{Game 2} \equiv \text{Game 3}.
+$
+
+\transition{\textit{On applique la randomisation de Waters (voir section \ref{lem:randomisation-waters})}}
+
+\noindent\textbf{Game \text{4}}
+
+Après avoir reçu la réponse du signer, l'utilisateur effectue la phase de
+déchiffrement. Puis, il effectue la randomisation de Waters en choisissant un aléa
+$t'\sample\mathbb{Z}_p$ et en calculant
+\[
+\widehat{\sigma}_1
+=
+\sigma_1 F(M)^{t'},
+\qquad
+\widehat{\sigma}_2
+=
+\sigma_2 g_2^{t'},
+\qquad
+\widehat{\sigma}'_2
+=
+\sigma'_2 g_1^{t'}.
+\]
+Comme $t'$ est choisi uniformément dans $\mathbb{Z}_p$, la valeur
+$t+t'$ est également uniformément distribuée dans $\mathbb{Z}_p$.
+Ainsi, la distribution de la signature finale est indépendante du message.
+Elle peut donc être remplacée par une signature simulée utilisant un aléa
+indépendant du message. Ainsi,
+$
+\text{Game 3} \equiv \text{Game 4}.
+$
+
+
+\transition{\textit{On remplace $m_0$ par $m_1$.}}
+
+\noindent\textbf{Game \text{5}}
+
+Dans ce jeu, le message $m_0$ est remplacé par $m_1$. D'après la transition
+précédente, la distribution de la signature finale est indépendante du
+message. Ainsi,
+$
+\text{Game 4} \equiv \text{Game 5}.
+$
+
+\paragraph{Conclusion:}
+On a
+$
+\text{Game 0}
+\equiv
+\text{Game 1}
+\equiv
+\text{Game 2}
+\equiv
+\text{Game 3}
+\equiv
+\text{Game 4}
+\equiv
+\text{Game 5}
+$,
+par conséquent,
+$
+\operatorname{View}_{\mathcal A}(m_0)
+\equiv
+\operatorname{View}_{\mathcal A}(m_1),
+$
+et le protocole satisfait donc la propriété d'aveuglement pour un signataire honnête.
+
+\end{proof}
 
 \subsection{Lemmes}
 
 Les lemmes présentés dans cette sous-section sont utilisés dans les preuves de sécurité. 
 Afin de mieux comprendre leur rôle et leur motivation, 
 il peut être plus naturel de commencer par les
-preuves des propriétés de sécurité, puis de revenir à cette sous-section
+preuves des propriétés de sécurité ci-dessus, puis de revenir à cette sous-section
 pour consulter les lemmes au fur et à mesure de leur utilisation.
 
 \subsubsection{Uniformité des branches messy (non-DH)}
@@ -1021,14 +1795,13 @@ g_2^{\widetilde{t}}(g_2^a)^{-1/K(M)},
 =
 g_1^{\widetilde{t}}(g_1^a)^{-1/K(M)}.
 \]
-Alors $(\Sigma_1,\sigma_2,\sigma'_2)$ est distribué comme une signature
-de Game 6, c'est-à-dire comme
-$
-\left(
-\mathsf{bsk}F(M)^t,g_2^t,g_1^t
-\right)
-$
-pour un $t\sample\mathbb{Z}_p$.
+Alors
+\[
+\mathcal{D}(\Sigma_1,\sigma_2,\sigma'_2)
+\equiv
+\mathcal{D}\left(\mathsf{bsk}F(M)^t,g_2^t,g_1^t\right),
+\]
+pour $t\sample\mathbb{Z}_p$.
 
 \begin{proof}
 
@@ -1066,15 +1839,17 @@ g_1^{ab}F(M)^t
 $
 Ainsi, les trois valeurs simulées sont exactement de la forme d'une
 signature de Game 6.
-
 Enfin, comme $\widetilde{t}$ est uniforme dans $\mathbb{Z}_p$ et que
 $K(M)\neq0$, la valeur
 $
 t=\widetilde{t}-a/K(M)
 $
-est également uniforme dans $\mathbb{Z}_p$.
-La distribution de la signature simulée est donc identique à celle
-d'une signature générée avec un aléa uniforme $t$.
+est également uniforme dans $\mathbb{Z}_p$. Ainsi,
+\[
+(\Sigma_1,\sigma_2,\sigma'_2)
+\equiv
+\left(\mathsf{bsk}\,F(M)^t,\ g_2^t,\ g_1^t\right).
+\]
 
 \end{proof}
 \end{lemma}
@@ -1263,688 +2038,6 @@ plus forte que nécessaire.
 \end{proof}
 \end{lemma}
 
-\subsection{Inforgeabilité}\label{sec:inforgeability}
-
-\begin{definition}[Inforgeabilité One-More (OMUF)]
-\label{definition:def-18}
-Un schéma de signature aveugle est dit One-More Unforgeable
-si, pour tout polynôme $Q=Q(\lambda)$ et tout adversaire PPT
-$\mathcal{A}$ effectuant au plus $Q$ requêtes de signature, son
-avantage dans l'expérience OMUF est négligeable en $\lambda$.
-Plus précisément,
-\[
-\operatorname{Adv}_{\mathcal{A}}^{\mathrm{omuf}}(\lambda)
-=
-\Pr\left[
-\begin{array}{l}
-(\mathsf{bvk},\mathsf{bsk})
-\gets \mathsf{BSGen}(1^\lambda),\\
-\{(m_i,\sigma_i)\}_{i=1}^{Q+1}
-\gets
-\mathcal{A}^{\mathsf{BSSigner}(\mathsf{bsk},\cdot)}
-(\mathsf{bvk}),\\
-\forall i\neq j,\ m_i\neq m_j,\\
-\forall i\in[Q+1],\
-\mathsf{BSVerify}(\mathsf{bvk},m_i,\sigma_i)=1
-\end{array}
-\right]
-=\negl(\lambda).
-\]
-\end{definition}
-
-\begin{theorem}[Inforgeabilité One-More sous l'hypothèse co-CDH]
-Pour tout adversaire PPT $\mathcal{A}$ effectuant au plus $Q$ requêtes
-de signature dans l'expérience OMUF, il existe un algorithme PPT
-$\mathcal{B}$ qui exécute $\mathcal{A}$ une seule fois et effectue un
-nombre polynomial d'opérations dans les groupes considérés, tel que
-\[
-\operatorname{Adv}_{\mathcal{A}}^{\mathrm{omuf}}(\lambda)
-\leq
-4(\ell+1)(Q+1)\,
-\operatorname{Adv}_{\mathcal{B}}^{\mathrm{co\text{-}CDH}}(\lambda)
-+
-\frac{2}{p}.
-\]
-\end{theorem}
-
-où :
-\begin{itemize}
-    \item $\operatorname{Adv}_{\mathcal{A}}^{\mathrm{omuf}}(\lambda)$
-    désigne la probabilité que $\mathcal{A}$ réussisse l'expérience
-    d'inforgeabilité One-More, c'est-à-dire qu'il produise $Q+1$
-    signatures valides sur des messages deux à deux distincts après
-    avoir effectué au plus $Q$ requêtes de signatur.
-
-    \item $\operatorname{Adv}_{\mathcal{B}}^{\mathrm{co\text{-}CDH}}(\lambda)$
-    désigne la probabilité que $\mathcal{B}$ résolve le problème
-    co-CDH, c'est-à-dire qu'à partir d'une instance
-    $(g_1,g_2,g_1^a,g_2^a,g_1^b)$, il calcule $g_1^{ab}$.
-
-    \item Le facteur $4(\ell+1)(Q+1)$ représente la perte dû
-    au partitionnement utilisée dans la réduction.
-
-    \item Le terme $\frac{2}{p}$ correspond à la probabilité que le
-    CRS ne soit pas messy
-\end{itemize}
-
-\begin{proof}[Preuve : Inforgeabilité One-More sous l'hypothèse co-CDH]
-
-Pour prouver ce théorème, nous allons procéder par une suite de jeux.
-Soit $\epsilon_i$ la probabilité de succès de $\mathcal{A}$ dans le jeu $i$.
-
-\bigskip
-
-\noindent\textbf{Game \text{0}}
-
-$Game~0$ est l'exécution réelle de la définition~\ref{definition:def-18}.
-
-\transition{\textit{Vérification du CRS}}
-
-
-\noindent\textbf{Game \text{1}}
-
-On abandonne lorsque le CRS n'est pas messy, c'est-à-dire si
-$g=1$ ou $\widetilde{w}=w^\eta$.
-On sait que
-$
-\Pr[\text{CRS non messy}] \leq \frac{2}{p},
-$
-car
-$
-\Pr[g=1]\leq\frac{1}{p}
-$
-et
-$
-\Pr[\widetilde{w}=w^\eta]=\frac{1}{p}.
-$
-Ainsi,
-$
-\epsilon_0\leq\epsilon_1+\frac{2}{p},
-$
-et
-$
-\text{Game 0} \approx \text{Game 1}.
-$
-
-\transition{\textit{Recherche des branches messy}}
-
-
-\noindent\textbf{Game \text{2}}
-
-Pour chaque requête $\rho_1$, on calcule $(\mu_i)_i$ avec
-$\mathsf{FindMessy}(\eta,\cdot)$.
-Si la session est utilisable, c'est-à-dire si
-$
-\mu_i\neq\bot
-\text{ pour tout }i\in[\ell],
-$
-on définit le message effectif
-$
-M^{\mathrm{eff}}=(\mu_1,\ldots,\mu_\ell).
-$
-Cette étape ne modifie donc pas le déroulement
-du protocole. Ainsi,
-$
-\epsilon_1=\epsilon_2,
-$
-et
-$
-\text{Game 1} \approx \text{Game 2}.
-$
-
-\transition{\textit{On uniformise les branches messy}}
-
-
-\noindent\textbf{Game \text{3}}
-
-Dans chaque session, pour toute position $i$ et toute branche $b$
-dont la paire de clés
-$
-(\mathsf{ek}_{i,b},\widetilde{\mathsf{ek}}_{i,b})
-$
-est non-DH (c'est-à-dire messy), on remplace le chiffré
-$\mathsf{ct}_{i,b}$ par un couple tiré uniformément dans
-$\mathbb{G}_1^2$.
-Chaque chiffré est construit avec des aléas uniformes
-$(s_{i,b},s'_{i,b})$ qui n'interviennent que dans ce chiffré.
-D'après le lemme~\ref{lem:lossy}, le chiffré obtenu est uniformément
-distribué dans $\mathbb{G}_1^2$ et est indépendant.
-On a donc
-$
-\epsilon_3=\epsilon_2,
-$
-et
-$
-\text{Game 2} \approx \text{Game 3}.
-$
-
-\transition{\textit{On uniformise les sessions non utilisables}}
-
-
-\noindent\textbf{Game \text{4}}
-
-Dans Game 2, pour chaque position $i$, on a calculé
-$
-\mu_i\in\{0,1,\bot\}.
-$
-Une session est dite non utilisable s'il existe une position
-$i_0$ telle que
-$
-\mu_{i_0}=\bot.
-$
-Cela signifie que les deux branches de la position $i_0$ sont messy.
-Dans Game 3, toutes les branches messy ont été remplacées
-par des couples uniformément distribués dans $\mathbb{G}_1^2$.
-Ainsi, pour une position non utilisable, les deux chiffrés sont déjà
-des valeurs uniformément distribuées dans $\mathbb{G}_1^2$.
-
-Cependant, pour les autres positions, c'est-à-dire celles qui
-possèdent une branche DH, le clair
-$
-\alpha_i u_i^{t\mu_i}
-$
-dépend encore des $\alpha_i$.
-On va donc remplacer ces valeurs des branches DH par des éléments
-uniformes de $\mathbb{G}_1$.
-On garde
-$
-\sigma_2=g_2^t
-$
-et
-$
-\sigma'_2=g_1^t,
-$
-qui sont indépendantes de $\mathsf{bsk}$.
-D'après le lemme \ref{lem:sharing} (ii), les valeurs
-$(\alpha_i)_{i\neq i_0}$ sont uniformément distribuées et indépendantes
-de $\mathsf{bsk}$ et de $t$. En les multipliant par
-$u_i^{t\mu_i}$, on conserve une distribution similaire
-(voir lemme \ref{lem:sharing} (iii)).
-Nous pouvons donc les remplacer par des éléments
-indépendants et uniformément distribués dans $\mathbb{G}_1$
-La distribution des valeurs des branches DH reste la même,
-et ainsi,
-$
-\epsilon_4=\epsilon_3,
-$
-et
-$
-\text{Game 3} \approx \text{Game 4}.
-$
-
-\transition{\textit{On reparamètre les sessions utilisables}}
-
-
-\noindent\textbf{Game \text{5}}
-
-Pour chaque session utilisable, de message effectif $M^{(j)}$ et de
-paramètre aléatoire $t_j$, on calcule
-$
-\Sigma_1
-=
-\mathsf{bsk}\cdot F(M^{(j)})^{t_j}.
-$
-On choisit ensuite uniformément un vecteur
-$
-\boldsymbol{\beta}
-=
-(\beta_1,\ldots,\beta_\ell)
-\in C_{\Sigma_1}
-$
-en utilisant le lemme~\ref{lem:sharing}(i).
-On définit alors les chiffrés des branches DH à partir des
-$\beta_i$, avec de nouveaux aléas $(s,s')$:
-\[
-D_{i,\mu_i}
-=
-\widetilde{\mathsf{ek}}_{i,\mu_i}^{s'}
-\mathsf{ek}_{i,\mu_i}^{s}
-\beta_i.
-\]
-
-Dans le jeu précédent, les clairs des branches DH étaient de la
-forme
-$
-\alpha_i u_i^{t_j\mu_i}.
-$
-Or, d'après le lemme~\ref{lem:sharing}(iii), le vecteur
-$
-\left(\alpha_i u_i^{t_j\mu_i}\right)_{i=1}^{\ell}
-$
-est uniformément distribué dans
-$
-C_{\Sigma_1}.
-$
-Il a donc exactement la même distribution que
-$\boldsymbol{\beta}$. Le remplacement ne modifie
-ainsi pas la distribution du protocole.
-Ainsi,
-$
-\epsilon_5=\epsilon_4,
-$
-et
-$
-\text{Game 4} \approx \text{Game 5}.
-$
-
-\transition{\textit{On partitionne les messages}}
-
-
-\noindent\textbf{Game \text{6}}
-
-Soit $\mathcal{S}$ l'ensemble des messages effectifs des sessions
-utilisables. On a
-$
-|\mathcal{S}|\leq Q.
-$
-Lorsque $\mathcal{A}$ réussit, il produit $Q+1$ signatures valides
-sur des messages deux à deux distincts. Il existe donc au moins un
-message qui n'appartient pas à $\mathcal{S}$.
-On note $M^*$ le premier message de la liste des sorties de
-$\mathcal{A}$ qui n'appartient pas à $\mathcal{S}$.
-On tire ensuite aléatoirement les paramètres du partitionnement
-$
-\kappa\sample\{0,\ldots,\ell\},
-$
-et
-$
-k_0,\ldots,k_\ell
-\sample\{0,\ldots,m_w-1\},
-$
-avec
-$
-m_w=2(Q+1).
-$
-Pour tout message $M=(M_1,\ldots,M_\ell)$, on définit
-\[
-K(M)
-=
-k_0-\kappa m_w
-+
-\sum_{i=1}^{\ell}M_i k_i.
-\text{ (voir \ref{})}
-\]
-On considère alors l'événement
-\[
-\mathsf{Good}
-:=
-\left\{
-\begin{array}{l}
-K(M^{(j)})\neq 0
-\quad\text{pour toute session utilisable }j\\
-K(M^*)=0.
-\end{array}
-\right.
-\]
-Game 6 est gagné si $\mathcal{A}$ réussit et si
-$\mathsf{Good}$ est vérifié.
-D'après le lemme~\ref{lem:partitioning}(ii), comme $M^*$ est différent
-de tous les messages effectifs des sessions utilisables et qu'il y a
-au plus $Q$ sessions utilisables, on a
-\[
-\Pr[\mathsf{Good}]
-\geq
-\frac{1}{4(\ell+1)(Q+1)}.
-\]
-Les paramètres $(\kappa,k_0,\ldots,k_\ell)$ sont tirés indépendamment
-de l'exécution de $\mathcal{A}$. Ainsi,
-\[
-\epsilon_6
-\geq
-\frac{1}{4(\ell+1)(Q+1)}\epsilon_5.
-\]
-et
-$
-\text{Game 5}
-\approx
-\text{Game 6}.
-$
-
-\paragraph{Conclusion:}
-On a
-$
-\text{Game 0}
-\approx
-\text{Game 1}
-\approx
-\text{Game 2}
-\approx
-\text{Game 3}
-\approx
-\text{Game 4}
-\approx
-\text{Game 5}
-\approx
-\text{Game 6}
-$,
-avec 
-$
-\epsilon_0
-\leq
-\epsilon_5+\frac{2}{p},
-$
-et, d'après Game 6,
-$
-\epsilon_6
-\geq
-\frac{1}{4(\ell+1)(Q+1)}\epsilon_5.
-$
-Il faut maintenant montrer qu'une réussite dans Game 6 permet
-de construire une solution au problème co-CDH. Pour cela, nous
-construisons un adversaire $\mathcal{B}$ qui utilise $\mathcal{A}$.
-
-\paragraph{Réduction au problème co-CDH:}
-Nous construisons maintenant un adversaire $\mathcal{B}$ capable de
-résoudre une instance co-CDH à partir d'un adversaire
-$\mathcal{A}$ qui réussit dans Game 6.
-L'adversaire $\mathcal{B}$ reçoit une instance
-$
-(g_1,g_2,g_1^a,g_2^a,g_1^b)
-$
-et doit calculer $g_1^{ab}$.
-
-\begin{enumerate}
-
-\item \textbf{Initialisation.}
-
-$\mathcal{B}$ pose
-$
-h_s=g_1^b
-$
-et
-$
-\mathsf{bvk}=g_2^a.
-$
-La clé secrète correspondante est alors
-$
-\mathsf{bsk}=g_1^{ab},
-$
-mais $\mathcal{B}$ ne la connaît pas.
-Les paramètres de Waters sont programmés comme dans le
-partitionnement de Game 6. D'après le lemme~\ref{lem:partitioning}(i),
-ils ont la même distribution que dans le jeu.
-
-\item \textbf{Réponse aux requêtes.}
-
-Pour chaque requête, $\mathcal{B}$ détermine si la session est
-utilisable.
-Si elle ne l'est pas, il répond comme dans Game 4, avec des valeurs
-uniformes.
-Si elle est utilisable, de message effectif $M^{(j)}$, $\mathcal{B}$
-calcule $K(M^{(j)})$.
-Si
-$
-K(M^{(j)})=0,
-$
-$\mathcal{B}$ abandonne.
-Sinon, il choisit $\widetilde{t}_j\sample\mathbb{Z}_p$ et calcule
-\[
-\Sigma_1
-=
-(g_1^a)^{-J(M^{(j)})/K(M^{(j)})}
-F(M^{(j)})^{\widetilde{t}_j},
-\]
-et
-\[
-\sigma_2
-=
-g_2^{\widetilde{t}_j}(g_2^a)^{-1/K(M^{(j)})},
-\qquad
-\sigma'_2
-=
-g_1^{\widetilde{t}_j}(g_1^a)^{-1/K(M^{(j)})}.
-\]
-Ces valeurs permettent à $\mathcal{B}$ de simuler la réponse du
-signataire sans connaître $\mathsf{bsk}$.
-D'après le lemme~\ref{lem:coupling}, cette simulation a la
-même distribution que dans Game 6.
-
-\item \textbf{Extraction.}
-
-Si $\mathcal{A}$ réussit dans Game 6, on considère le message $M^*$ tel que $K(M^*)=0$.
-Soit 
-$\sigma^*=(\widehat{\sigma}_1^*,\widehat{\sigma}_2^*,\widehat{\sigma}_2^{\prime *})$ 
-la signature correspondante.
-Comme $\sigma^*$ est valide, il existe un $t^*\in\mathbb{Z}_p$ tel que 
-$\widehat{\sigma}_2^{\prime *}=g_1^{t^*}$ 
-et 
-$\widehat{\sigma}_1^*=g_1^{ab}F(M^*)^{t^*}$.
-Or, comme $K(M^*)=0$, la définition de $F$ donne $F(M^*)=g_1^{J(M^*)}$.
-On obtient donc 
-$\widehat{\sigma}_1^*=g_1^{ab}\left(g_1^{t^*}\right)^{J(M^*)}$.
-Comme 
-$\widehat{\sigma}_2^{\prime *}=g_1^{t^*}$, 
-on peut écrire 
-$\widehat{\sigma}_1^*=g_1^{ab}\left(\widehat{\sigma}_2^{\prime *}\right)^{J(M^*)}$.
-$\mathcal{B}$ peut alors isoler le terme $g_1^{ab}$ et calculer
-$
-g_1^{ab}=\widehat{\sigma}_1^*\left(\widehat{\sigma}_2^{\prime *}\right)^{-J(M^*)}
-$
-.
-Ainsi, $\mathcal{B}$ résout l'instance co-CDH.
-
-\end{enumerate}
-
-Donc
-$
-\operatorname{Adv}_{\mathcal{B}}^{\mathrm{co\text{-}CDH}}(\lambda)
-\geq \epsilon_6
-$
-et
-$
-\epsilon_0
-\leq
-4(\ell+1)(Q+1)
-\operatorname{Adv}_{\mathcal{B}}^{\mathrm{co\text{-}CDH}}(\lambda)
-+
-\frac{2}{p}.
-$
-
-\end{proof}
-
-
-\subsection{Aveuglement}\label{sec:blindness}
-
-
-\begin{definition}[Propriété d'aveuglement, signataire honnête]
-Un schéma de signature aveugle est aveugle pour un signataire honnête si
-pour tout adversaire PPT $\mathcal A$,
-\[
-\left|
-\Pr\!\left[
-\begin{array}{l}
-(\mathsf{bvk},\mathsf{bsk})\gets\mathsf{BSKeygen}(1^\lambda),\
-(m_0,m_1)\gets\mathcal A(\mathsf{bvk}),\
-b\sample\{0,1\},\\
-(\rho_{1,i},st_i)\gets\mathsf{BSUser}(\mathsf{bvk},m_i)
-\quad(i\in\{0,1\}),\\
-(\rho_{2,b},\rho_{2,1-b})\gets
-\mathcal A(\rho_{1,b},\rho_{1,1-b}),\\
-\sigma_i\gets\mathsf{BSDerive}(st_i,\rho_{2,i})
-\quad(i\in\{0,1\}),\\
-\text{si }\exists i,\
-\mathsf{BSVerify}(\mathsf{bvk},m_i,\sigma_i)=0:
-\ \sigma_0=\sigma_1=\bot,\\
-b=\mathcal A(\sigma_0,\sigma_1)
-\end{array}
-\right]
--\frac12
-\right|
-=\negl(\lambda).
-\]
-\end{definition}
-
-\begin{proof}[Preuve : aveuglement pour un signataire honnête]
-
-On veut montrer que, pour deux messages
-$m_0,m_1\in\{0,1\}^{\ell}$, la vue du signataire est indistinguable :
-$
-\operatorname{View}_{\mathcal A}(m_0)
-\approx
-\operatorname{View}_{\mathcal A}(m_1),
-$
-où $\mathcal A$ désigne le signataire honnête.
-Nous raisonnons par une suite de jeux.
-
-\bigskip
-
-\noindent\textbf{Game \text{0}}
-
-Il s'agit de l'exécution réelle du protocole avec le message $m_0$.
-Pour chaque position $i$, l'utilisateur construit une branche DH
-correspondant au bit $m_{0,i}$ et une branche messy correspondant à
-l'autre valeur. Le signataire calcule ensuite les chiffrés des deux
-branches et les transmet à l'utilisateur.
-
-\transition{\textit{On remplace les chiffrés des branches messy par des
-couples uniformes.}}
-
-\noindent\textbf{Game \text{1}}
-
-Dans un CRS honnêtement généré, chaque position possède une branche DH
-et une branche messy. Pour la branche messy, le couple
-$
-(\mathsf{ek}_{i,1-M_i},
-\widetilde{\mathsf{ek}}_{i,1-M_i})
-$
-est une paire non-DH. D'après le lemme~\ref{lem:lossy}, le chiffrement
-réalisé sur cette branche est uniformément distribué sur
-$\mathbb{G}_1^2$, avec une distribution indépendante du message
-chiffré.
-On peut donc remplacer, pour chaque position, le chiffré de la branche
-messy par un couple uniformément distribué dans $\mathbb{G}_1^2$ sans
-modifier la vue du signataire. Ainsi,
-$
-\text{Game 0} \approx \text{Game 1}.
-$
-
-\transition{\textit{On remplace les branches DH par des branches
-indépendantes du bit du message.}}
-
-\noindent\textbf{Game \text{2}}
-
-Après le jeu précédent, les chiffrés des branches messy sont
-uniformes et ne dépendent plus du message. Il reste à traiter les
-branches DH (non messy).
-Pour une branche DH correspondant au bit $M_i$, on a
-\[
-(\mathsf{ek}_{i,M_i},\widetilde{\mathsf{ek}}_{i,M_i})
-=
-(g^{y_i},h^{y_i}),
-\qquad
-y_i\sample\mathbb{Z}_p.
-\]
-
-Le signataire observe les deux branches sans savoir laquelle
-correspond au bit $M_i$. Sous l'hypothèse DDH, il ne peut pas distinguer
-la paire
-$
-(g^{y_i},h^{y_i})
-$
-d'une paire de la forme
-$
-(g^{y_i},z_i),
-$
-$
-y_i,z_i\sample\mathbb{Z}_p.
-$
-On peut donc remplacer la branche DH par une paire
-indépendante de la branche correspondant au bit du message.
-Après cela, les deux branches associées à chaque position
-ont la même distribution quel que soit le bit $M_i$. Par conséquent,
-la distribution de l'ensemble du premier message envoyé par
-l'utilisateur ne dépend plus de $M$.
-Ainsi,
-$
-\text{Game 1} \approx \text{Game 2}.
-$
-
-\transition{\textit{On applique la réduction DDH de la section \ref{lem:ddh-waters}}}
-
-\noindent\textbf{Game \text{3}}
-
-Après le jeu précédent, les branches envoyées par l'utilisateur sont indépendantes du message $M$.
-Suite à la réponse du signataire, le déchiffrement de la branche DH donne:
-\[
-\sigma_1=h_s^aF(M)^t,
-\qquad
-\sigma_2=g_2^t,
-\qquad
-\sigma'_2=g_1^t.
-\]
-On applique alors la réduction DDH de la
-section \ref{lem:ddh-waters}. Celle-ci permet de remplacer, sous
-l'hypothèse DDH, le terme $F(M)$ par $F(0)$ dans la signature.
-Ainsi, la signature simulée ne dépend plus du message $M$ et
-$
-\text{Game 2} \approx \text{Game 3}.
-$
-
-\transition{\textit{On applique la randomisation de Waters (voir section \ref{lem:randomisation-waters})}}
-
-\noindent\textbf{Game \text{4}}
-
-Après avoir reçu la réponse du signer, l'utilisateur effectue la phase de
-déchiffrement. Puis, il effectue la randomisation de Waters en choisissant un aléa
-$t'\sample\mathbb{Z}_p$ et en calculant
-\[
-\widehat{\sigma}_1
-=
-\sigma_1 F(M)^{t'},
-\qquad
-\widehat{\sigma}_2
-=
-\sigma_2 g_2^{t'},
-\qquad
-\widehat{\sigma}'_2
-=
-\sigma'_2 g_1^{t'}.
-\]
-Comme $t'$ est choisi uniformément dans $\mathbb{Z}_p$, la valeur
-$t+t'$ est également uniformément distribuée dans $\mathbb{Z}_p$.
-Ainsi, la distribution de la signature finale est indépendante du message.
-Elle peut donc être remplacée par une signature simulée utilisant un aléa
-indépendant du message. Ainsi,
-$
-\text{Game 3} \approx \text{Game 4}.
-$
-
-
-\transition{\textit{On remplace $m_0$ par $m_1$.}}
-
-\noindent\textbf{Game \text{5}}
-
-Dans ce jeu, le message $m_0$ est remplacé par $m_1$. D'après la transition
-précédente, la distribution de la signature finale est indépendante du
-message. Ainsi,
-$
-\text{Game 4} \approx \text{Game 5}.
-$
-
-\paragraph{Conclusion:}
-On a
-$
-\text{Game 0}
-\approx
-\text{Game 1}
-\approx
-\text{Game 2}
-\approx
-\text{Game 3}
-\approx
-\text{Game 4}
-\approx
-\text{Game 5}
-$,
-par conséquent,
-$
-\operatorname{View}_{\mathcal A}(m_0)
-\approx
-\operatorname{View}_{\mathcal A}(m_1),
-$
-et le protocole satisfait donc la propriété d'aveuglement pour un signataire honnête.
-
-\end{proof}
 
 \section{Implémentation et benchmarks}
 
@@ -2127,7 +2220,7 @@ et la génération de graphiques.
 
 \subsubsection{Courbes elliptiques utilisées}
 Pour tester le protocole, nous avons utilisé plusieurs courbes elliptiques, 
-plus précisément des courbes dites ``pairing-friendly'' \cite{afg2024,guillevic2025}, 
+plus précisément des courbes dites ``pairing-friendly'' \cite{afg2024,guillevic2025,aeg2022}, 
 c'est-à-dire des courbes permettant de calculer efficacement un couplage bilinéaire. 
 Les courbes retenues couvrent ainsi plusieurs combinaisons de tailles de corps et de degrés, afin d'évaluer le comportement du protocole dans des configurations différentes.
 \begin{itemize}
@@ -2241,7 +2334,7 @@ En termes de temps d'exécution, \texttt{bn254} est la courbe la plus rapide dan
 aussi bien pour OT que pour dual-OT. 
 Cela s'explique notamment par la petite taille de son corps de base de seulement 254 bits.
 Cependant, les études récentes des attaques sur ce type de courbes (TNFS) 
-ont fait baisser le niveau de sécurité de cette courbe \cite{afg2024}. 
+ont fait baisser le niveau de sécurité de cette courbe \cite{afg2024,gs2021}. 
 Cela la place ainsi en dessous du niveau visé pour une sécurité de 128 bits \cite{guillevic2025}.
 Elle semble donc peu adaptée à une utilisation à long terme.
 
@@ -2276,15 +2369,68 @@ Enfin, il pourrait être utile de tester le protocole sur des courbes offrant un
 
 \begin{thebibliography}{99}
 
+\bibitem{chaum1982}
+David Chaum.
+\textit{Blind Signatures for Untraceable Payments}.
+In \textit{Advances in Cryptology -- CRYPTO 1982},
+pages 199--203.
+Plenum Press, 1982.
+\url{https://doi.org/10.1007/978-1-4757-0602-4_18}.
+
+\bibitem{chaum1983}
+David Chaum.
+\textit{Blind Signature System}.
+In \textit{Advances in Cryptology -- CRYPTO 1983},
+page 153.
+Plenum Press, 1983.
+
+\bibitem{krs2023}
+Shuichi Katsumata, Michael Reichle, and Yusuke Sakai.
+\textit{Practical Round-Optimal Blind Signatures in the ROM from Standard Assumptions}.
+Advances in Cryptology -- ASIACRYPT 2023, LNCS.
+Springer, 2023.
+\url{https://eprint.iacr.org/2023/1447}.
+
+\bibitem{knr2024}
+Julia Kastner, Ky Nguyen, and Michael Reichle.
+\textit{Pairing-Free Blind Signatures from Standard Assumptions in the ROM}.
+Advances in Cryptology -- CRYPTO 2024, LNCS.
+Springer, 2024.
+\url{https://ia.cr/2023/1810}.
+
+\bibitem{rabin1981}
+Michael O. Rabin.
+\textit{How to Exchange Secrets with Oblivious Transfer}.
+Technical Report TR-81, Harvard University, 1981.
+\url{https://eprint.iacr.org/2005/187}.
+
 \bibitem{waters2005}
 Brent Waters.
 \textit{Efficient Identity-Based Encryption Without Random Oracles}.
 Advances in Cryptology -- EUROCRYPT 2005, 2005.
 
-\bibitem{elgamal1985}
-Taher ElGamal.
-\textit{A Public Key Cryptosystem and a Signature Scheme Based on Discrete Logarithms}.
-IEEE Transactions on Information Theory, 31(4):469--472, 1985.
+\bibitem{pvw2007}
+Chris Peikert, Vinod Vaikuntanathan, and Brent Waters.
+\textit{A Framework for Efficient and Composable Oblivious Transfer}.
+Cryptology ePrint Archive, Paper 2007/348, 2007.
+\url{https://eprint.iacr.org/2007/348}.
+
+\bibitem{diffiehellman1976}
+Whitfield Diffie and Martin E. Hellman.
+\textit{New Directions in Cryptography}.
+IEEE Transactions on Information Theory, 22(6):644--654, 1976.
+
+\bibitem{jlo1997}
+Ari Juels, Michael Luby, and Rafail Ostrovsky.
+\textit{Security of Blind Digital Signatures (Extended Abstract)}.
+Advances in Cryptology -- CRYPTO 1997, LNCS vol. 1294, pages 150--164.
+Springer, 1997.
+
+\bibitem{boneyboyen2004}
+Dan Boneh and Xavier Boyen.
+\textit{Short Signatures Without Random Oracles}.
+Advances in Cryptology -- EUROCRYPT 2004, LNCS vol. 3027, pages 56--73.
+Springer, 2004.
 
 \bibitem{relic}
 Diego F. Aranha, Conrado P. L. Gouvêa, Tobias Markmann, Riad S. Wahby, and
@@ -2292,18 +2438,6 @@ Kevin Liao.
 \textit{RELIC is an Efficient LIbrary for Cryptography}.
 RELIC Toolkit, 2025.
 \url{https://github.com/relic-toolkit/relic}.
-
-\bibitem{chaum1983}
-David Chaum.
-\textit{Blind Signatures for Untraceable Payments}.
-In \textit{Advances in Cryptology -- CRYPTO 1982}.
-Springer, 1983.
-
-\bibitem{knr2023}
-Julia Kastner, Ky Nguyen, and Michael Reichle.
-\textit{Pairing-Free Blind Signatures from Standard Assumptions in the ROM}.
-Cryptology ePrint Archive, Paper 2023/1810, 2023.
-\url{https://eprint.iacr.org/2023/1810}.
 
 \bibitem{afg2024}
 Diego F. Aranha, Georgios Fotiadis, and Aurore Guillevic.
@@ -2319,6 +2453,21 @@ Page web, première publication le 10 septembre 2020,
 dernière mise à jour le 2 décembre 2025.
 \url{https://people.irisa.fr/Aurore.Guillevic/Pairing_friendly_curves.html}.
 
+\bibitem{aeg2022}
+Diego F. Aranha, Youssef El Housni, and Aurore Guillevic.
+\textit{A Survey of Elliptic Curves for Proof Systems}.
+Designs, Codes and Cryptography, 91:3333--3378, 2022.
+
+\bibitem{gs2021}
+Aurore Guillevic and Shashank Singh.
+\textit{On the Alpha Value of Polynomials in the Tower Number Field Sieve Algorithm}.
+2019--2021.
+\url{https://gitlab.inria.fr/tnfs-alpha/alpha}.
+
+\bibitem{elgamal1985}
+Taher ElGamal.
+\textit{A Public Key Cryptosystem and a Signature Scheme Based on Discrete Logarithms}.
+IEEE Transactions on Information Theory, 31(4):469--472, 1985.
 
 \end{thebibliography}
 
@@ -2403,7 +2552,7 @@ t' \sample \mathbb{Z}_p \\
 \subsection{Construction de la signature à partir de OT}
 
 Pour chaque bit $M_i$ du message $M$, le signataire construit deux branches
-associées aux deux valeurs possibles du bit :
+associées aux deux valeurs possibles du bit, utilisant un mécanisme de chiffrement de type ElGamal \cite{elgamal1985}:
 $
 0 \longrightarrow \alpha_i,
 $
@@ -2566,7 +2715,7 @@ présentés dans la section \ref{sec:result_analysis}.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=1\textwidth]{../bsfot/results/images/bs_params_OT_vs_dual-OT.png}
+\includegraphics[width=0.9\textwidth]{../bsfot/results/images/bs_params_OT_vs_dual-OT.png}
 \caption{Temps d'exécution de la générations des paramètres publics pour les protocoles OT et dual-OT.}
 \label{fig:annexe_bs_params}
 \end{figure}
